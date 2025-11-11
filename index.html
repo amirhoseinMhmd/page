@@ -3,236 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amirhossein Mohammadi</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg width='128' height='128' viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='64' cy='64' r='64' fill='%23e0e7ff'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Inter, sans-serif' font-size='64' font-weight='bold' fill='%233730a3'%3EAM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <title>Amirhossein Mohammadi - Ph.D. Candidate</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg width='128' height='128' viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='64' cy='64' r='64' fill='%231e40af'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='serif' font-size='64' font-weight='bold' fill='white'%3EAM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #eaf0ff; /* A light blue background */
+            background-color: #ffffff;
+        }
+        h1, h2, h3 {
+            font-family: 'Crimson Pro', serif;
         }
         html {
-            scroll-padding-top: 5rem; /* Adjust for sticky header height */
+            scroll-padding-top: 5rem;
         }
         .section-title {
-            border-bottom: 2px solid #3b82f6; /* Blue accent color */
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
+            font-family: 'Crimson Pro', serif;
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
             font-weight: 600;
-            font-size: 1.25rem;
-            color: #1f2937; /* Darker gray for titles */
+            font-size: 1.875rem;
+            color: #111827;
+            letter-spacing: -0.025em;
         }
         .card {
             background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
         }
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: #1e40af;
+            box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.1);
+        }
+        .publication-item {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .publication-item:last-child {
+            border-bottom: none;
+        }
+        .experience-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 2rem;
+        }
+        .experience-item:last-child {
+            padding-bottom: 0;
+        }
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background-color: #1e40af;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #1e40af;
+        }
+        .experience-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.5rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background-color: #e5e7eb;
+        }
+        .experience-item:last-child::after {
+            display: none;
         }
         .tag {
-            background-color: #e0e7ff; /* Light blue for tags */
-            color: #3730a3; /* Darker blue for tag text */
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
+            background-color: #eff6ff;
+            color: #1e40af;
+            padding: 0.375rem 0.875rem;
+            border-radius: 0.375rem;
             font-size: 0.875rem;
             font-weight: 500;
+            display: inline-block;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .contact-link:hover {
+            background-color: #f9fafb;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.2s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #1e40af;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .profile-image {
+            border: 4px solid #1e40af;
+            box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.2);
         }
     </style>
 </head>
 <body class="text-gray-800">
 
 <!-- Header and Navigation Bar -->
-<header class="bg-white shadow-md sticky top-0 z-50">
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
-                <a href="#" class="font-bold text-xl text-blue-600">Amirhossein Mohammadi</a>
+                <a href="#" class="font-bold text-xl text-gray-900" style="font-family: 'Crimson Pro', serif;">Amirhossein Mohammadi</a>
             </div>
             <div class="hidden md:block">
-                <div class="ml-10 flex items-baseline space-x-4">
-                    <a href="#about" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About</a>
-                    <a href="#education" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Education</a>
-                    <a href="#publication" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Publication</a>
-                    <a href="#experience" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Experience</a>
-                    <a href="#projects" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Projects</a>
-                    <a href="#contact" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                <div class="ml-10 flex items-baseline space-x-6">
+                    <a href="#about" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">About</a>
+                    <a href="#research" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Research</a>
+                    <a href="#publications" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Publications</a>
+                    <a href="#experience" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Experience</a>
+                    <a href="#contact" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Contact</a>
                 </div>
             </div>
             <div class="-mr-2 flex md:hidden">
-                <button id="mobile-menu-button" type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                <button id="mobile-menu-button" type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100" aria-controls="mobile-menu" aria-expanded="false">
                     <span class="sr-only">Open main menu</span>
                     <i class="fas fa-bars h-6 w-6"></i>
                 </button>
             </div>
         </div>
     </nav>
-    <!-- Mobile menu, show/hide based on menu state. -->
     <div class="md:hidden hidden" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#about" class="text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">About</a>
-            <a href="#education" class="text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Education</a>
-            <a href="#publication" class="text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Publication</a>
-            <a href="#experience" class="text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Experience</a>
-            <a href="#projects" class="text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Projects</a>
-            <a href="#contact" class="text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200">
+            <a href="#about" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">About</a>
+            <a href="#research" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Research</a>
+            <a href="#publications" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Publications</a>
+            <a href="#experience" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Experience</a>
+            <a href="#contact" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
         </div>
     </div>
 </header>
 
-<main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-    <!-- Main Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        <!-- Left Column -->
-        <div class="lg:col-span-1 space-y-8">
-            <!-- Profile Card -->
-            <div class="card p-6 text-center">
-                <!-- Add your image URL in the src attribute below -->
-                <img src="images/Profile.jpg" alt="Amirhossein Mohammadi" class="w-64 h-64 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
-                <h1 class="text-3xl font-bold text-gray-900">Amirhossein Mohammadi</h1>
-                <p class="text-blue-600 font-medium mt-2">Ph.D. Candidate & NLP/ML Specialist</p>
+<main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 my-8">
+    <!-- Hero Section -->
+    <section class="mb-16">
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div class="flex-shrink-0">
+                <img src="images/Profile.jpg" alt="Amirhossein Mohammadi" class="w-48 h-48 rounded-full profile-image">
             </div>
-
-            <!-- Contact Info Card -->
-            <div id="contact" class="card p-6">
-                <h2 class="section-title">Contact</h2>
-                <ul class="space-y-4">
-                    <li class="flex items-center">
-                        <i class="fas fa-envelope w-6 text-blue-500"></i>
-                        <a href="mailto:a.mohammadi@uu.nl" class="hover:text-blue-600">a.mohammadi@uu.nl</a>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fab fa-linkedin w-6 text-blue-500"></i>
-                        <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" class="hover:text-blue-600">Linkedin</a>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fab fa-github w-6 text-blue-500"></i>
-                        <a href="https://github.com/amirhoseinMhmd" target="_blank" class="hover:text-blue-600">Github</a>
-                    </li>
-                </ul>
+            <div class="flex-1 text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Amirhossein Mohammadi</h1>
+                <p class="text-xl text-blue-800 font-medium mb-4">Ph.D. Candidate in Natural Language Processing</p>
+                <p class="text-lg text-gray-600 mb-6">Department of Languages, Literature and Communication<br>Utrecht University, Netherlands</p>
+                <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                    <a href="mailto:a.mohammadi@uu.nl" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-blue-800 hover:text-blue-800 transition">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/amirhoseinMhmd" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-blue-800 hover:text-blue-800 transition">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- Right Column -->
-        <div class="lg:col-span-2 space-y-8">
-            <!-- About Me Card -->
-            <div id="about" class="card p-6">
-                <h2 class="section-title">About Me</h2>
-                <p class="text-lg leading-relaxed">
-                    A dedicated Ph.D. candidate at Utrecht University with a strong background in Artificial Intelligence and Natural Language Processing. My research focuses on the capabilities of Large Language Models. I have hands-on experience as an NLP/ML Specialist and Big Data Engineer, developing scalable systems, search engines, and data pipelines. I am passionate about leveraging technology to solve complex problems and contribute to meaningful projects.
-                </p>
-            </div>
+    <!-- About Section -->
+    <section id="about" class="mb-16">
+        <h2 class="section-title">About</h2>
+        <div class="prose prose-lg max-w-none">
+            <p class="text-gray-700 leading-relaxed text-lg">
+                I am a Ph.D. candidate at Utrecht University, where my research focuses on investigating the capabilities of Large Language Models, particularly in learning impossible languages. My work sits at the intersection of theoretical linguistics and artificial intelligence, exploring fundamental questions about language acquisition and computational learning.
+            </p>
+            <p class="text-gray-700 leading-relaxed text-lg mt-4">
+                Prior to my doctoral studies, I gained extensive industry experience as an NLP/ML Specialist and Big Data Engineer, where I developed scalable systems for information retrieval, search engines, and data pipelines. My technical expertise spans transformer architectures (BERT, GPT), distributed systems, and cloud infrastructure.
+            </p>
+        </div>
+    </section>
 
-            <!-- Education Card -->
-            <div id="education" class="card p-6">
-                <h2 class="section-title">Education</h2>
-                <div class="space-y-6">
+    <!-- Research Interests -->
+    <section id="research" class="mb-16">
+        <h2 class="section-title">Research Interests</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-brain text-3xl text-blue-800 mt-1"></i>
                     <div>
-                        <h3 class="text-xl font-semibold">Ph.D. Candidate</h3>
-                        <p class="text-md text-blue-600">Utrecht University (UU)</p>
-                        <p class="text-sm text-gray-600">Sep 2021 - Present</p>
-                        <p class="mt-2">Investigation into the capability of LLMs in Learning Impossible Languages.</p>
-                    </div>
-                    <hr>
-                    <div>
-                        <h3 class="text-xl font-semibold">M.Sc. Soft Computing and Artificial Intelligence</h3>
-                        <p class="text-md text-blue-600">Allameh Tabataba'i University (ATU)</p>
-                        <p class="text-sm text-gray-600">Sep 2016 - Aug 2021</p>
-                        <p class="mt-2">Thesis: Diagnosis of depression by detecting linguistic markers of depression using Machine Learning methods.</p>
-                    </div>
-                    <hr>
-                    <div>
-                        <h3 class="text-xl font-semibold">B.Sc. Computer Science</h3>
-                        <p class="text-md text-blue-600">Kharazmi University (KHU)</p>
-                        <p class="text-sm text-gray-600">Sep 2012 - Jun 2016</p>
-                        <p class="mt-2">B.Sc. Project: Comprehensive comparison of Swarm intelligence algorithms over Traveling Salesman Problem.</p>
+                        <h3 class="font-semibold text-lg mb-2">Large Language Models</h3>
+                        <p class="text-gray-600">Understanding the learning capabilities and limitations of modern LLMs</p>
                     </div>
                 </div>
             </div>
-            <!-- Publication Card -->
-            <div id="publication" class="card p-6">
-                <h2 class="section-title">Publications</h2>
-                <div id="publications-list">
-                    <div class="text-center text-gray-500 py-4">
-                        <i class="fas fa-spinner fa-spin text-2xl"></i>
-                        <p class="mt-2">Loading publications...</p>
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-language text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">Computational Linguistics</h3>
+                        <p class="text-gray-600">Investigating language structure through computational approaches</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-robot text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">Natural Language Processing</h3>
+                        <p class="text-gray-600">Developing practical NLP systems for real-world applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-heartbeat text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">NLP for Mental Health</h3>
+                        <p class="text-gray-600">Using linguistic markers to detect mental health conditions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="mb-16">
+        <h2 class="section-title">Publications</h2>
+        <div class="card p-8">
+            <div id="publications-list">
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-spinner fa-spin text-3xl"></i>
+                    <p class="mt-3">Loading publications...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education" class="mb-16">
+        <h2 class="section-title">Education</h2>
+        <div class="space-y-6">
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-800"></i>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">Ph.D. in Artificial Intelligence</h3>
+                                <p class="text-blue-800 font-medium">Utrecht University</p>
+                            </div>
+                            <span class="text-gray-600 font-medium">2021 - Present</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">Dissertation: Investigation into the capability of Large Language Models in learning impossible languages</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Experience Card -->
-            <div id="experience" class="card p-6">
-                <h2 class="section-title">Work Experience</h2>
-                <div class="space-y-6">
-                    <div>
-                        <div class="flex justify-between items-baseline">
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-800"></i>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">M.Sc. in Soft Computing and Artificial Intelligence</h3>
+                                <p class="text-blue-800 font-medium">Allameh Tabataba'i University</p>
+                            </div>
+                            <span class="text-gray-600 font-medium">2016 - 2021</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">Thesis: Diagnosis of depression by detecting linguistic markers using Machine Learning methods</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-800"></i>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">B.Sc. in Computer Science</h3>
+                                <p class="text-blue-800 font-medium">Kharazmi University</p>
+                            </div>
+                            <span class="text-gray-600 font-medium">2012 - 2016</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">Project: Comprehensive comparison of swarm intelligence algorithms for the Traveling Salesman Problem</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="mb-16">
+        <h2 class="section-title">Professional Experience</h2>
+        <div class="card p-8">
+            <div class="space-y-0">
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
                             <h3 class="text-xl font-semibold">NLP/ML Specialist</h3>
-                            <p class="text-sm text-gray-600">June 2022 - May 2025</p>
+                            <p class="text-blue-800 font-medium">MCL</p>
                         </div>
-                        <p class="text-md text-blue-600">MCL</p>
-                        <p class="mt-2">Developed systems using Transformers, BERT, and GPT-2 for information retrieval and generative models. Contributed to a search engine for multi-type data (images, documents, voice).</p>
+                        <span class="text-gray-600 font-medium">June 2022 - May 2025</span>
                     </div>
-                    <hr>
-                    <div>
-                        <div class="flex justify-between items-baseline">
-                            <h3 class="text-xl font-semibold">Big Data Engineer</h3>
-                            <p class="text-sm text-gray-600">Mar 2021 - May 2025</p>
-                        </div>
-                        <p class="text-md text-blue-600">Mahsan co.</p>
-                        <p class="mt-2">Developed high-throughput data collectors and ETL processes with Java, Python, and Cassandra. Designed and developed data pipelines using ActiveMQ and Kafka. Deployed and maintained Cassandra clusters and worked with cloud object storages like MinIO and Ceph.</p>
-                    </div>
-                    <hr>
-                    <div>
-                        <div class="flex justify-between items-baseline">
-                            <h3 class="text-xl font-semibold">MicroService Back-end Developer</h3>
-                            <p class="text-sm text-gray-600">Jul 2019 - Mar 2021</p>
-                        </div>
-                        <p class="text-md text-blue-600">Tourism IT co.</p>
-                        <p class="mt-2">Designed and developed digital banking services for TourismBank using a microservice architecture. Created system gateways with REST API and gRPC for internal communication.</p>
-                    </div>
-                    <hr>
-                    <div>
-                        <div class="flex justify-between items-baseline">
-                            <h3 class="text-xl font-semibold">Java-SE Developer</h3>
-                            <p class="text-sm text-gray-600">Oct 2018 - Mar 2020</p>
-                        </div>
-                        <p class="text-md text-blue-600">TSIN co.</p>
-                        <p class="mt-2">Designed and developed an ETL tool to extract, transform, and load data from various SQL databases and files into an Oracle data warehouse.</p>
+                    <p class="text-gray-700 mb-3">Developed advanced NLP systems using state-of-the-art transformer architectures including BERT and GPT-2 for information retrieval and text generation. Contributed to the development of a multi-modal search engine capable of processing images, documents, and voice data.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Transformers</span>
+                        <span class="tag">BERT</span>
+                        <span class="tag">GPT-2</span>
+                        <span class="tag">Information Retrieval</span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Projects Card -->
-            <div id="projects" class="card p-6">
-                <h2 class="section-title">Projects</h2>
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="font-semibold">Depression Diagnosis via Linguistic Markers (Master's Thesis)</h3>
-                        <p>Utilized BERT to classify text for depression, achieving 85.5% accuracy and showcasing the potential of language-based mental health assessment.</p>
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">Big Data Engineer</h3>
+                            <p class="text-blue-800 font-medium">Mahsan Co.</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">March 2021 - May 2025</span>
                     </div>
-                    <div>
-                        <h3 class="font-semibold">Swarm Intelligence Algorithm Comparison (Bachelor's Project)</h3>
-                        <p>Implemented and compared Ant Colony Optimization, Artificial Bee Colony, Firefly, and Red Deer algorithms on Traveling Salesman Problem datasets.</p>
+                    <p class="text-gray-700 mb-3">Designed and implemented high-throughput data collection systems and ETL pipelines using Java and Python. Architected data streaming solutions with ActiveMQ and Kafka, deployed and maintained distributed Cassandra clusters, and managed cloud object storage systems (MinIO, Ceph).</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Cassandra</span>
+                        <span class="tag">Kafka</span>
+                        <span class="tag">ETL</span>
+                        <span class="tag">Cloud Storage</span>
                     </div>
-                    <div>
-                        <h3 class="font-semibold">Various Implementations</h3>
-                        <p>Developed projects including intent classification with BERT, CIFAR-10 classification with CNNs, graph algorithms, a cryptography tool using Hafez poems, P2P data transfer, and more.</p>
+                </div>
+
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">Microservice Backend Developer</h3>
+                            <p class="text-blue-800 font-medium">Tourism IT Co.</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">July 2019 - March 2021</span>
+                    </div>
+                    <p class="text-gray-700 mb-3">Designed and developed digital banking services for TourismBank using microservice architecture. Implemented system gateways with REST API and gRPC for efficient internal service communication.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Microservices</span>
+                        <span class="tag">REST API</span>
+                        <span class="tag">gRPC</span>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">Java SE Developer</h3>
+                            <p class="text-blue-800 font-medium">TSIN Co.</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">October 2018 - March 2020</span>
+                    </div>
+                    <p class="text-gray-700 mb-3">Designed and developed an enterprise ETL tool for extracting, transforming, and loading data from various SQL databases and file formats into an Oracle data warehouse.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Java</span>
+                        <span class="tag">ETL</span>
+                        <span class="tag">Oracle</span>
+                        <span class="tag">Data Warehouse</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="mb-16">
+        <h2 class="section-title">Contact</h2>
+        <div class="card p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="mailto:a.mohammadi@uu.nl" class="contact-link">
+                    <i class="fas fa-envelope text-2xl text-blue-800 w-12"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">Email</p>
+                        <p class="text-gray-600">a.mohammadi@uu.nl</p>
+                    </div>
+                </a>
+                <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" class="contact-link">
+                    <i class="fab fa-linkedin text-2xl text-blue-800 w-12"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">LinkedIn</p>
+                        <p class="text-gray-600">amirhoseinmhmd</p>
+                    </div>
+                </a>
+                <a href="https://github.com/amirhoseinMhmd" target="_blank" class="contact-link">
+                    <i class="fab fa-github text-2xl text-blue-800 w-12"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">GitHub</p>
+                        <p class="text-gray-600">amirhoseinMhmd</p>
+                    </div>
+                </a>
+                <div class="contact-link">
+                    <i class="fas fa-map-marker-alt text-2xl text-blue-800 w-12"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">Office</p>
+                        <p class="text-gray-600">C1.01, Groenmangebouw<br>Padualaan, Utrecht</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
+<footer class="bg-gray-50 border-t border-gray-200 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <p class="text-center text-gray-600">© 2024 Amirhossein Mohammadi. All rights reserved.</p>
+    </div>
+</footer>
+
 <script>
-    // JavaScript to toggle the mobile menu
+    // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuIcon = mobileMenuButton.querySelector('i');
@@ -242,7 +441,6 @@
         mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
         mobileMenu.classList.toggle('hidden');
 
-        // Toggle hamburger/close icon
         if (mobileMenu.classList.contains('hidden')) {
             mobileMenuIcon.classList.remove('fa-times');
             mobileMenuIcon.classList.add('fa-bars');
@@ -276,7 +474,6 @@
                 const type = match[1].toLowerCase();
                 const key = match[2].trim();
                 const fieldsString = match[3];
-
                 const fields = this.parseFields(fieldsString);
 
                 entries.push({
@@ -321,9 +518,9 @@
             .catch(error => {
                 console.error('Error loading publications:', error);
                 document.getElementById('publications-list').innerHTML = `
-                    <div class="text-center text-red-500 py-4">
-                        <i class="fas fa-exclamation-circle text-2xl"></i>
-                        <p class="mt-2">Failed to load publications. Please make sure publication.bib is in the same directory.</p>
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-exclamation-circle text-3xl"></i>
+                        <p class="mt-3 text-gray-600">Unable to load publications. Please ensure publication.bib is in the same directory.</p>
                     </div>
                 `;
             });
@@ -333,11 +530,10 @@
         const container = document.getElementById('publications-list');
 
         if (!publications || publications.length === 0) {
-            container.innerHTML = '<p class="text-gray-600">No publications found.</p>';
+            container.innerHTML = '<p class="text-gray-600 text-center py-4">No publications found.</p>';
             return;
         }
 
-        // Sort by year (newest first)
         publications.sort((a, b) => {
             const yearA = parseInt(a.year) || 0;
             const yearB = parseInt(b.year) || 0;
@@ -353,43 +549,24 @@
         const year = pub.year || 'N/A';
         const venue = pub.journal || pub.booktitle || pub.publisher || '';
 
-        // Generate arXiv link if available
         let venueHTML = venue;
         if (venue.includes('arXiv:')) {
             const arxivMatch = venue.match(/arXiv:(\d+\.\d+)/);
             if (arxivMatch) {
                 const arxivId = arxivMatch[1];
-                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">${escapeHtml(venue)}</a>`;
+                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-800 hover:underline font-medium" target="_blank" rel="noopener noreferrer">${escapeHtml(venue)}</a>`;
             }
         }
 
-        // Create additional links
-        let linksHTML = '';
+        let linksHTML = '<div class="flex gap-3 mt-2">';
         if (pub.url) {
-            linksHTML += `<a href="${escapeHtml(pub.url)}" class="text-blue-600 hover:underline ml-2" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i></a>`;
+            linksHTML += `<a href="${escapeHtml(pub.url)}" class="inline-flex items-center gap-1 text-blue-800 hover:underline text-sm" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Link</a>`;
         }
         if (pub.doi) {
-            linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="text-blue-600 hover:underline ml-2" target="_blank" rel="noopener noreferrer"><i class="fas fa-book"></i></a>`;
+            linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="inline-flex items-center gap-1 text-blue-800 hover:underline text-sm" target="_blank" rel="noopener noreferrer"><i class="fas fa-book"></i> DOI</a>`;
         }
+        linksHTML += '</div>';
 
         return `
-            <div class="text-sm mb-3">
-                <span class="font-semibold"> ${escapeHtml(title)}.</span>
-                <span class="text-gray-700">${escapeHtml(authors)}.</span>
-                <span class="text-gray-600"> ${venueHTML}${year ? `, ${escapeHtml(year)}` : ''}.</span>${linksHTML}
-            </div>
-        `;
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // Load publications when page loads
-    window.addEventListener('DOMContentLoaded', loadPublications);
-
-</script>
-</body>
-</html>
+            <div class="publication-item">
+                <h4 class="font-semibold text-lg text-gray-900 mb-2">${escapeHtml
