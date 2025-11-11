@@ -169,7 +169,7 @@
             <div class="flex-1 text-center md:text-left">
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Amirhossein Mohammadi</h1>
                 <p class="text-xl text-blue-800 font-medium mb-4">Ph.D. Candidate in Natural Language Processing</p>
-                <p class="text-lg text-gray-600 mb-6">Department of Languages, Literature and Communication<br>Utrecht University, Netherlands</p>
+                <p class="text-lg text-gray-600 mb-6">Utrecht University, Netherlands</p>
                 <div class="flex flex-wrap gap-3 justify-center md:justify-start">
                     <a href="mailto:a.mohammadi@uu.nl" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition">
                         <i class="fas fa-envelope"></i>
@@ -193,11 +193,9 @@
         <h2 class="section-title">About</h2>
         <div class="prose prose-lg max-w-none">
             <p class="text-gray-700 leading-relaxed text-lg">
-                I am a Ph.D. candidate at Utrecht University, where my research focuses on investigating the capabilities of Large Language Models, particularly in learning impossible languages. My work sits at the intersection of theoretical linguistics and artificial intelligence, exploring fundamental questions about language acquisition and computational learning.
-            </p>
+                I am a Ph.D. candidate at Utrecht University, specializing in Natural Language Processing. My doctoral research investigates the computational capabilities and limitations of Large Language Models (LLMs), with a particular focus on their capacity to acquire and process theoretically "impossible" languages. This work is situated at the critical confluence of theoretical linguistics and artificial intelligence, addressing fundamental questions regarding the nature of language acquisition and the boundaries of computational learning theory.            </p>
             <p class="text-gray-700 leading-relaxed text-lg mt-4">
-                Prior to my doctoral studies, I gained extensive industry experience as an NLP/ML Specialist and Big Data Engineer, where I developed scalable systems for information retrieval, search engines, and data pipelines. My technical expertise spans transformer architectures (BERT, GPT), distributed systems, and cloud infrastructure.
-            </p>
+                Preceding my academic tenure, I accumulated extensive professional experience as an NLP/ML Specialist and Big Data Engineer. My industry contributions involved the design and deployment of scalable, high-performance systems for advanced information retrieval platforms, next-generation search engines, and robust data engineering pipelines. My core technical expertise encompasses state-of-the-art transformer architectures (e.g., BERT, GPT-series), distributed computing, and cloud infrastructure management.            </p>
         </div>
     </section>
 
@@ -247,7 +245,7 @@
     <!-- Publications Section -->
     <section id="publications" class="mb-16">
         <h2 class="section-title">Publications</h2>
-        <div class="card p-8">
+        <div class="card p-1">
             <div id="publications-list">
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-spinner fa-spin text-3xl"></i>
@@ -450,7 +448,7 @@
         }
     });
 
-    // Close mobile menu when a link is clicked
+    // Close mobile menu on link click
     const mobileMenuLinks = document.querySelectorAll('#mobile-menu a, .hidden.md\\:block a');
     mobileMenuLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -463,7 +461,7 @@
         });
     });
 
-    // BibTeX Parser for Publications
+    // BibTeX Parser
     class BibtexParser {
         parse(bibtexString) {
             const entries = [];
@@ -548,25 +546,42 @@
         const authors = pub.author || 'Unknown Authors';
         const year = pub.year || 'N/A';
         const venue = pub.journal || pub.booktitle || pub.publisher || '';
-
         let venueHTML = venue;
+
         if (venue.includes('arXiv:')) {
             const arxivMatch = venue.match(/arXiv:(\d+\.\d+)/);
             if (arxivMatch) {
                 const arxivId = arxivMatch[1];
-                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-800 hover:underline font-medium" target="_blank" rel="noopener noreferrer">${escapeHtml(venue)}</a>`;
+                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-800 hover:underline" target="_blank">${escapeHtml(venue)}</a>`;
             }
         }
 
-        let linksHTML = '<div class="flex gap-3 mt-2">';
-        if (pub.url) {
-            linksHTML += `<a href="${escapeHtml(pub.url)}" class="inline-flex items-center gap-1 text-blue-800 hover:underline text-sm" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Link</a>`;
-        }
-        if (pub.doi) {
-            linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="inline-flex items-center gap-1 text-blue-800 hover:underline text-sm" target="_blank" rel="noopener noreferrer"><i class="fas fa-book"></i> DOI</a>`;
-        }
-        linksHTML += '</div>';
+        let linksHTML = '';
+        if (pub.url) linksHTML += `<a href="${escapeHtml(pub.url)}" class="text-blue-800 hover:underline ml-2" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+        if (pub.doi) linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="text-blue-800 hover:underline ml-2" target="_blank"><i class="fas fa-book"></i></a>`;
 
         return `
             <div class="publication-item">
-                <h4 class="font-semibold text-lg text-gray-900 mb-2">${escapeHtml
+                <p class="text-gray-900 leading-snug">
+                    <span class="font-semibold">${escapeHtml(title)}.</span>
+                    <span class="text-gray-600 italic">${escapeHtml(authors)}, ${venueHTML}${year ? `, ${escapeHtml(year)}` : ''}.</span>
+                    ${linksHTML}
+                </p>
+            </div>
+        `;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Load publications when page loads
+    loadPublications();
+</script>
