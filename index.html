@@ -42,11 +42,21 @@
             box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.1);
         }
         .publication-item {
-            padding: 1.25rem 0;
+            padding: 1rem 0 1rem 1.5rem;
             border-bottom: 1px solid #f3f4f6;
+            position: relative;
         }
         .publication-item:last-child {
             border-bottom: none;
+        }
+        .publication-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            color: #1e40af;
+            font-size: 1.25rem;
+            font-weight: bold;
         }
         .experience-item {
             position: relative;
@@ -169,7 +179,7 @@
             <div class="flex-1 text-center md:text-left">
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Amirhossein Mohammadi</h1>
                 <p class="text-xl text-blue-800 font-medium mb-4">Ph.D. Candidate in Natural Language Processing</p>
-                <p class="text-lg text-gray-600 mb-6">Utrecht University, Netherlands</p>
+                <p class="text-lg text-gray-600 mb-6">Department of Languages, Literature and Communication<br>Utrecht University, Netherlands</p>
                 <div class="flex flex-wrap gap-3 justify-center md:justify-start">
                     <a href="mailto:a.mohammadi@uu.nl" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition">
                         <i class="fas fa-envelope"></i>
@@ -178,6 +188,11 @@
                     <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-blue-800 hover:text-blue-800 transition">
                         <i class="fab fa-linkedin"></i>
                         <span>LinkedIn</span>
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank"
+                       class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-blue-800 hover:text-blue-800 transition">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Scholar</span>
                     </a>
                     <a href="https://github.com/amirhoseinMhmd" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-blue-800 hover:text-blue-800 transition">
                         <i class="fab fa-github"></i>
@@ -193,9 +208,11 @@
         <h2 class="section-title">About</h2>
         <div class="prose prose-lg max-w-none">
             <p class="text-gray-700 leading-relaxed text-lg">
-                I am a Ph.D. candidate at Utrecht University, specializing in Natural Language Processing. My doctoral research investigates the computational capabilities and limitations of Large Language Models (LLMs), with a particular focus on their capacity to acquire and process theoretically "impossible" languages. This work is situated at the critical confluence of theoretical linguistics and artificial intelligence, addressing fundamental questions regarding the nature of language acquisition and the boundaries of computational learning theory.            </p>
+                I am a Ph.D. candidate at Utrecht University, where my research focuses on investigating the capabilities of Large Language Models, particularly in learning impossible languages. My work sits at the intersection of theoretical linguistics and artificial intelligence, exploring fundamental questions about language acquisition and computational learning.
+            </p>
             <p class="text-gray-700 leading-relaxed text-lg mt-4">
-                Preceding my academic tenure, I accumulated extensive professional experience as an NLP/ML Specialist and Big Data Engineer. My industry contributions involved the design and deployment of scalable, high-performance systems for advanced information retrieval platforms, next-generation search engines, and robust data engineering pipelines. My core technical expertise encompasses state-of-the-art transformer architectures (e.g., BERT, GPT-series), distributed computing, and cloud infrastructure management.            </p>
+                Prior to my doctoral studies, I gained extensive industry experience as an NLP/ML researcher and Big Data Engineer, where I developed scalable systems for information retrieval, search engines, and data pipelines. My technical expertise spans transformer architectures (BERT, GPT), distributed systems, and cloud infrastructure.
+            </p>
         </div>
     </section>
 
@@ -245,7 +262,7 @@
     <!-- Publications Section -->
     <section id="publications" class="mb-16">
         <h2 class="section-title">Publications</h2>
-        <div class="card p-1">
+        <div class="card p-8">
             <div id="publications-list">
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-spinner fa-spin text-3xl"></i>
@@ -268,7 +285,7 @@
                                 <h3 class="text-xl font-semibold mb-1">Ph.D. in Artificial Intelligence</h3>
                                 <p class="text-blue-800 font-medium">Utrecht University</p>
                             </div>
-                            <span class="text-gray-600 font-medium">2025 - Present</span>
+                            <span class="text-gray-600 font-medium">2021 - Present</span>
                         </div>
                         <p class="text-gray-700 mt-3">Dissertation: Investigation into the capability of Large Language Models in learning impossible languages</p>
                     </div>
@@ -284,7 +301,7 @@
                                 <h3 class="text-xl font-semibold mb-1">M.Sc. in Soft Computing and Artificial Intelligence</h3>
                                 <p class="text-blue-800 font-medium">Allameh Tabataba'i University</p>
                             </div>
-                            <span class="text-gray-600 font-medium">2021 - 2023</span>
+                            <span class="text-gray-600 font-medium">2016 - 2021</span>
                         </div>
                         <p class="text-gray-700 mt-3">Thesis: Diagnosis of depression by detecting linguistic markers using Machine Learning methods</p>
                     </div>
@@ -300,7 +317,7 @@
                                 <h3 class="text-xl font-semibold mb-1">B.Sc. in Computer Science</h3>
                                 <p class="text-blue-800 font-medium">Kharazmi University</p>
                             </div>
-                            <span class="text-gray-600 font-medium">2016 - 2021</span>
+                            <span class="text-gray-600 font-medium">2012 - 2016</span>
                         </div>
                         <p class="text-gray-700 mt-3">Project: Comprehensive comparison of swarm intelligence algorithms for the Traveling Salesman Problem</p>
                     </div>
@@ -317,7 +334,7 @@
                 <div class="experience-item">
                     <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
                         <div>
-                            <h3 class="text-xl font-semibold">NLP/ML Specialist</h3>
+                            <h3 class="text-xl font-semibold">NLP/ML Researcher</h3>
                             <p class="text-blue-800 font-medium">MCL</p>
                         </div>
                         <span class="text-gray-600 font-medium">June 2022 - May 2025</span>
@@ -394,20 +411,6 @@
                     <div>
                         <p class="font-medium text-gray-900">Email</p>
                         <p class="text-gray-600">a.mohammadi@uu.nl</p>
-                    </div>
-                </a>
-                <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" class="contact-link">
-                    <i class="fab fa-linkedin text-2xl text-blue-800 w-12"></i>
-                    <div>
-                        <p class="font-medium text-gray-900">LinkedIn</p>
-                        <p class="text-gray-600">amirhoseinmhmd</p>
-                    </div>
-                </a>
-                <a href="https://github.com/amirhoseinMhmd" target="_blank" class="contact-link">
-                    <i class="fab fa-github text-2xl text-blue-800 w-12"></i>
-                    <div>
-                        <p class="font-medium text-gray-900">GitHub</p>
-                        <p class="text-gray-600">amirhoseinMhmd</p>
                     </div>
                 </a>
                 <div class="contact-link">
@@ -546,19 +549,19 @@
         const authors = pub.author || 'Unknown Authors';
         const year = pub.year || 'N/A';
         const venue = pub.journal || pub.booktitle || pub.publisher || '';
-        let venueHTML = venue;
 
+        let venueHTML = venue;
         if (venue.includes('arXiv:')) {
             const arxivMatch = venue.match(/arXiv:(\d+\.\d+)/);
             if (arxivMatch) {
                 const arxivId = arxivMatch[1];
-                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-800 hover:underline" target="_blank">${escapeHtml(venue)}</a>`;
+                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-800 hover:underline" target="_blank" rel="noopener noreferrer">${escapeHtml(venue)}</a>`;
             }
         }
 
         let linksHTML = '';
-        if (pub.url) linksHTML += `<a href="${escapeHtml(pub.url)}" class="text-blue-800 hover:underline ml-2" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
-        if (pub.doi) linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="text-blue-800 hover:underline ml-2" target="_blank"><i class="fas fa-book"></i></a>`;
+        if (pub.url) linksHTML += `<a href="${escapeHtml(pub.url)}" class="text-blue-800 hover:underline ml-2" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i></a>`;
+        if (pub.doi) linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="text-blue-800 hover:underline ml-2" target="_blank" rel="noopener noreferrer"><i class="fas fa-book"></i></a>`;
 
         return `
             <div class="publication-item">
@@ -571,11 +574,6 @@
         `;
     }
 
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
