@@ -3,272 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amirhossein Mohammadi — Utrecht University</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg width='128' height='128' viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='128' height='128' fill='%23111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Georgia,serif' font-size='54' fill='%23fff'%3EAM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <title>Amirhossein Mohammadi - Ph.D. Candidate</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg width='128' height='128' viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='64' cy='64' r='64' fill='%231e40af'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='serif' font-size='64' font-weight='bold' fill='white'%3EAM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --ink: #111;
-            --ink-mid: #444;
-            --ink-light: #777;
-            --bg: #fff;
-            --rule: #e0e0e0;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-padding-top: 3.5rem; }
-
         body {
-            font-family: 'Source Sans 3', sans-serif;
-            background: var(--bg);
-            color: var(--ink);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
         }
-
-        .nav {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(6px);
-            border-bottom: 1px solid var(--rule);
+        h1, h2, h3 {
+            font-family: 'Crimson Pro', serif;
         }
-        .nav-inner {
-            max-width: 720px; margin: 0 auto; padding: 0 1.5rem;
-            display: flex; align-items: center; justify-content: space-between;
-            height: 3rem;
+        html {
+            scroll-padding-top: 5rem;
         }
-        .nav-name {
-            font-family: 'EB Garamond', serif;
-            font-size: 1.05rem; font-weight: 500;
-            color: var(--ink); text-decoration: none;
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            font-size: 1.875rem;
+            color: #111827;
+            letter-spacing: -0.025em;
         }
-        .nav-links { display: flex; gap: 0.15rem; }
-        .nav-links a {
-            font-size: 0.78rem; font-weight: 500; color: var(--ink-light);
-            text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 3px;
-            letter-spacing: 0.04em; text-transform: uppercase;
-            transition: color 0.15s;
+        .card {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
         }
-        .nav-links a:hover { color: var(--ink); }
-
-        .mobile-toggle {
-            display: none; background: none; border: none;
-            font-size: 1.1rem; color: var(--ink-light); cursor: pointer; padding: 0.4rem;
+        .card:hover {
+            border-color: #1e40af;
+            box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.1);
         }
-        .mobile-nav { display: none; border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem 0.75rem; }
-        .mobile-nav.open { display: block; }
-        .mobile-nav a {
-            display: block; font-size: 0.85rem; font-weight: 500; color: var(--ink-light);
-            text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.03em;
+        .publication-item {
+            padding: 1rem 0 1rem 1.5rem;
+            border-bottom: 1px solid #f3f4f6;
+            position: relative;
         }
-        .mobile-nav a:hover { color: var(--ink); }
-
-        @media (max-width: 640px) {
-            .nav-links { display: none; }
-            .mobile-toggle { display: block; }
+        .publication-item:last-child {
+            border-bottom: none;
         }
-
-        .page { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
-
-        .hero {
-            padding: 3rem 0 2rem;
-            display: flex; gap: 2rem; align-items: flex-start;
+        .publication-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            color: #1e40af;
+            font-size: 1.25rem;
+            font-weight: bold;
         }
-        .hero-photo img {
-            width: 160px; height: 160px; border-radius: 50%;
-            object-fit: cover; filter: grayscale(15%);
+        .experience-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 2rem;
         }
-        .hero-text { padding-top: 0.15rem; }
-        .hero-text h1 {
-            font-family: 'EB Garamond', serif;
-            font-size: 2rem; font-weight: 500; line-height: 1.2; margin-bottom: 0.3rem;
+        .experience-item:last-child {
+            padding-bottom: 0;
         }
-        .hero-text .subtitle {
-            font-family: 'EB Garamond', serif;
-            font-size: 1.05rem; color: var(--ink-mid); font-style: italic;
-            margin-bottom: 0.15rem;
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background-color: #1e40af;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #1e40af;
         }
-        .hero-text .affil {
-            font-size: 0.88rem; color: var(--ink-light); margin-bottom: 1rem;
+        .experience-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.5rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background-color: #e5e7eb;
         }
-        .hero-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-        .hero-links a {
-            font-size: 0.82rem; color: var(--ink-light); text-decoration: none;
-            transition: color 0.15s;
+        .experience-item:last-child::after {
+            display: none;
         }
-        .hero-links a:hover { color: var(--ink); }
-        .hero-links a i { margin-right: 0.25rem; }
-
-        @media (max-width: 540px) {
-            .hero { flex-direction: column; align-items: center; text-align: center; gap: 1.25rem; padding: 2.25rem 0 1.5rem; }
-            .hero-links { justify-content: center; }
-            .hero-text h1 { font-size: 1.65rem; }
+        .tag {
+            background-color: #eff6ff;
+            color: #1e40af;
+            padding: 0.375rem 0.875rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-block;
         }
-
-        .section { padding: 1.75rem 0; border-top: 1px solid var(--rule); }
-
-        .section-heading {
-            font-family: 'EB Garamond', serif;
-            font-size: 1.3rem; font-weight: 500; color: var(--ink);
-            margin-bottom: 1rem;
+        .contact-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
         }
-
-        .about p {
-            font-family: 'EB Garamond', serif;
-            font-size: 1.05rem; line-height: 1.8; color: var(--ink-mid);
-            margin-bottom: 0.75rem;
+        .contact-link:hover {
+            background-color: #f9fafb;
         }
-        .about p:last-child { margin-bottom: 0; }
-
-        .pub-year {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem; color: var(--ink-light);
-            margin-top: 1.25rem; margin-bottom: 0.5rem;
-            letter-spacing: 0.03em;
+        .nav-link {
+            position: relative;
+            transition: color 0.2s;
         }
-        .pub-year:first-child { margin-top: 0; }
-
-        .pub-entry {
-            font-family: 'EB Garamond', serif;
-            font-size: 0.98rem; line-height: 1.6; color: var(--ink-mid);
-            padding: 0.4rem 0;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #1e40af;
+            transition: width 0.3s;
         }
-        .pub-entry .t { font-weight: 500; color: var(--ink); }
-        .pub-entry .v { font-style: italic; }
-        .pub-entry a {
-            font-family: 'Source Sans 3', sans-serif;
-            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.04em; color: var(--ink-light); text-decoration: none;
-            margin-left: 0.2rem;
+        .nav-link:hover::after {
+            width: 100%;
         }
-        .pub-entry a:hover { color: var(--ink); }
-
-        .pub-loading, .pub-error {
-            text-align: center; padding: 2rem 0; color: var(--ink-light); font-style: italic; font-size: 0.9rem;
-        }
-
-        .contact-row { display: flex; gap: 3rem; flex-wrap: wrap; }
-        .contact-item .label {
-            font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
-            color: var(--ink-light); font-weight: 600; margin-bottom: 0.1rem;
-        }
-        .contact-item .val {
-            font-family: 'EB Garamond', serif; font-size: 0.98rem; color: var(--ink-mid);
-        }
-
-        .footer {
-            border-top: 1px solid var(--rule); margin-top: 2rem; padding: 1.5rem 0;
-            text-align: center; font-size: 0.78rem; color: var(--ink-light);
-        }
-
-        @media print {
-            .nav, .mobile-toggle, .mobile-nav { display: none; }
-            .page { max-width: 100%; }
+        .profile-image {
+            border: 4px solid #1e40af;
+            box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.2);
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-<header class="nav">
-    <nav class="nav-inner">
-        <a href="index.html" class="nav-name">A. Mohammadi</a>
-        <div class="nav-links">
-            <a href="#about">About</a>
-            <a href="#publications">Publications</a>
-<!--            <a href="blog.html">Blog</a>-->
-            <a href="#contact">Contact</a>
+<!-- Header and Navigation Bar -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <a href="#" class="font-bold text-xl text-gray-900" style="font-family: 'Crimson Pro', serif;">Amirhossein Mohammadi</a>
+            </div>
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-6">
+                    <a href="#about" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">About</a>
+                    <a href="#research" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Research</a>
+                    <a href="#publications" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Publications</a>
+                    <a href="#experience" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Experience</a>
+                    <a href="#contact" class="nav-link text-gray-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">Contact</a>
+                </div>
+            </div>
+            <div class="-mr-2 flex md:hidden">
+                <button id="mobile-menu-button" type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <i class="fas fa-bars h-6 w-6"></i>
+                </button>
+            </div>
         </div>
-        <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
-            <i class="fas fa-bars"></i>
-        </button>
     </nav>
-    <div class="mobile-nav" id="mobile-menu">
-        <a href="#about">About</a>
-        <a href="#publications">Publications</a>
-<!--        <a href="blog.html">Blog</a>-->
-        <a href="#contact">Contact</a>
+    <div class="md:hidden hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200">
+            <a href="#about" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">About</a>
+            <a href="#research" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Research</a>
+            <a href="#publications" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Publications</a>
+            <a href="#experience" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Experience</a>
+            <a href="#contact" class="text-gray-600 hover:text-blue-800 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+        </div>
     </div>
 </header>
 
-<div class="page">
-
-    <section class="hero">
-        <div class="hero-photo">
-            <img src="images/Profile.jpg" alt="Amirhossein Mohammadi">
-        </div>
-        <div class="hero-text">
-            <h1>Amirhossein Mohammadi</h1>
-            <p class="subtitle">Ph.D. Candidate in Natural Language Processing</p>
-            <p class="affil">Utrecht University, Netherlands</p>
-            <div class="hero-links">
-                <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i>Scholar</a>
-                <a href="https://github.com/amirhoseinMhmd" target="_blank"><i class="fab fa-github"></i>GitHub</a>
-                <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank"><i class="fab fa-linkedin"></i>LinkedIn</a>
+<main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 my-8">
+    <!-- Hero Section -->
+    <section class="mb-16">
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div class="flex-shrink-0">
+                <img src="images/Profile.jpg" alt="Amirhossein Mohammadi" class="w-48 h-48 rounded-full profile-image">
+            </div>
+            <div class="flex-1 text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Amirhossein Mohammadi</h1>
+                <p class="text-xl text-blue-800 font-medium mb-4">Ph.D. Candidate in Natural Language Processing</p>
+                <p class="text-lg text-gray-600 mb-6"> Utrecht University, Netherlands<br></p>
+                <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                    <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" class="inline-flex items-center justify-center w-10 h-10 bg-blue-800 text-white rounded-full hover:bg-blue-900 transition">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank"
+                       class="inline-flex items-center justify-center w-10 h-10 bg-blue-800 text-white rounded-full hover:bg-blue-900 transition">
+                        <i class="fas fa-graduation-cap"></i>
+                    </a>
+                    <a href="https://github.com/amirhoseinMhmd" target="_blank" class="inline-flex items-center justify-center w-10 h-10 bg-blue-800 text-white rounded-full hover:bg-blue-900 transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="about" class="section">
-        <h2 class="section-heading">About</h2>
-        <div class="about">
-            <p>I am a Ph.D. candidate at Utrecht University, supervised by <a href="https://ayoubbagheri.nl/" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Ayoub Bagheri</a> and <a href="https://www.uu.nl/staff/AGatt" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Albert Gatt</a>, working at the intersection of computational linguistics, cognitive science, and artificial intelligence. My research investigates the capabilities and limitations of large language models in computing and acquiring natural and unnatural languages. I am particularly interested in understanding how LLMs process, recover, and interpret structurally degraded input, and what this reveals about the relationship between neural architectural biases and human cognitive constraints on language.</p>
-            <p>My broader research interests include mechanistic interpretability of language models, information locality in natural language, and the application of NLP methods to mental health.</p>
+    <!-- About Section -->
+    <section id="about" class="mb-16">
+        <h2 class="section-title">About</h2>
+        <div class="prose prose-lg max-w-none">
+            <p class="text-gray-700 leading-relaxed text-lg">
+                I am a Ph.D. candidate at Utrecht University, where my research focuses on investigating the capabilities of Large Language Models, particularly in learning impossible languages. My work sits at the intersection of theoretical linguistics and artificial intelligence, exploring fundamental questions about language acquisition and computational learning.
+            </p>
+            <p class="text-gray-700 leading-relaxed text-lg mt-4">
+                Prior to my doctoral studies, I gained extensive industry experience as an NLP/ML researcher and Big Data Engineer, where I developed scalable systems for information retrieval, search engines, and data pipelines. My technical expertise spans transformer architectures, distributed systems, and cloud infrastructure.
+            </p>
         </div>
     </section>
 
-    <section id="publications" class="section">
-        <h2 class="section-heading">Publications</h2>
-        <div id="publications-list">
-            <div class="pub-loading">Loading publications…</div>
+    <!-- Research Interests -->
+    <section id="research" class="mb-16">
+        <h2 class="section-title">Research Interests</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-brain text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">Large Language Models</h3>
+                        <p class="text-gray-600">Understanding the learning capabilities and limitations of modern LLMs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-language text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">Computational Linguistics</h3>
+                        <p class="text-gray-600">Investigating language structure through computational approaches</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-robot text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">Natural Language Processing</h3>
+                        <p class="text-gray-600">Developing practical NLP systems for real-world applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-heartbeat text-3xl text-blue-800 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">NLP for Mental Health</h3>
+                        <p class="text-gray-600">Using linguistic markers to detect mental health conditions</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="contact" class="section">
-        <h2 class="section-heading">Contact</h2>
-        <div class="contact-row">
-            <div class="contact-item"><div class="label">Email</div><div class="val">a.mohammadi [at] uu.nl</div></div>
-            <div class="contact-item"><div class="label">Office</div><div class="val">C1.01, Groenmangebouw, Padualaan, Utrecht</div></div>
+    <!-- Publications Section -->
+    <section id="publications" class="mb-16">
+        <h2 class="section-title">Publications</h2>
+        <div class="card p-8">
+            <div id="publications-list">
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-spinner fa-spin text-3xl"></i>
+                    <p class="mt-3">Loading publications...</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer class="footer">© 2025 Amirhossein Mohammadi</footer>
-</div>
+    <!-- Education -->
+    <section id="education" class="mb-16">
+        <h2 class="section-title">Education</h2>
+        <div class="space-y-6">
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-800"></i>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">Ph.D. in Artificial Intelligence</h3>
+                                <p class="text-blue-800 font-medium">Utrecht University</p>
+                            </div>
+                            <span class="text-gray-600 font-medium">2021 - Present</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">Dissertation: Investigation into the capability of Large Language Models in learning impossible languages</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-800"></i>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">M.Sc. in Soft Computing and Artificial Intelligence</h3>
+                                <p class="text-blue-800 font-medium">Allameh Tabataba'i University</p>
+                            </div>
+                            <span class="text-gray-600 font-medium">2016 - 2021</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">Thesis: Diagnosis of depression by detecting linguistic markers using Machine Learning methods</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-800"></i>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">B.Sc. in Computer Science</h3>
+                                <p class="text-blue-800 font-medium">Kharazmi University</p>
+                            </div>
+                            <span class="text-gray-600 font-medium">2012 - 2016</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">Project: Comprehensive comparison of swarm intelligence algorithms for the Traveling Salesman Problem</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="mb-16">
+        <h2 class="section-title">Professional Experience</h2>
+        <div class="card p-8">
+            <div class="space-y-0">
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">NLP/ML Researcher</h3>
+                            <p class="text-blue-800 font-medium">MCl(part-time)</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">June 2022 - May 2025</span>
+                    </div>
+                    <p class="text-gray-700 mb-3">Developed advanced NLP systems using state-of-the-art transformer architectures including BERT and GPT-2 for information retrieval and text generation. Contributed to the development of a multi-modal search engine capable of processing images, documents, and voice data.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Transformers</span>
+                        <span class="tag">BERT</span>
+                        <span class="tag">GPT-2</span>
+                        <span class="tag">Information Retrieval</span>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">Big Data Engineer</h3>
+                            <p class="text-blue-800 font-medium">Balout Co.</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">March 2021 - May 2025</span>
+                    </div>
+                    <p class="text-gray-700 mb-3">Designed and implemented high-throughput data collection systems and ETL pipelines using Java and Python. Architected data streaming solutions with ActiveMQ and Kafka, deployed and maintained distributed Cassandra clusters, and managed cloud object storage systems (MinIO, Ceph).</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Cassandra</span>
+                        <span class="tag">Kafka</span>
+                        <span class="tag">ETL</span>
+                        <span class="tag">Cloud Storage</span>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">Microservice Backend Developer</h3>
+                            <p class="text-blue-800 font-medium">Tourism IT Co.</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">July 2019 - March 2021</span>
+                    </div>
+                    <p class="text-gray-700 mb-3">Designed and developed digital banking services for TourismBank using microservice architecture. Implemented system gateways with REST API and gRPC for efficient internal service communication.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Microservices</span>
+                        <span class="tag">REST API</span>
+                        <span class="tag">gRPC</span>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-semibold">Java SE Developer</h3>
+                            <p class="text-blue-800 font-medium">TSIN Co.</p>
+                        </div>
+                        <span class="text-gray-600 font-medium">October 2018 - March 2020</span>
+                    </div>
+                    <p class="text-gray-700 mb-3">Designed and developed an enterprise ETL tool for extracting, transforming, and loading data from various SQL databases and file formats into an Oracle data warehouse.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Java</span>
+                        <span class="tag">ETL</span>
+                        <span class="tag">Oracle</span>
+                        <span class="tag">Data Warehouse</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="mb-16">
+        <h2 class="section-title">Contact</h2>
+        <div class="card p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a class="contact-link">
+                    <i class="fas fa-envelope text-2xl text-blue-800 w-12"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">Email</p>
+                        <p class="text-gray-600">a.mohammadi[AT]uu.nl</p>
+                    </div>
+                </a>
+                <div class="contact-link">
+                    <i class="fas fa-map-marker-alt text-2xl text-blue-800 w-12"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">Office</p>
+                        <p class="text-gray-600">C1.01, Groenmangebouw<br>Padualaan, Utrecht</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-gray-50 border-t border-gray-200 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <p class="text-center text-gray-600">© 2024 Amirhossein Mohammadi. All rights reserved.</p>
+    </div>
+</footer>
 
 <script>
-    const btn = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('mobile-menu');
-    const icon = btn.querySelector('i');
-    btn.addEventListener('click', () => { menu.classList.toggle('open'); icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); });
-    document.querySelectorAll('.mobile-nav a').forEach(a => { a.addEventListener('click', () => { menu.classList.remove('open'); icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }); });
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuIcon = mobileMenuButton.querySelector('i');
 
-    class BibtexParser {
-        parse(s) { const e=[],re=/@(\w+)\s*\{\s*([^,]+)\s*,\s*([\s\S]*?)\n\}/gm;let m;while((m=re.exec(s))!==null){e.push({type:m[1].toLowerCase(),key:m[2].trim(),...this.parseFields(m[3])});}return e; }
-        parseFields(s) { const f={},re=/(\w+)\s*=\s*\{([^}]*)\}|(\w+)\s*=\s*"([^"]*)"/g;let m;while((m=re.exec(s))!==null){f[(m[1]||m[3]).toLowerCase()]=(m[2]||m[4]).trim();}return f; }
-    }
-    function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+    mobileMenuButton.addEventListener('click', () => {
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        mobileMenu.classList.toggle('hidden');
 
-    fetch('publication.bib').then(r=>{if(!r.ok)throw 0;return r.text();}).then(bib=>{
-        const pubs=new BibtexParser().parse(bib);
-        if(!pubs.length){document.getElementById('publications-list').innerHTML='<div class="pub-error">No publications found.</div>';return;}
-        pubs.sort((a,b)=>(parseInt(b.year)||0)-(parseInt(a.year)||0));
-        const g={};pubs.forEach(p=>{const y=p.year||'Undated';(g[y]=g[y]||[]).push(p);});
-        let h='';
-        for(const y of Object.keys(g).sort((a,b)=>b-a)){
-            h+=`<div class="pub-year">${esc(y)}</div>`;
-            g[y].forEach(p=>{
-                const v=p.journal||p.booktitle||p.publisher||'';
-                let l='';
-                if(p.url)l+=` <a href="${esc(p.url)}" target="_blank">[link]</a>`;
-                if(p.doi)l+=` <a href="https://doi.org/${esc(p.doi)}" target="_blank">[doi]</a>`;
-                if(v.includes('arXiv:')){const x=v.match(/arXiv:(\d+\.\d+)/);if(x)l+=` <a href="https://arxiv.org/pdf/${x[1]}" target="_blank">[arxiv]</a>`;}
-                h+=`<div class="pub-entry"><span class="t">${esc(p.title||'Untitled')}.</span> ${esc(p.author||'')}. ${v?`<span class="v">${esc(v)}</span>.`:''} ${l}</div>`;
-            });
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+        } else {
+            mobileMenuIcon.classList.remove('fa-bars');
+            mobileMenuIcon.classList.add('fa-times');
         }
-        document.getElementById('publications-list').innerHTML=h;
-    }).catch(()=>{document.getElementById('publications-list').innerHTML='<div class="pub-error">Unable to load publications.</div>';});
+    });
+
+    // Close mobile menu on link click
+    const mobileMenuLinks = document.querySelectorAll('#mobile-menu a, .hidden.md\\:block a');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                mobileMenuIcon.classList.remove('fa-times');
+                mobileMenuIcon.classList.add('fa-bars');
+            }
+        });
+    });
+
+    // BibTeX Parser
+    class BibtexParser {
+        parse(bibtexString) {
+            const entries = [];
+            const entryRegex = /@(\w+)\s*\{\s*([^,]+)\s*,\s*([\s\S]*?)\n\}/gm;
+            let match;
+
+            while ((match = entryRegex.exec(bibtexString)) !== null) {
+                const type = match[1].toLowerCase();
+                const key = match[2].trim();
+                const fieldsString = match[3];
+                const fields = this.parseFields(fieldsString);
+
+                entries.push({
+                    type,
+                    key,
+                    ...fields
+                });
+            }
+
+            return entries;
+        }
+
+        parseFields(fieldsString) {
+            const fields = {};
+            const fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}|(\w+)\s*=\s*"([^"]*)"/g;
+            let match;
+
+            while ((match = fieldRegex.exec(fieldsString)) !== null) {
+                const fieldName = (match[1] || match[3]).toLowerCase();
+                const fieldValue = (match[2] || match[4]).trim();
+                fields[fieldName] = fieldValue;
+            }
+
+            return fields;
+        }
+    }
+
+    // Load and display publications
+    function loadPublications() {
+        fetch('publication.bib')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load publication.bib');
+                }
+                return response.text();
+            })
+            .then(bibtexContent => {
+                const parser = new BibtexParser();
+                const publications = parser.parse(bibtexContent);
+                displayPublications(publications);
+            })
+            .catch(error => {
+                console.error('Error loading publications:', error);
+                document.getElementById('publications-list').innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-exclamation-circle text-3xl"></i>
+                        <p class="mt-3 text-gray-600">Unable to load publications. Please ensure publication.bib is in the same directory.</p>
+                    </div>
+                `;
+            });
+    }
+
+    function displayPublications(publications) {
+        const container = document.getElementById('publications-list');
+
+        if (!publications || publications.length === 0) {
+            container.innerHTML = '<p class="text-gray-600 text-center py-4">No publications found.</p>';
+            return;
+        }
+
+        publications.sort((a, b) => {
+            const yearA = parseInt(a.year) || 0;
+            const yearB = parseInt(b.year) || 0;
+            return yearB - yearA;
+        });
+
+        container.innerHTML = publications.map(pub => createPublicationHTML(pub)).join('');
+    }
+
+    function createPublicationHTML(pub) {
+        const title = pub.title || 'Untitled';
+        const authors = pub.author || 'Unknown Authors';
+        const year = pub.year || 'N/A';
+        const venue = pub.journal || pub.booktitle || pub.publisher || '';
+
+        let venueHTML = venue;
+        if (venue.includes('arXiv:')) {
+            const arxivMatch = venue.match(/arXiv:(\d+\.\d+)/);
+            if (arxivMatch) {
+                const arxivId = arxivMatch[1];
+                venueHTML = `<a href="https://arxiv.org/pdf/${arxivId}" class="text-blue-800 hover:underline" target="_blank" rel="noopener noreferrer">${escapeHtml(venue)}</a>`;
+            }
+        }
+
+        let linksHTML = '';
+        if (pub.url) linksHTML += `<a href="${escapeHtml(pub.url)}" class="text-blue-800 hover:underline ml-2" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i></a>`;
+        if (pub.doi) linksHTML += `<a href="https://doi.org/${escapeHtml(pub.doi)}" class="text-blue-800 hover:underline ml-2" target="_blank" rel="noopener noreferrer"><i class="fas fa-book"></i></a>`;
+
+        return `
+            <div class="publication-item">
+                <p class="text-gray-900 leading-snug">
+                    <span class="font-semibold">${escapeHtml(title)}.</span>
+                    <span class="text-gray-600 italic">${escapeHtml(authors)}, ${venueHTML}${year ? `, ${escapeHtml(year)}` : ''}.</span>
+                    ${linksHTML}
+                </p>
+            </div>
+        `;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Load publications when page loads
+    loadPublications();
 </script>
-</body>
-</html>
