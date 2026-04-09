@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amirhossein Mohammadi — Utrecht University</title>
+    <meta name="description" content="Amirhossein Mohammadi — Ph.D. Candidate in Natural Language Processing at Utrecht University. Research on LLMs, computational linguistics, and cognitive science.">
+    <meta property="og:title" content="Amirhossein Mohammadi — Utrecht University">
+    <meta property="og:description" content="Ph.D. Candidate in Natural Language Processing. Research on large language models, computational linguistics, and cognitive science.">
+    <meta property="og:type" content="website">
     <link rel="icon" href="data:image/svg+xml,%3Csvg width='128' height='128' viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='128' height='128' fill='%23111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Georgia,serif' font-size='54' fill='%23fff'%3EAM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,8 +18,14 @@
             --ink: #111;
             --ink-mid: #444;
             --ink-light: #777;
+            --ink-faint: #aaa;
             --bg: #fff;
-            --rule: #e0e0e0;
+            --bg-subtle: #f9f9f9;
+            --rule: #e4e4e4;
+            --accent: #2a5caa;
+            --accent-light: #e8eef8;
+            --tag-bg: #f0f4fa;
+            --tag-color: #2a5caa;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,14 +39,15 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ── NAV ── */
         .nav {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(6px);
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--rule);
         }
         .nav-inner {
-            max-width: 720px; margin: 0 auto; padding: 0 1.5rem;
+            max-width: 760px; margin: 0 auto; padding: 0 1.5rem;
             display: flex; align-items: center; justify-content: space-between;
             height: 3rem;
         }
@@ -45,14 +56,15 @@
             font-size: 1.05rem; font-weight: 500;
             color: var(--ink); text-decoration: none;
         }
-        .nav-links { display: flex; gap: 0.15rem; }
+        .nav-links { display: flex; gap: 0.1rem; }
         .nav-links a {
-            font-size: 0.78rem; font-weight: 500; color: var(--ink-light);
-            text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 3px;
-            letter-spacing: 0.04em; text-transform: uppercase;
-            transition: color 0.15s;
+            font-size: 0.75rem; font-weight: 600; color: var(--ink-light);
+            text-decoration: none; padding: 0.3rem 0.55rem; border-radius: 3px;
+            letter-spacing: 0.05em; text-transform: uppercase;
+            transition: color 0.15s, background 0.15s;
         }
-        .nav-links a:hover { color: var(--ink); }
+        .nav-links a:hover { color: var(--ink); background: var(--bg-subtle); }
+        .nav-links a.active { color: var(--accent); }
 
         .mobile-toggle {
             display: none; background: none; border: none;
@@ -61,8 +73,8 @@
         .mobile-nav { display: none; border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem 0.75rem; }
         .mobile-nav.open { display: block; }
         .mobile-nav a {
-            display: block; font-size: 0.85rem; font-weight: 500; color: var(--ink-light);
-            text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.03em;
+            display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink-light);
+            text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.04em;
         }
         .mobile-nav a:hover { color: var(--ink); }
 
@@ -71,20 +83,23 @@
             .mobile-toggle { display: block; }
         }
 
-        .page { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+        /* ── LAYOUT ── */
+        .page { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
 
+        /* ── HERO ── */
         .hero {
-            padding: 3rem 0 2rem;
-            display: flex; gap: 2rem; align-items: flex-start;
+            padding: 3rem 0 2.25rem;
+            display: flex; gap: 2.25rem; align-items: flex-start;
         }
         .hero-photo img {
-            width: 160px; height: 160px; border-radius: 50%;
-            object-fit: cover; filter: grayscale(15%);
+            width: 150px; height: 150px; border-radius: 50%;
+            object-fit: cover; filter: grayscale(10%);
+            border: 3px solid var(--rule);
         }
-        .hero-text { padding-top: 0.15rem; }
+        .hero-text { padding-top: 0.1rem; }
         .hero-text h1 {
             font-family: 'EB Garamond', serif;
-            font-size: 2rem; font-weight: 500; line-height: 1.2; margin-bottom: 0.3rem;
+            font-size: 2rem; font-weight: 500; line-height: 1.15; margin-bottom: 0.3rem;
         }
         .hero-text .subtitle {
             font-family: 'EB Garamond', serif;
@@ -92,78 +107,178 @@
             margin-bottom: 0.15rem;
         }
         .hero-text .affil {
-            font-size: 0.88rem; color: var(--ink-light); margin-bottom: 1rem;
+            font-size: 0.87rem; color: var(--ink-light); margin-bottom: 1.1rem;
         }
-        .hero-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .hero-links { display: flex; gap: 0.9rem; flex-wrap: wrap; align-items: center; }
         .hero-links a {
             font-size: 0.82rem; color: var(--ink-light); text-decoration: none;
-            transition: color 0.15s;
+            transition: color 0.15s; display: flex; align-items: center; gap: 0.3rem;
         }
-        .hero-links a:hover { color: var(--ink); }
-        .hero-links a i { margin-right: 0.25rem; }
+        .hero-links a:hover { color: var(--accent); }
+        .hero-links .sep { color: var(--rule); font-size: 0.8rem; }
 
         @media (max-width: 540px) {
             .hero { flex-direction: column; align-items: center; text-align: center; gap: 1.25rem; padding: 2.25rem 0 1.5rem; }
             .hero-links { justify-content: center; }
-            .hero-text h1 { font-size: 1.65rem; }
+            .hero-text h1 { font-size: 1.7rem; }
         }
 
+        /* ── SECTIONS ── */
         .section { padding: 1.75rem 0; border-top: 1px solid var(--rule); }
 
         .section-heading {
             font-family: 'EB Garamond', serif;
-            font-size: 1.3rem; font-weight: 500; color: var(--ink);
-            margin-bottom: 1rem;
+            font-size: 1.25rem; font-weight: 600; color: var(--ink);
+            margin-bottom: 1.1rem; letter-spacing: 0.01em;
         }
 
+        /* ── NEWS ── */
+        .news-list { display: flex; flex-direction: column; gap: 0; }
+        .news-item {
+            display: grid; grid-template-columns: 5.5rem 1fr;
+            gap: 0 1rem; padding: 0.55rem 0;
+            border-bottom: 1px solid #f2f2f2; align-items: baseline;
+        }
+        .news-item:last-child { border-bottom: none; }
+        .news-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.73rem; color: var(--ink-faint);
+            letter-spacing: 0.03em; padding-top: 0.05rem;
+            white-space: nowrap;
+        }
+        .news-text {
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem; color: var(--ink-mid); line-height: 1.55;
+        }
+        .news-text a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+        .news-text a:hover { color: var(--accent); }
+        .news-badge {
+            display: inline-block; font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em;
+            text-transform: uppercase; padding: 0.1rem 0.4rem; border-radius: 2px;
+            margin-right: 0.35rem; vertical-align: middle; position: relative; top: -1px;
+        }
+        .badge-paper { background: #e8f4e8; color: #2e7d32; }
+        .badge-talk  { background: #fff3e0; color: #e65100; }
+        .badge-award { background: #fce4ec; color: #c62828; }
+        .badge-news  { background: var(--accent-light); color: var(--accent); }
+
+        /* ── ABOUT ── */
         .about p {
             font-family: 'EB Garamond', serif;
-            font-size: 1.05rem; line-height: 1.8; color: var(--ink-mid);
-            margin-bottom: 0.75rem;
+            font-size: 1.05rem; line-height: 1.82; color: var(--ink-mid);
+            margin-bottom: 0.8rem;
         }
         .about p:last-child { margin-bottom: 0; }
 
+        /* ── RESEARCH INTERESTS ── */
+        .interests-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .interest-tag {
+            font-size: 0.8rem; font-weight: 500;
+            background: var(--tag-bg); color: var(--tag-color);
+            padding: 0.3rem 0.7rem; border-radius: 4px;
+            border: 1px solid #d2ddf5;
+            transition: background 0.15s;
+        }
+        .interest-tag:hover { background: #dde7f7; }
+
+        /* ── PUBLICATIONS ── */
         .pub-year {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem; color: var(--ink-light);
-            margin-top: 1.25rem; margin-bottom: 0.5rem;
-            letter-spacing: 0.03em;
+            font-size: 0.75rem; color: var(--ink-faint);
+            margin-top: 1.35rem; margin-bottom: 0.6rem;
+            letter-spacing: 0.04em; text-transform: uppercase;
         }
         .pub-year:first-child { margin-top: 0; }
 
         .pub-entry {
+            padding: 0.65rem 0 0.65rem 0;
+            border-bottom: 1px solid #f4f4f4;
+        }
+        .pub-entry:last-child { border-bottom: none; }
+
+        .pub-title {
             font-family: 'EB Garamond', serif;
-            font-size: 0.98rem; line-height: 1.6; color: var(--ink-mid);
-            padding: 0.4rem 0;
+            font-size: 1.02rem; font-weight: 500; color: var(--ink);
+            line-height: 1.45; margin-bottom: 0.22rem;
         }
-        .pub-entry .t { font-weight: 500; color: var(--ink); }
-        .pub-entry .v { font-style: italic; }
-        .pub-entry a {
+        .pub-authors {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem; color: var(--ink-mid); line-height: 1.5;
+            margin-bottom: 0.18rem;
+        }
+        .pub-authors .me { font-weight: 600; color: var(--ink); }
+        .pub-venue {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem; color: var(--ink-light);
+            font-style: italic; margin-bottom: 0.4rem;
+        }
+        .pub-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .pub-link {
             font-family: 'Source Sans 3', sans-serif;
-            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.04em; color: var(--ink-light); text-decoration: none;
-            margin-left: 0.2rem;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--ink-light); text-decoration: none;
+            padding: 0.15rem 0.45rem; border: 1px solid var(--rule);
+            border-radius: 3px; transition: all 0.15s;
         }
-        .pub-entry a:hover { color: var(--ink); }
+        .pub-link:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+        .pub-bib-btn {
+            cursor: pointer; background: none;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--ink-light);
+            padding: 0.15rem 0.45rem; border: 1px solid var(--rule);
+            border-radius: 3px; transition: all 0.15s;
+        }
+        .pub-bib-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+        .pub-bib-btn.copied { color: #2e7d32; border-color: #2e7d32; background: #e8f4e8; }
+
+        .pub-abstract-toggle {
+            cursor: pointer; background: none; border: none;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--ink-light);
+            padding: 0.15rem 0; transition: color 0.15s;
+        }
+        .pub-abstract-toggle:hover { color: var(--accent); }
+        .pub-abstract {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem; color: var(--ink-mid); line-height: 1.7;
+            margin-top: 0.6rem; padding: 0.7rem 0.9rem;
+            background: var(--bg-subtle); border-left: 2px solid var(--rule);
+            border-radius: 0 3px 3px 0;
+            display: none;
+        }
+        .pub-abstract.open { display: block; }
 
         .pub-loading, .pub-error {
-            text-align: center; padding: 2rem 0; color: var(--ink-light); font-style: italic; font-size: 0.9rem;
+            text-align: center; padding: 2rem 0; color: var(--ink-light);
+            font-style: italic; font-size: 0.9rem;
         }
 
-        .contact-row { display: flex; gap: 3rem; flex-wrap: wrap; }
-        .contact-item .label {
-            font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
-            color: var(--ink-light); font-weight: 600; margin-bottom: 0.1rem;
+        /* ── CONTACT ── */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
+        .contact-item {}
+        .contact-label {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em;
+            color: var(--ink-faint); font-weight: 700; margin-bottom: 0.2rem;
         }
-        .contact-item .val {
-            font-family: 'EB Garamond', serif; font-size: 0.98rem; color: var(--ink-mid);
+        .contact-val {
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem; color: var(--ink-mid);
         }
+        .contact-val a { color: var(--ink-mid); text-decoration: none; transition: color 0.15s; }
+        .contact-val a:hover { color: var(--accent); }
 
+        /* ── FOOTER ── */
         .footer {
-            border-top: 1px solid var(--rule); margin-top: 2rem; padding: 1.5rem 0;
-            text-align: center; font-size: 0.78rem; color: var(--ink-light);
+            border-top: 1px solid var(--rule); margin-top: 2.5rem; padding: 1.5rem 0;
+            text-align: center; font-size: 0.77rem; color: var(--ink-faint);
         }
+        .footer a { color: var(--ink-faint); text-decoration: none; }
+        .footer a:hover { color: var(--ink-light); }
 
+        /* ── PRINT ── */
         @media print {
             .nav, .mobile-toggle, .mobile-nav { display: none; }
             .page { max-width: 100%; }
@@ -174,11 +289,13 @@
 
 <header class="nav">
     <nav class="nav-inner">
-        <a href="index.html" class="nav-name">A. Mohammadi</a>
+        <a href="index.html" class="nav-name">Amirhossein M.</a>
         <div class="nav-links">
             <a href="#about">About</a>
+            <a href="#research">Research</a>
             <a href="#publications">Publications</a>
-            <!--            <a href="blog.html">Blog</a>-->
+<!--            <a href="#news">News</a>-->
+            <a href="blog.html">Blog</a>
             <a href="#contact">Contact</a>
         </div>
         <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
@@ -187,14 +304,17 @@
     </nav>
     <div class="mobile-nav" id="mobile-menu">
         <a href="#about">About</a>
+        <a href="#research">Research</a>
         <a href="#publications">Publications</a>
-        <!--        <a href="blog.html">Blog</a>-->
+        <a href="#news">News</a>
+        <a href="blog.html">Blog</a>
         <a href="#contact">Contact</a>
     </div>
 </header>
 
 <div class="page">
 
+    <!-- ── HERO ── -->
     <section class="hero">
         <div class="hero-photo">
             <img src="images/Profile.jpg" alt="Amirhossein Mohammadi">
@@ -202,23 +322,45 @@
         <div class="hero-text">
             <h1>Amirhossein Mohammadi</h1>
             <p class="subtitle">Ph.D. Candidate in Natural Language Processing</p>
-            <p class="affil">Utrecht University, Netherlands</p>
+            <p class="affil">Utrecht University &middot; Netherlands</p>
             <div class="hero-links">
-                <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i>Scholar</a>
-                <a href="https://github.com/amirhoseinMhmd" target="_blank"><i class="fab fa-github"></i>GitHub</a>
-                <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank"><i class="fab fa-linkedin"></i>LinkedIn</a>
+                <a href="mailto:a.mohammadi@uu.nl"><i class="fas fa-envelope"></i> Email</a>
+                <span class="sep">/</span>
+                <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i> Scholar</a>
+                <span class="sep">/</span>
+                <a href="https://github.com/amirhoseinMhmd" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <span class="sep">/</span>
+                <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
             </div>
         </div>
     </section>
 
+    <!-- ── ABOUT ── -->
     <section id="about" class="section">
         <h2 class="section-heading">About</h2>
         <div class="about">
-            <p>I am a Ph.D. candidate at Utrecht University, supervised by <a href="https://robertab.nl/" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Robert Bagheri</a> , <a href="https://www.uu.nl/staff/AGatt" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Albert Gatt</a>, and <a href="https://www.uu.nl/medewerkers/LEFrank" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Laurence Frank</a>, working at the intersection of computational linguistics, cognitive science, and artificial intelligence. My research investigates the capabilities and limitations of large language models in computing and acquiring natural and unnatural languages. I am particularly interested in understanding how LLMs process, recover, and interpret structurally degraded input, and what this reveals about the relationship between neural architectural biases and human cognitive constraints on language.</p>
+            <p>I am a Ph.D. candidate at Utrecht University, supervised by <a href="https://robertab.nl/" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Robert Bagheri</a>, <a href="https://www.uu.nl/staff/AGatt" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Albert Gatt</a>, and <a href="https://www.uu.nl/medewerkers/LEFrank" target="_blank" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Laurence Frank</a>, working at the intersection of computational linguistics, cognitive science, and artificial intelligence. My research investigates the capabilities and limitations of large language models in computing and acquiring natural and unnatural languages. I am particularly interested in understanding how LLMs process, recover, and interpret structurally degraded input, and what this reveals about the relationship between neural architectural biases and human cognitive constraints on language.</p>
             <p>My broader research interests include mechanistic interpretability of language models, information locality in natural language, and the application of NLP methods to mental health.</p>
         </div>
     </section>
 
+    <!-- ── RESEARCH INTERESTS ── -->
+    <section id="research" class="section">
+        <h2 class="section-heading">Research Interests</h2>
+        <div class="interests-grid">
+            <span class="interest-tag">Large Language Models</span>
+            <span class="interest-tag">Computational Linguistics</span>
+            <span class="interest-tag">Cognitive Science &amp; Language</span>
+            <span class="interest-tag">Mechanistic Interpretability</span>
+            <span class="interest-tag">Impossible &amp; Unnatural Languages</span>
+            <span class="interest-tag">Information Locality</span>
+            <span class="interest-tag">Structurally Degraded Input</span>
+            <span class="interest-tag">NLP for Mental Health</span>
+            <span class="interest-tag">Part-of-Speech Tagging</span>
+        </div>
+    </section>
+
+    <!-- ── PUBLICATIONS ── -->
     <section id="publications" class="section">
         <h2 class="section-heading">Publications</h2>
         <div id="publications-list">
@@ -226,49 +368,190 @@
         </div>
     </section>
 
+    <!-- ── NEWS ── -->
+<!--    <section id="news" class="section">-->
+<!--        <h2 class="section-heading">News</h2>-->
+<!--        <div class="news-list">-->
+<!--            <div class="news-item">-->
+<!--                <span class="news-date">2024</span>-->
+<!--                <span class="news-text"><span class="news-badge badge-news">New</span>Started Ph.D. at Utrecht University in Natural Language Processing.</span>-->
+<!--            </div>-->
+<!--            <div class="news-item">-->
+<!--                <span class="news-date">Mar 2023</span>-->
+<!--                <span class="news-text"><span class="news-badge badge-paper">Paper</span>Preprint <em>ACO-Tagger: A Novel Method for Part-of-Speech Tagging using Ant Colony Optimization</em> posted on <a href="https://arxiv.org/abs/2303.16760" target="_blank">arXiv</a>.</span>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Add new entries above this line. Copy the block below for a new item:-->
+<!--            <div class="news-item">-->
+<!--                <span class="news-date">Mon YYYY</span>-->
+<!--                <span class="news-text"><span class="news-badge badge-paper">Paper</span>Short description of the news item.</span>-->
+<!--            </div>-->
+<!--            &ndash;&gt;-->
+<!--        </div>-->
+<!--    </section>-->
+
+    <!-- ── CONTACT ── -->
     <section id="contact" class="section">
         <h2 class="section-heading">Contact</h2>
-        <div class="contact-row">
-            <div class="contact-item"><div class="label">Email</div><div class="val">a.mohammadi [at] uu.nl</div></div>
-            <div class="contact-item"><div class="label">Office</div><div class="val">C1.01, Groenmangebouw, Padualaan, Utrecht</div></div>
+        <div class="contact-grid">
+            <div class="contact-item">
+                <div class="contact-label">Email</div>
+                <div class="contact-val"><a href="mailto:a.mohammadi@uu.nl">a.mohammadi [at] uu.nl</a></div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-label">Office</div>
+                <div class="contact-val">C1.01, Groenmangebouw<br>Padualaan, Utrecht</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-label">Academic Profiles</div>
+                <div class="contact-val">
+                    <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank">Google Scholar</a> &middot;
+                    <a href="https://github.com/amirhoseinMhmd" target="_blank">GitHub</a> &middot;
+                    <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank">LinkedIn</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer class="footer">© 2025 Amirhossein Mohammadi</footer>
+    <footer class="footer">
+        &copy; 2026 Amirhossein Mohammadi &mdash;
+        <a href="https://www.uu.nl" target="_blank">Utrecht University</a>
+    </footer>
 </div>
 
 <script>
-    const btn = document.getElementById('mobile-menu-button');
+    /* ── Mobile nav toggle ── */
+    const btn  = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
     const icon = btn.querySelector('i');
-    btn.addEventListener('click', () => { menu.classList.toggle('open'); icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); });
-    document.querySelectorAll('.mobile-nav a').forEach(a => { a.addEventListener('click', () => { menu.classList.remove('open'); icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }); });
+    btn.addEventListener('click', () => {
+        menu.classList.toggle('open');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    });
+    document.querySelectorAll('.mobile-nav a').forEach(a => {
+        a.addEventListener('click', () => {
+            menu.classList.remove('open');
+            icon.classList.add('fa-bars');
+            icon.classList.remove('fa-times');
+        });
+    });
 
+    /* ── Active nav link on scroll ── */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks  = document.querySelectorAll('.nav-links a[href^="#"]');
+    const observer  = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => observer.observe(s));
+
+    /* ── BibTeX parser ── */
     class BibtexParser {
-        parse(s) { const e=[],re=/@(\w+)\s*\{\s*([^,]+)\s*,\s*([\s\S]*?)\n\}/gm;let m;while((m=re.exec(s))!==null){e.push({type:m[1].toLowerCase(),key:m[2].trim(),...this.parseFields(m[3])});}return e; }
-        parseFields(s) { const f={},re=/(\w+)\s*=\s*\{([^}]*)\}|(\w+)\s*=\s*"([^"]*)"/g;let m;while((m=re.exec(s))!==null){f[(m[1]||m[3]).toLowerCase()]=(m[2]||m[4]).trim();}return f; }
-    }
-    function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-
-    fetch('publication.bib').then(r=>{if(!r.ok)throw 0;return r.text();}).then(bib=>{
-        const pubs=new BibtexParser().parse(bib);
-        if(!pubs.length){document.getElementById('publications-list').innerHTML='<div class="pub-error">No publications found.</div>';return;}
-        pubs.sort((a,b)=>(parseInt(b.year)||0)-(parseInt(a.year)||0));
-        const g={};pubs.forEach(p=>{const y=p.year||'Undated';(g[y]=g[y]||[]).push(p);});
-        let h='';
-        for(const y of Object.keys(g).sort((a,b)=>b-a)){
-            h+=`<div class="pub-year">${esc(y)}</div>`;
-            g[y].forEach(p=>{
-                const v=p.journal||p.booktitle||p.publisher||'';
-                let l='';
-                if(p.url)l+=` <a href="${esc(p.url)}" target="_blank">[link]</a>`;
-                if(p.doi)l+=` <a href="https://doi.org/${esc(p.doi)}" target="_blank">[doi]</a>`;
-                if(v.includes('arXiv:')){const x=v.match(/arXiv:(\d+\.\d+)/);if(x)l+=` <a href="https://arxiv.org/pdf/${x[1]}" target="_blank">[arxiv]</a>`;}
-                h+=`<div class="pub-entry"><span class="t">${esc(p.title||'Untitled')}.</span> ${esc(p.author||'')}. ${v?`<span class="v">${esc(v)}</span>.`:''} ${l}</div>`;
-            });
+        parse(s) {
+            const e = [], re = /@(\w+)\s*\{\s*([^,]+)\s*,\s*([\s\S]*?)\n\}/gm;
+            let m;
+            while ((m = re.exec(s)) !== null) {
+                e.push({ type: m[1].toLowerCase(), key: m[2].trim(), _raw: m[0], ...this.parseFields(m[3]) });
+            }
+            return e;
         }
-        document.getElementById('publications-list').innerHTML=h;
-    }).catch(()=>{document.getElementById('publications-list').innerHTML='<div class="pub-error">Unable to load publications.</div>';});
+        parseFields(s) {
+            const f = {}, re = /(\w+)\s*=\s*\{((?:[^{}]|\{[^{}]*\})*)\}|(\w+)\s*=\s*"([^"]*)"/g;
+            let m;
+            while ((m = re.exec(s)) !== null) {
+                f[(m[1] || m[3]).toLowerCase()] = (m[2] || m[4]).trim();
+            }
+            return f;
+        }
+    }
+
+    function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+    /* Bold the author's own name */
+    function fmtAuthors(authorStr) {
+        if (!authorStr) return '';
+        return authorStr
+            .split(' and ')
+            .map(a => a.trim())
+            .map(a => {
+                const normalized = a.toLowerCase();
+                if (normalized.includes('mohammadi') && normalized.includes('amirhossein')) {
+                    return `<strong class="me">${esc(a)}</strong>`;
+                }
+                return esc(a);
+            })
+            .join(', ');
+    }
+
+    /* Copy text to clipboard with button feedback */
+    function copyBib(raw, btn) {
+        navigator.clipboard.writeText(raw).then(() => {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => { btn.textContent = 'Cite'; btn.classList.remove('copied'); }, 2000);
+        });
+    }
+
+    /* Load and render publications */
+    fetch('publication.bib')
+        .then(r => { if (!r.ok) throw 0; return r.text(); })
+        .then(bib => {
+            const pubs = new BibtexParser().parse(bib);
+            if (!pubs.length) {
+                document.getElementById('publications-list').innerHTML = '<div class="pub-error">No publications found.</div>';
+                return;
+            }
+            pubs.sort((a, b) => (parseInt(b.year) || 0) - (parseInt(a.year) || 0));
+
+            const groups = {};
+            pubs.forEach(p => { const y = p.year || 'Undated'; (groups[y] = groups[y] || []).push(p); });
+
+            let html = '';
+            for (const y of Object.keys(groups).sort((a, b) => b - a)) {
+                html += `<div class="pub-year">${esc(y)}</div>`;
+                groups[y].forEach((p, idx) => {
+                    const venue = p.journal || p.booktitle || p.publisher || '';
+                    const uid   = `pub-${y}-${idx}`;
+                    const absId = `abs-${uid}`;
+
+                    let links = '';
+                    if (p.url)  links += `<a class="pub-link" href="${esc(p.url)}"  target="_blank">Link</a>`;
+                    if (p.doi)  links += `<a class="pub-link" href="https://doi.org/${esc(p.doi)}" target="_blank">DOI</a>`;
+                    if (venue.includes('arXiv:')) {
+                        const x = venue.match(/arXiv:(\d+\.\d+)/);
+                        if (x) links += `<a class="pub-link" href="https://arxiv.org/pdf/${x[1]}" target="_blank">PDF</a>`;
+                    }
+                    if (p.eprint) links += `<a class="pub-link" href="https://arxiv.org/abs/${esc(p.eprint)}" target="_blank">arXiv</a>`;
+
+                    links += `<button class="pub-bib-btn" onclick="copyBib(${JSON.stringify(p._raw)}, this)">Cite</button>`;
+
+                    let absToggle = '';
+                    let absBlock  = '';
+                    if (p.abstract) {
+                        absToggle = `<button class="pub-abstract-toggle" onclick="document.getElementById('${absId}').classList.toggle('open');this.textContent=document.getElementById('${absId}').classList.contains('open')?'Hide abstract':'Abstract'">Abstract</button>`;
+                        absBlock  = `<div class="pub-abstract" id="${absId}">${esc(p.abstract)}</div>`;
+                    }
+
+                    html += `
+                    <div class="pub-entry">
+                        <div class="pub-title">${esc(p.title || 'Untitled')}</div>
+                        <div class="pub-authors">${fmtAuthors(p.author)}</div>
+                        ${venue ? `<div class="pub-venue">${esc(venue)}</div>` : ''}
+                        <div class="pub-links">${links}${absToggle ? '&ensp;' + absToggle : ''}</div>
+                        ${absBlock}
+                    </div>`;
+                });
+            }
+            document.getElementById('publications-list').innerHTML = html;
+        })
+        .catch(() => {
+            document.getElementById('publications-list').innerHTML = '<div class="pub-error">Unable to load publications.</div>';
+        });
 </script>
 </body>
 </html>

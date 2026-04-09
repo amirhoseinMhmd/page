@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Amirhossein Mohammadi</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg width='128' height='128' viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='128' height='128' fill='%23111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Georgia,serif' font-size='54' fill='%23fff'%3EAM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #111;
+            --ink-mid: #444;
+            --ink-light: #777;
+            --bg: #fff;
+            --rule: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid var(--rule);
+        }
+        .nav-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 3rem;
+        }
+        .nav-name {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.05rem; font-weight: 500;
+            color: var(--ink); text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 0.15rem; }
+        .nav-links a {
+            font-size: 0.78rem; font-weight: 500; color: var(--ink-light);
+            text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 3px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            transition: color 0.15s;
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a.active { color: var(--ink); }
+
+        .mobile-toggle {
+            display: none; background: none; border: none;
+            font-size: 1.1rem; color: var(--ink-light); cursor: pointer; padding: 0.4rem;
+        }
+        .mobile-nav { display: none; border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem 0.75rem; }
+        .mobile-nav.open { display: block; }
+        .mobile-nav a {
+            display: block; font-size: 0.85rem; font-weight: 500; color: var(--ink-light);
+            text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .mobile-nav a:hover { color: var(--ink); }
+
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+        }
+
+        .page {
+            max-width: 720px; margin: 0 auto; padding: 0 1.5rem;
+        }
+
+        .page-header {
+            padding: 2.5rem 0 1.5rem;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .page-header h1 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.8rem; font-weight: 500; color: var(--ink);
+        }
+
+        .page-header p {
+            font-size: 0.9rem; color: var(--ink-light); margin-top: 0.25rem;
+        }
+
+        /* Blog posts */
+        .blog-post {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .blog-post:last-child { border-bottom: none; }
+
+        .blog-post-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; color: var(--ink-light);
+            letter-spacing: 0.02em;
+        }
+
+        .blog-post-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.2rem; font-weight: 500; color: var(--ink);
+            margin: 0.2rem 0 0.35rem;
+        }
+
+        .blog-post-title a {
+            color: var(--ink);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .blog-post-title a:hover {
+            color: var(--ink-mid);
+        }
+
+        .blog-post-summary {
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem; color: var(--ink-mid); line-height: 1.7;
+        }
+
+        .blog-post-tags {
+            display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem;
+        }
+
+        .blog-post-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem; color: var(--ink-light);
+            background: #f5f5f5; padding: 0.15rem 0.45rem; border-radius: 2px;
+        }
+
+        .blog-empty {
+            color: var(--ink-light); font-style: italic; font-size: 0.9rem;
+            padding: 2rem 0;
+        }
+
+        .footer {
+            border-top: 1px solid var(--rule); margin-top: 2rem; padding: 1.5rem 0;
+            text-align: center; font-size: 0.78rem; color: var(--ink-light);
+        }
+
+        @media print {
+            .nav, .mobile-toggle, .mobile-nav { display: none; }
+            .page { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="nav">
+    <nav class="nav-inner">
+        <a href="index.html" class="nav-name">Amirhossein M.</a>
+        <div class="nav-links">
+            <a href="index.html#about">About</a>
+            <a href="index.html#research">Research</a>
+            <a href="index.html#publications">Publications</a>
+            <a href="blog.html" class="active">Blog</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+        <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    <div class="mobile-nav" id="mobile-menu">
+        <a href="index.html#about">About</a>
+        <a href="index.html#research">Research</a>
+        <a href="index.html#publications">Publications</a>
+        <a href="blog.html">Blog</a>
+        <a href="index.html#contact">Contact</a>
+    </div>
+</header>
+
+<div class="page">
+
+    <div class="page-header">
+        <h1>Blog</h1>
+    </div>
+
+    <!--
+        ╔══════════════════════════════════════════════════════════════╗
+        ║  HOW TO ADD A NEW BLOG POST                                ║
+        ║                                                            ║
+        ║  Copy the block below and paste it at the TOP of the       ║
+        ║  blog posts list (right after this comment).               ║
+        ║  Fill in your date, title, summary, link, and tags.        ║
+        ║                                                            ║
+        ║  <div class="blog-post">                                   ║
+        ║      <div class="blog-post-date">Month DD, YYYY</div>     ║
+        ║      <div class="blog-post-title">                         ║
+        ║          <a href="blog/your-post.html">Post Title</a>     ║
+        ║      </div>                                                ║
+        ║      <p class="blog-post-summary">                         ║
+        ║          A short description of what the post is about.    ║
+        ║      </p>                                                  ║
+        ║      <div class="blog-post-tags">                          ║
+        ║          <span class="blog-post-tag">Tag1</span>          ║
+        ║          <span class="blog-post-tag">Tag2</span>          ║
+        ║      </div>                                                ║
+        ║  </div>                                                    ║
+        ╚══════════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- ── Posts ── -->
+
+    <div class="blog-post">
+        <div class="blog-post-title">
+            <a href="blog/hpc.html">Getting Started with HPC Clusters, Slurm & tmux</a>
+        </div>
+        <p class="blog-post-summary">A beginner-friendly, step-by-step guide to connecting to HPC clusters, navigating the terminal, editing files, managing code with Git, and submitting GPU jobs with Slurm. No prior experience required.</p>
+        <div class="blog-post-tags">
+            <span class="blog-post-tag">HPC</span>
+            <span class="blog-post-tag">Slurm</span>
+            <span class="blog-post-tag">tmux</span>
+            <span class="blog-post-tag">Tutorial</span>
+        </div>
+    </div>
+
+<!--    <div class="blog-post">-->
+<!--        <div class="blog-post-title">-->
+<!--            <a href="blog/mission-accomplished.html">Mission Accomplished? Recovering Information from 'Impossible' Languages with LLMs</a>-->
+<!--        </div>-->
+<!--        <p class="blog-post-summary">We fine-tune GPT-2 — pre-trained on impossible languages — to translate linguistically degraded inputs back into natural language. Three perturbation types reveal how LLM architectural biases partially mirror human cognitive constraints on information locality.</p>-->
+<!--        <div class="blog-post-tags">-->
+<!--            <span class="blog-post-tag">LLMs</span>-->
+<!--            <span class="blog-post-tag">Impossible Languages</span>-->
+<!--            <span class="blog-post-tag">Information Locality</span>-->
+<!--            <span class="blog-post-tag">ACL submission</span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <footer class="footer">© 2025 Amirhossein Mohammadi</footer>
+</div>
+
+<script>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn.querySelector('i');
+    btn.addEventListener('click', () => { menu.classList.toggle('open'); icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); });
+    document.querySelectorAll('.mobile-nav a').forEach(a => { a.addEventListener('click', () => { menu.classList.remove('open'); icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }); });
+</script>
+
+</body>
+</html>
