@@ -448,7 +448,7 @@
 
             <p>Once your terminal is open, connect to the cluster using SSH (Secure Shell). Your institution will provide you with a hostname, username, and password:</p>
 
-            <div class="code-block"><span class="c-fn">ssh</span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="acd9dfc9dec2cdc1c9ecc4dccf82d9c2c5dac9dedfc5d8d582c9c8d9">[email&#160;protected]</a></div>
+            <div class="code-block"><span class="c-fn">ssh</span> username@hpc.university.edu</div>
 
             <p>Replace <code>username</code> and <code>hpc.university.edu</code> with the credentials from your institution or instructor. When prompted for your password, type it and press Enter — the cursor will not move while you type, which is normal.</p>
 
@@ -627,10 +627,10 @@
             <p>Before running a Python script on the cluster, you need to transfer it from your laptop. Open a <strong>new</strong> terminal on your local machine (not the cluster one) and use SCP:</p>
 
             <div class="code-block"><span class="c-comment"># upload a single file</span>
-                scp myscript.py <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1b6e687e69757a767e5b736b78356e75726d7e6968726f62357e7f6e">[email&#160;protected]</a>:~/my_project/
+                scp myscript.py username@hpc.university.edu:~/my_project/
 
                 <span class="c-comment"># upload an entire folder (-r flag)</span>
-                scp -r my_project/ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d484e584f535c50587d554d5e134853544b584f4e54494413585948">[email&#160;protected]</a>:~/</div>
+                scp -r my_project/ username@hpc.university.edu:~/</div>
 
             <p>Once transferred, you can also load Python and run a quick sanity check directly — but only on the login node for tiny tests:</p>
 
@@ -974,7 +974,7 @@
             <h3>First-time setup</h3>
 
             <div class="code-block">git config --global user.name <span class="c-str">"Your Name"</span>
-                git config --global user.email <span class="c-str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8d1c7dde8cdd0c9c5d8c4cd86cbc7c5">[email&#160;protected]</a>"</span></div>
+                git config --global user.email <span class="c-str">"you@example.com"</span></div>
 
             <h3>The everyday workflow</h3>
 
@@ -1068,9 +1068,9 @@
             <table class="compare-table">
                 <thead><tr><th>Command</th><th>What it does</th></tr></thead>
                 <tbody>
-                <tr><td class="cmd-col">ssh <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6217110710220a12014c170c0b140710110b161b4c070617">[email&#160;protected]</a></td><td class="desc-col">Connect to the HPC cluster</td></tr>
-                <tr><td class="cmd-col">scp file.py <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5623253324163e26357823383f203324253f222f78333223">[email&#160;protected]</a>:~/</td><td class="desc-col">Upload a file</td></tr>
-                <tr><td class="cmd-col">scp -r folder/ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fc898f998ebc948c9fd28992958a998e8f958885d2999889">[email&#160;protected]</a>:~/</td><td class="desc-col">Upload a whole folder</td></tr>
+                <tr><td class="cmd-col">ssh user@hpc.university.edu</td><td class="desc-col">Connect to the HPC cluster</td></tr>
+                <tr><td class="cmd-col">scp file.py user@hpc.university.edu:~/</td><td class="desc-col">Upload a file</td></tr>
+                <tr><td class="cmd-col">scp -r folder/ user@hpc.university.edu:~/</td><td class="desc-col">Upload a whole folder</td></tr>
                 </tbody>
             </table>
 
