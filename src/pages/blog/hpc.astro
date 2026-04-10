@@ -1,0 +1,1178 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Getting Started with HPC Clusters, Slurm & tmux — Amirhossein Mohammadi"
+  description="A beginner-friendly, step-by-step guide to connecting to HPC clusters, navigating the terminal, editing files, managing code with Git, and submitting GPU jobs with Slurm."
+  htmlClass="scroll-smooth"
+>
+  <style is:global>
+    :root {
+      --ink: #111;
+      --ink-mid: #444;
+      --ink-light: #777;
+      --ink-faint: #aaa;
+      --bg: #fff;
+      --bg-subtle: #f9f9f9;
+      --rule: #e4e4e4;
+      --accent: #2a5caa;
+      --accent-light: #e8eef8;
+      --green: #2e7d32;
+      --green-light: #e8f4e8;
+      --red: #c0392b;
+      --red-light: #fff5f5;
+      --orange: #e65100;
+      --orange-light: #fff3e0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-padding-top: 3.5rem; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      max-width: 760px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 3rem;
+    }
+    .nav-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem; font-weight: 500;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 0.1rem; }
+    .nav-links a {
+      font-size: 0.75rem; font-weight: 600; color: var(--ink-light);
+      text-decoration: none; padding: 0.3rem 0.55rem; border-radius: 3px;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover { color: var(--ink); background: var(--bg-subtle); }
+    .nav-links a.active { color: var(--accent); }
+    .mobile-toggle {
+      display: none; background: none; border: none;
+      font-size: 1.1rem; color: var(--ink-light); cursor: pointer; padding: 0.4rem;
+    }
+    .mobile-nav { display: none; border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem 0.75rem; }
+    .mobile-nav.open { display: block; }
+    .mobile-nav a {
+      display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink-light);
+      text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .mobile-nav a:hover { color: var(--ink); }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+    }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .article-header { padding: 3rem 0 2rem; border-bottom: 1px solid var(--rule); }
+    .article-back {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.77rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--ink-faint); text-decoration: none;
+      margin-bottom: 1.75rem; transition: color 0.15s;
+    }
+    .article-back:hover { color: var(--accent); }
+    .article-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.1rem; }
+    .article-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; color: var(--ink-light);
+      background: #f0f0f0; padding: 0.15rem 0.5rem; border-radius: 2px;
+    }
+    .article-tag.tut { background: var(--orange-light); color: var(--orange); }
+    .article-tag.hl { background: var(--accent-light); color: var(--accent); }
+    .article-header h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 2.05rem; font-weight: 500; line-height: 1.2;
+      color: var(--ink); margin-bottom: 0.55rem;
+    }
+    .article-header .subtitle {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.1rem; font-style: italic; color: var(--ink-light);
+      margin-bottom: 0.9rem;
+    }
+    .article-meta {
+      display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap;
+      font-size: 0.82rem; color: var(--ink-faint); margin-bottom: 1.25rem;
+    }
+    .article-meta .date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+    .article-meta .authors { font-family: 'EB Garamond', serif; font-size: 0.95rem; color: var(--ink-mid); font-style: italic; }
+    .article-meta .sep { color: var(--rule); }
+
+    .toc {
+      background: var(--bg-subtle); border: 1px solid var(--rule);
+      border-radius: 6px; padding: 1.1rem 1.3rem; margin: 2rem 0;
+    }
+    .toc-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--ink-faint); margin-bottom: 0.7rem;
+    }
+    .toc ol { padding-left: 1.3rem; margin: 0; }
+    .toc li {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem; color: var(--ink-mid);
+      margin-bottom: 0.25rem; line-height: 1.5;
+    }
+    .toc a { color: var(--ink-mid); text-decoration: none; transition: color 0.15s; }
+    .toc a:hover { color: var(--accent); }
+
+    .article-body { padding: 2.25rem 0; }
+    .article-body p {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.07rem; line-height: 1.87; color: var(--ink-mid);
+      margin-bottom: 1.1rem;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.5rem; font-weight: 500; color: var(--ink);
+      margin: 2.75rem 0 0.9rem; padding-top: 0.5rem;
+      border-top: 1px solid var(--rule);
+    }
+    .article-body h2:first-child { margin-top: 0; border-top: none; }
+    .article-body h2 .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; background: var(--accent); color: #fff;
+      border-radius: 3px; padding: 0.15rem 0.45rem;
+      margin-right: 0.6rem; vertical-align: middle; position: relative; top: -2px;
+    }
+    .article-body h3 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.2rem; font-weight: 600; color: var(--ink);
+      margin: 1.75rem 0 0.55rem;
+    }
+    .article-body a {
+      color: var(--ink); text-decoration: underline;
+      text-underline-offset: 2px; text-decoration-color: var(--rule);
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .article-body a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+    .article-body strong { font-weight: 600; color: var(--ink); }
+    .article-body em { font-style: italic; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: #f0f0f0; color: var(--ink-mid);
+      padding: 0.1em 0.35em; border-radius: 3px;
+    }
+
+    .callout {
+      border-radius: 0 6px 6px 0; padding: 1rem 1.25rem; margin: 1.5rem 0;
+    }
+    .callout.info { background: var(--accent-light); border-left: 3px solid var(--accent); }
+    .callout.tip { background: var(--green-light); border-left: 3px solid var(--green); }
+    .callout.warn { background: var(--orange-light); border-left: 3px solid var(--orange); }
+    .callout.danger { background: var(--red-light); border-left: 3px solid var(--red); }
+    .callout-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 0.4rem;
+    }
+    .callout.info .callout-label { color: var(--accent); }
+    .callout.tip .callout-label { color: var(--green); }
+    .callout.warn .callout-label { color: var(--orange); }
+    .callout.danger .callout-label { color: var(--red); }
+    .callout p { font-size: 1rem !important; margin-bottom: 0.4rem !important; color: var(--ink-mid); }
+    .callout p:last-child { margin-bottom: 0 !important; }
+    .callout ul {
+      font-family: 'EB Garamond', serif; font-size: 1rem;
+      color: var(--ink-mid); padding-left: 1.3rem; margin-top: 0.3rem;
+    }
+    .callout li { margin-bottom: 0.2rem; line-height: 1.65; }
+
+    .steps { margin: 1.25rem 0; }
+    .step-item {
+      display: grid; grid-template-columns: 2rem 1fr;
+      gap: 0 0.9rem; margin-bottom: 1.2rem; align-items: start;
+    }
+    .step-circle {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 0.1rem;
+    }
+    .step-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.9rem; font-weight: 600; color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .step-desc {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem; color: var(--ink-mid); line-height: 1.65;
+    }
+
+    .code-block {
+      background: #1e1e2e; color: #cdd6f4;
+      border-radius: 6px; padding: 1.1rem 1.2rem; margin: 1.25rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem; line-height: 1.7;
+      overflow-x: auto; white-space: pre;
+    }
+    .code-block .c-comment { color: #6c7086; }
+    .code-block .c-key { color: #cba6f7; }
+    .code-block .c-str { color: #a6e3a1; }
+    .code-block .c-num { color: #fab387; }
+    .code-block .c-fn { color: #89b4fa; }
+    .code-block-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--ink-faint);
+      margin-bottom: 0.35rem; margin-top: 1.25rem;
+    }
+
+    .compare-table {
+      width: 100%; border-collapse: collapse;
+      font-family: 'EB Garamond', serif; font-size: 0.97rem;
+      margin: 1.4rem 0; border: 1px solid var(--rule); border-radius: 6px;
+      overflow: hidden;
+    }
+    .compare-table th {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--ink-light);
+      background: var(--bg-subtle); padding: 0.55rem 0.9rem;
+      text-align: left; border-bottom: 1px solid var(--rule);
+    }
+    .compare-table td {
+      padding: 0.6rem 0.9rem; color: var(--ink-mid);
+      border-bottom: 1px solid #f0f0f0; vertical-align: top; line-height: 1.55;
+    }
+    .compare-table tr:nth-child(even) td { background: var(--bg-subtle); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .cmd-col {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; color: var(--ink); white-space: nowrap;
+      font-weight: 500; width: 42%;
+    }
+    .compare-table .desc-col {
+      font-family: 'EB Garamond', serif; font-size: 0.97rem;
+    }
+
+    .insight {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--bg-subtle); border: 1px solid var(--rule);
+      border-radius: 8px; padding: 1rem 1.1rem; margin: 1.25rem 0;
+    }
+    .insight-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .insight-body { font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--ink-mid); line-height: 1.7; }
+    .insight-body strong { color: var(--ink); font-weight: 600; }
+
+    .try-it {
+      background: #1e1e2e; border-radius: 8px;
+      padding: 1.3rem 1.5rem; margin: 1.3rem 0;
+    }
+    .try-it-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #6c7086; margin-bottom: 0.8rem;
+    }
+    .try-it-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .try-it-link {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem; font-weight: 600; text-decoration: none;
+      padding: 0.4rem 0.85rem; border-radius: 5px; transition: opacity 0.15s;
+    }
+    .try-it-link:hover { opacity: 0.85; }
+    .try-it-link.gh { background: #313244; color: #cdd6f4; }
+    .try-it-link.doc { background: #45475a; color: #cdd6f4; }
+
+    .footer {
+      border-top: 1px solid var(--rule); margin-top: 3rem; padding: 1.5rem 0;
+      text-align: center; font-size: 0.77rem; color: var(--ink-faint);
+    }
+    .footer a { color: var(--ink-faint); text-decoration: none; }
+    .footer a:hover { color: var(--ink-light); }
+
+    @media print {
+      .nav, .mobile-toggle, .mobile-nav { display: none; }
+      .page { max-width: 100%; }
+    }
+  </style>
+
+  <header class="nav">
+    <nav class="nav-inner">
+      <a href="/" class="nav-name">A. Mohammadi</a>
+      <div class="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#research">Research</a>
+        <a href="/#publications">Publications</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </nav>
+    <div class="mobile-nav" id="mobile-menu">
+      <a href="/#about">About</a>
+      <a href="/#research">Research</a>
+      <a href="/#publications">Publications</a>
+      <a href="/blog/">Blog</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </header>
+
+  <div class="page">
+    <article>
+      <!-- ── HEADER ── -->
+      <header class="article-header">
+        <a href="/blog/" class="article-back">
+          <i class="fas fa-arrow-left"></i> Blog
+        </a>
+
+        <div class="article-tags">
+          <span class="article-tag tut">Tutorial</span>
+          <span class="article-tag">HPC</span>
+          <span class="article-tag">Slurm</span>
+          <span class="article-tag">Linux</span>
+          <span class="article-tag">GPU</span>
+          <span class="article-tag">Git</span>
+        </div>
+
+        <h1>Getting Started with HPC Clusters, Slurm &amp; tmux</h1>
+        <p class="subtitle">A beginner-friendly guide to running Python on any high-performance computing cluster</p>
+
+        <div class="article-meta">
+          <span class="date">April 2026</span>
+          <span class="sep">&middot;</span>
+          <span class="authors">Amirhossein Mohammadi</span>
+          <span class="sep">&middot;</span>
+          <span>25 min read</span>
+        </div>
+      </header>
+
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-title">In this guide</div>
+        <ol>
+          <li><a href="#connecting">Connecting to your HPC cluster</a></li>
+          <li><a href="#navigating">Navigating the terminal</a></li>
+          <li><a href="#cp-mv">Copying and moving files — <code>cp</code> and <code>mv</code></a></li>
+          <li><a href="#vim">Editing files in the terminal — <code>vim</code></a></li>
+          <li><a href="#uploading">Uploading your Python files</a></li>
+          <li><a href="#python">Python environments — venv &amp; uv</a></li>
+          <li><a href="#tmux">Using tmux for persistent sessions</a></li>
+          <li><a href="#slurm">Submitting jobs with Slurm</a></li>
+          <li><a href="#gpu">Running GPU jobs &amp; monitoring with <code>nvidia-smi</code></a></li>
+          <li><a href="#git">Using Git on the cluster</a></li>
+          <li><a href="#quickref">Quick reference — all commands</a></li>
+        </ol>
+      </nav>
+
+      <div class="article-body">
+        <!-- ══════════════════════════════ -->
+        <h2 id="connecting"><span class="step-num">01</span> Connecting to your HPC cluster</h2>
+
+        <p>A terminal (also called a command prompt or shell) is a window where you type commands instead of clicking buttons. Here is how to open one on your machine:</p>
+
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-circle">W</div>
+            <div class="step-body">
+              <div class="step-title">Windows</div>
+              <div class="step-desc">Press the Windows key, search for <strong>PowerShell</strong> or <strong>Windows Terminal</strong>, and open it.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">M</div>
+            <div class="step-body">
+              <div class="step-title">Mac</div>
+              <div class="step-desc">Press <code>Cmd + Space</code>, type <em>Terminal</em>, and press Enter.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">L</div>
+            <div class="step-body">
+              <div class="step-title">Linux</div>
+              <div class="step-desc">Press <code>Ctrl + Alt + T</code>.</div>
+            </div>
+          </div>
+        </div>
+
+        <p>Once your terminal is open, connect to the cluster using SSH (Secure Shell). Your institution will provide you with a hostname, username, and password:</p>
+
+        <div class="code-block"><span class="c-fn">ssh</span> username@hpc.university.edu</div>
+
+        <p>Replace <code>username</code> and <code>hpc.university.edu</code> with the credentials from your institution or instructor. When prompted for your password, type it and press Enter — the cursor will not move while you type, which is normal.</p>
+
+        <div class="callout tip">
+          <div class="callout-label">💡 First-time connection</div>
+          <p>You may see a message asking if you trust the server. Type <code>yes</code> and press Enter.</p>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Login nodes vs. compute nodes</div>
+          <p>When you SSH in, you land on a <strong>login node</strong> — a shared entry point not meant for heavy computation. Only run tiny test commands here. For real workloads, always use Slurm (see <a href="#slurm">Part 8</a>).</p>
+        </div>
+
+        <h2 id="navigating"><span class="step-num">02</span> Navigating the terminal</h2>
+
+        <p>Once connected, you are in a text environment. Instead of clicking folders, you type commands. Here are the essential ones:</p>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">ls</td><td class="desc-col">List files and folders in the current location</td></tr>
+            <tr><td class="cmd-col">ls -lh</td><td class="desc-col">List files with sizes and details (human-readable)</td></tr>
+            <tr><td class="cmd-col">cd foldername</td><td class="desc-col">Enter a folder (directory)</td></tr>
+            <tr><td class="cmd-col">cd ..</td><td class="desc-col">Go up one level (back to the parent folder)</td></tr>
+            <tr><td class="cmd-col">cd ~</td><td class="desc-col">Go directly to your home folder</td></tr>
+            <tr><td class="cmd-col">pwd</td><td class="desc-col">Show where you currently are</td></tr>
+            <tr><td class="cmd-col">mkdir name</td><td class="desc-col">Create a new folder called <em>name</em></td></tr>
+            <tr><td class="cmd-col">rm filename</td><td class="desc-col">Delete a file — no undo, be careful!</td></tr>
+            <tr><td class="cmd-col">rm -r foldername</td><td class="desc-col">Delete an entire folder and its contents</td></tr>
+            <tr><td class="cmd-col">cat file.txt</td><td class="desc-col">Display the contents of a text file</td></tr>
+            <tr><td class="cmd-col">head -n 20 file.txt</td><td class="desc-col">Show only the first 20 lines of a file</td></tr>
+            <tr><td class="cmd-col">tail -n 20 file.txt</td><td class="desc-col">Show only the last 20 lines of a file</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-label">📂 Example walkthrough</div>
+          <p><code>ls</code> — see what is in your home folder<br />
+            <code>mkdir my_project</code> — create a new project folder<br />
+            <code>cd my_project</code> — enter that folder<br />
+            <code>ls</code> — it is empty for now</p>
+        </div>
+
+        <h2 id="cp-mv"><span class="step-num">03</span> Copying and moving files — <code>cp</code> and <code>mv</code></h2>
+
+        <p>Two of the most useful commands for managing files on an HPC cluster are <code>cp</code> (copy) and <code>mv</code> (move/rename). Think of them like drag-and-drop — but in the terminal.</p>
+
+        <h3>Copying files — cp</h3>
+        <p><code>cp</code> makes a duplicate of a file. The original stays in place.</p>
+
+        <div class="code-block"><span class="c-comment"># copy a file, giving it a new name</span>
+          cp source.py destination.py
+
+          <span class="c-comment"># copy into a folder</span>
+          cp myscript.py backup/myscript.py
+
+          <span class="c-comment"># copy an entire folder (-r means recursive)</span>
+          cp -r my_project/ my_project_backup/</div>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">cp file.py copy.py</td><td class="desc-col">Make a copy of file.py called copy.py</td></tr>
+            <tr><td class="cmd-col">cp file.py folder/</td><td class="desc-col">Copy file.py into folder/</td></tr>
+            <tr><td class="cmd-col">cp -r folder/ backup/</td><td class="desc-col">Copy an entire folder into backup/</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-label">💡 Tip</div>
+          <p>Use <code>cp -r</code> to duplicate a whole project folder before making big changes — a handy safety net!</p>
+        </div>
+
+        <h3>Moving and renaming files — mv</h3>
+        <p><code>mv</code> moves a file to a new location <em>or</em> renames it. Unlike <code>cp</code>, the original is removed.</p>
+
+        <div class="code-block"><span class="c-comment"># rename a file</span>
+          mv oldname.py newname.py
+
+          <span class="c-comment"># move into a folder</span>
+          mv myscript.py scripts/
+
+          <span class="c-comment"># move a whole folder</span>
+          mv results/ outputs/results/</div>
+
+        <div class="callout danger">
+          <div class="callout-label">⚠ mv overwrites without asking!</div>
+          <p>If a file with the same name already exists at the destination, <code>mv</code> will silently overwrite it. Always double-check before moving.</p>
+        </div>
+
+        <h2 id="vim"><span class="step-num">04</span> Editing files in the terminal — vim</h2>
+
+        <p>On an HPC cluster you cannot open a graphical text editor. Instead, you edit files directly in the terminal using <strong>vim</strong> (or the simpler <strong>nano</strong>). vim feels strange at first, but a few commands get you a long way.</p>
+
+        <div class="insight">
+          <div class="insight-icon">🎛️</div>
+          <div class="insight-body"><strong>vim has two modes.</strong> <em>Normal mode</em> — for navigating and running commands — is where vim always starts. <em>Insert mode</em> — for actually typing text — is entered by pressing <code>i</code>. Switch back to Normal with <code>Esc</code>.</div>
+        </div>
+
+        <h3>Opening, saving, and closing</h3>
+
+        <div class="code-block"><span class="c-fn">vim</span> myscript.py    <span class="c-comment"># open (or create) a file</span></div>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">:w</td><td class="desc-col">Save (write) the file</td></tr>
+            <tr><td class="cmd-col">:q</td><td class="desc-col">Quit vim (only if no unsaved changes)</td></tr>
+            <tr><td class="cmd-col">:wq</td><td class="desc-col">Save and quit</td></tr>
+            <tr><td class="cmd-col">:q!</td><td class="desc-col">Quit WITHOUT saving (force quit)</td></tr>
+            <tr><td class="cmd-col">:w newname.py</td><td class="desc-col">Save as a different filename</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Moving around (Normal mode)</h3>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">Arrow keys</td><td class="desc-col">Move the cursor</td></tr>
+            <tr><td class="cmd-col">gg</td><td class="desc-col">Jump to the very top of the file</td></tr>
+            <tr><td class="cmd-col">G</td><td class="desc-col">Jump to the very bottom of the file</td></tr>
+            <tr><td class="cmd-col">0</td><td class="desc-col">Jump to the start of the current line</td></tr>
+            <tr><td class="cmd-col">$</td><td class="desc-col">Jump to the end of the current line</td></tr>
+            <tr><td class="cmd-col">/searchterm</td><td class="desc-col">Search for a word (press <code>n</code> for next match)</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Editing text</h3>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">i</td><td class="desc-col">Enter Insert mode before the cursor</td></tr>
+            <tr><td class="cmd-col">o</td><td class="desc-col">Insert a new line below and enter Insert mode</td></tr>
+            <tr><td class="cmd-col">Esc</td><td class="desc-col">Return to Normal mode</td></tr>
+            <tr><td class="cmd-col">dd</td><td class="desc-col">Delete the entire current line</td></tr>
+            <tr><td class="cmd-col">u</td><td class="desc-col">Undo the last change</td></tr>
+            <tr><td class="cmd-col">Ctrl + r</td><td class="desc-col">Redo (undo the undo)</td></tr>
+            <tr><td class="cmd-col">yy</td><td class="desc-col">Copy (yank) the current line</td></tr>
+            <tr><td class="cmd-col">p</td><td class="desc-col">Paste the copied line below the cursor</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-label">🛟 Minimal vim survival guide</div>
+          <p>1. Open a file: <code>vim myscript.py</code><br />
+            2. Start editing: press <code>i</code><br />
+            3. Make your changes<br />
+            4. Stop editing: press <code>Esc</code><br />
+            5. Save and quit: type <code>:wq</code> then press Enter<br /><br />
+            If you get stuck, press <code>Esc</code> a few times then type <code>:q!</code> to exit without saving.</p>
+        </div>
+
+        <h3>nano — the beginner-friendly alternative</h3>
+        <p>If vim feels overwhelming, <strong>nano</strong> is much simpler. Commands are shown at the bottom of the screen.</p>
+
+        <div class="code-block"><span class="c-fn">nano</span> myscript.py</div>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">Ctrl + O, Enter</td><td class="desc-col">Save the file</td></tr>
+            <tr><td class="cmd-col">Ctrl + X</td><td class="desc-col">Exit nano</td></tr>
+            <tr><td class="cmd-col">Ctrl + K</td><td class="desc-col">Cut (delete) the current line</td></tr>
+            <tr><td class="cmd-col">Ctrl + W</td><td class="desc-col">Search for text</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="uploading"><span class="step-num">05</span> Uploading your Python files</h2>
+
+        <p>Before running a Python script on the cluster, you need to transfer it from your laptop. Open a <strong>new</strong> terminal on your local machine (not the cluster one) and use SCP:</p>
+
+        <div class="code-block"><span class="c-comment"># upload a single file</span>
+          scp myscript.py username@hpc.university.edu:~/my_project/
+
+          <span class="c-comment"># upload an entire folder (-r flag)</span>
+          scp -r my_project/ username@hpc.university.edu:~/</div>
+
+        <p>Once transferred, you can also load Python and run a quick sanity check directly — but only on the login node for tiny tests:</p>
+
+        <div class="code-block">module load Python
+          python myscript.py</div>
+
+        <h2 id="python"><span class="step-num">06</span> Python environments — venv &amp; uv</h2>
+
+        <p>On an HPC cluster, the system Python is shared by everyone. Installing packages globally is either forbidden or will break things for others. The solution is a <strong>virtual environment</strong> — an isolated folder that holds its own Python interpreter and packages, separate from the system and from other projects.</p>
+
+        <div class="insight">
+          <div class="insight-icon">📦</div>
+          <div class="insight-body"><strong>Why bother with virtual environments?</strong> Two projects might need different versions of the same package (e.g. PyTorch 1.x vs 2.x). Environments let each project have exactly what it needs without conflict — and you can wipe and recreate them cleanly at any time.</div>
+        </div>
+
+        <h3>Option A — venv (built into Python, no install needed)</h3>
+
+        <p><code>venv</code> is Python&apos;s built-in tool. It is available everywhere Python is installed, making it the safe default on any HPC cluster.</p>
+
+        <div class="code-block"><span class="c-comment"># 1. Load Python via the module system first</span>
+          module load Python
+
+          <span class="c-comment"># 2. Create a virtual environment called .venv in your project folder</span>
+          python -m venv .venv
+
+          <span class="c-comment"># 3. Activate it — your prompt will change to show (.venv)</span>
+          source .venv/bin/activate
+
+          <span class="c-comment"># 4. Install packages — they go into .venv/, not the system</span>
+          pip install torch numpy pandas
+
+          <span class="c-comment"># 5. Install from a requirements file</span>
+          pip install -r requirements.txt
+
+          <span class="c-comment"># 6. Save your current packages to a requirements file</span>
+          pip freeze &gt; requirements.txt
+
+          <span class="c-comment"># 7. Deactivate when done</span>
+          deactivate</div>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">python -m venv .venv</td><td class="desc-col">Create a virtual environment in the <code>.venv/</code> folder</td></tr>
+            <tr><td class="cmd-col">source .venv/bin/activate</td><td class="desc-col">Activate the environment (must do this every session)</td></tr>
+            <tr><td class="cmd-col">deactivate</td><td class="desc-col">Leave the environment (back to system Python)</td></tr>
+            <tr><td class="cmd-col">pip install package</td><td class="desc-col">Install a package into the active environment</td></tr>
+            <tr><td class="cmd-col">pip install -r requirements.txt</td><td class="desc-col">Install all packages listed in requirements.txt</td></tr>
+            <tr><td class="cmd-col">pip freeze &gt; requirements.txt</td><td class="desc-col">Save all installed packages and their versions to a file</td></tr>
+            <tr><td class="cmd-col">pip list</td><td class="desc-col">Show all installed packages in the current environment</td></tr>
+            <tr><td class="cmd-col">pip show package</td><td class="desc-col">Show details about a specific installed package</td></tr>
+            <tr><td class="cmd-col">pip uninstall package</td><td class="desc-col">Remove a package from the environment</td></tr>
+            <tr><td class="cmd-col">which python</td><td class="desc-col">Confirm you are using the environment&apos;s Python, not the system one</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Remember to activate in your Slurm script</div>
+          <p>A Slurm job starts a fresh shell — your activation from the terminal is not carried over. Always add <code>source .venv/bin/activate</code> to your job script, <em>after</em> <code>module load Python</code>:</p>
+          <p><code>module load Python</code><br />
+            <code>source /home/username/my_project/.venv/bin/activate</code><br />
+            <code>python train.py</code></p>
+        </div>
+
+        <h3>Option B — uv (fast, modern, recommended for new projects)</h3>
+
+        <p><code>uv</code> is a newer Python package manager written in Rust. It is dramatically faster than pip — often 10–100× — and handles both virtual environments and package installation in one tool. It may not be pre-installed on your cluster, but installing it for yourself takes seconds.</p>
+
+        <div class="code-block"><span class="c-comment"># Install uv into your home directory (no admin rights needed)</span>
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+          <span class="c-comment"># Reload your shell so the 'uv' command is found</span>
+          source ~/.bashrc</div>
+
+        <p>Once installed, the workflow is similar to venv but faster and with smarter dependency resolution:</p>
+
+        <div class="code-block"><span class="c-comment"># Create a virtual environment (uses .venv/ by default)</span>
+          uv venv
+
+          <span class="c-comment"># Or specify a Python version explicitly</span>
+          uv venv --python 3.11
+
+          <span class="c-comment"># Activate (same as venv)</span>
+          source .venv/bin/activate
+
+          <span class="c-comment"># Install packages — much faster than pip</span>
+          uv pip install torch numpy pandas
+
+          <span class="c-comment"># Install from requirements.txt</span>
+          uv pip install -r requirements.txt
+
+          <span class="c-comment"># Install from pyproject.toml (if your project uses it)</span>
+          uv pip install -e .
+
+          <span class="c-comment"># Run a script directly without activating (uv handles it)</span>
+          uv run python train.py</div>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">uv venv</td><td class="desc-col">Create a virtual environment in <code>.venv/</code></td></tr>
+            <tr><td class="cmd-col">uv venv --python 3.11</td><td class="desc-col">Create an environment with a specific Python version</td></tr>
+            <tr><td class="cmd-col">uv pip install package</td><td class="desc-col">Install a package (much faster than pip)</td></tr>
+            <tr><td class="cmd-col">uv pip install -r requirements.txt</td><td class="desc-col">Install from a requirements file</td></tr>
+            <tr><td class="cmd-col">uv pip install -e .</td><td class="desc-col">Install current project in editable mode (from pyproject.toml)</td></tr>
+            <tr><td class="cmd-col">uv pip freeze</td><td class="desc-col">List installed packages and versions</td></tr>
+            <tr><td class="cmd-col">uv run python train.py</td><td class="desc-col">Run a script inside the environment without activating first</td></tr>
+            <tr><td class="cmd-col">uv pip compile requirements.in</td><td class="desc-col">Resolve and lock dependencies to a <code>requirements.txt</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-label">⚡ venv vs. uv — which should I use?</div>
+          <p><strong>venv + pip:</strong> always available, no setup, works everywhere. Use it when you are on a new cluster and are not sure what is installed.<br />
+            <strong>uv:</strong> dramatically faster installs, smarter dependency handling, and a nicer overall experience. Use it for any new project where you can do a one-time install. On a shared cluster, install it to <code>~/.cargo/bin/</code> (its default) — no admin rights required.</p>
+        </div>
+
+        <h3>Recommended project layout with an environment</h3>
+
+        <div class="code-block">my_project/
+          .venv/               <span class="c-comment"># virtual environment — never commit this!</span>
+          data/                <span class="c-comment"># datasets</span>
+          scripts/             <span class="c-comment"># your Python files</span>
+          outputs/             <span class="c-comment"># results, logs, saved models</span>
+          job.slurm            <span class="c-comment"># Slurm job script</span>
+          requirements.txt     <span class="c-comment"># pinned package versions</span>
+          pyproject.toml       <span class="c-comment"># optional: modern project metadata</span>
+          .gitignore           <span class="c-comment"># include .venv/ here!</span></div>
+
+        <div class="callout tip">
+          <div class="callout-label">🙈 Always gitignore your environment</div>
+          <p>Add <code>.venv/</code> to your <code>.gitignore</code>. Virtual environments are large, machine-specific, and fully reproducible from <code>requirements.txt</code> — there is no reason to commit them.</p>
+        </div>
+
+        <h2 id="tmux"><span class="step-num">07</span> Using tmux for persistent sessions</h2>
+
+        <p>If you close your laptop or lose your Wi-Fi connection, any running program in your SSH session will be killed. <strong>tmux</strong> solves this by keeping your session alive on the server even when you disconnect — like leaving a TV on at home while you go out.</p>
+
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-circle">1</div>
+            <div class="step-body">
+              <div class="step-title">Start a new session</div>
+              <div class="step-desc"><code>tmux new -s mysession</code> — give it a memorable name.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">2</div>
+            <div class="step-body">
+              <div class="step-title">Run your script as normal</div>
+              <div class="step-desc"><code>python myscript.py</code></div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">3</div>
+            <div class="step-body">
+              <div class="step-title">Detach — your script keeps running</div>
+              <div class="step-desc">Press <code>Ctrl + B</code>, then press <code>D</code>. You are back at the normal shell; the session is still alive.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">4</div>
+            <div class="step-body">
+              <div class="step-title">Reconnect later</div>
+              <div class="step-desc"><code>tmux attach -t mysession</code></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">tmux new -s name</td><td class="desc-col">Start a new session called <em>name</em></td></tr>
+            <tr><td class="cmd-col">Ctrl+B, D</td><td class="desc-col">Detach (leave session running)</td></tr>
+            <tr><td class="cmd-col">tmux attach -t name</td><td class="desc-col">Reconnect to a session</td></tr>
+            <tr><td class="cmd-col">tmux ls</td><td class="desc-col">List all sessions</td></tr>
+            <tr><td class="cmd-col">tmux kill-session -t name</td><td class="desc-col">Delete a session</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-label">🔀 tmux vs. Slurm — when to use which</div>
+          <p><strong>tmux:</strong> quick tests, debugging, interactive work that takes a few minutes.<br />
+            <strong>Slurm:</strong> long training runs, batch jobs, anything needing a GPU.</p>
+        </div>
+
+        <h2 id="slurm"><span class="step-num">08</span> Submitting jobs with Slurm</h2>
+
+        <p>Slurm is a job scheduler. Instead of running your code directly, you write a small script describing your job (how long, how many CPUs, whether you need a GPU), and Slurm runs it on a compute node when resources are available.</p>
+
+        <h3>Exploring your cluster first</h3>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">sinfo</td><td class="desc-col">List all partitions (queues) and how many nodes are idle/busy</td></tr>
+            <tr><td class="cmd-col">squeue</td><td class="desc-col">Show all currently running and queued jobs on the cluster</td></tr>
+            <tr><td class="cmd-col">squeue -u username</td><td class="desc-col">Show only your own jobs</td></tr>
+            <tr><td class="cmd-col">sacctmgr show user</td><td class="desc-col">Show your account and billing group information</td></tr>
+            <tr><td class="cmd-col">module avail</td><td class="desc-col">List all software modules available to load</td></tr>
+            <tr><td class="cmd-col">module list</td><td class="desc-col">Show which modules you currently have loaded</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Creating a CPU job script</h3>
+
+        <p>Create the file with <code>nano job.slurm</code>, write the following, then save with <code>Ctrl+O</code>, Enter, <code>Ctrl+X</code>:</p>
+
+        <div class="code-block"><span class="c-comment">#!/bin/bash</span>
+          <span class="c-key">#SBATCH --job-name=</span><span class="c-str">my_first_job</span>
+          <span class="c-key">#SBATCH --time=</span><span class="c-num">00:30:00</span>
+          <span class="c-key">#SBATCH --nodes=</span><span class="c-num">1</span>
+          <span class="c-key">#SBATCH --ntasks=</span><span class="c-num">1</span>
+          <span class="c-key">#SBATCH --cpus-per-task=</span><span class="c-num">4</span>
+          <span class="c-key">#SBATCH --mem=</span><span class="c-str">8G</span>
+
+          module load Python
+          python myscript.py</div>
+
+        <table class="compare-table">
+          <thead><tr><th>Flag</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">--job-name</td><td class="desc-col">A friendly name to identify your job in the queue</td></tr>
+            <tr><td class="cmd-col">--time=00:30:00</td><td class="desc-col">Maximum time allowed (HH:MM:SS) — job is killed if exceeded</td></tr>
+            <tr><td class="cmd-col">--nodes=1</td><td class="desc-col">Number of machines to use (almost always 1 for Python)</td></tr>
+            <tr><td class="cmd-col">--ntasks=1</td><td class="desc-col">Number of parallel tasks (1 for a single Python script)</td></tr>
+            <tr><td class="cmd-col">--cpus-per-task=4</td><td class="desc-col">How many CPU cores to allocate</td></tr>
+            <tr><td class="cmd-col">--mem=8G</td><td class="desc-col">How much RAM to allocate</td></tr>
+            <tr><td class="cmd-col">--partition=name</td><td class="desc-col">The queue to submit to — clusters have different partitions (e.g. <em>short</em>, <em>long</em>, <em>gpu</em>). Check your cluster&apos;s docs.</td></tr>
+            <tr><td class="cmd-col">--account=name</td><td class="desc-col">Your billing account — required on some HPC systems. Your welcome email will specify this.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-label">🗂 Cluster-specific settings</div>
+          <p>Every HPC cluster has its own partition names, time limits, and account requirements. Always check your cluster&apos;s documentation or welcome email. Use <code>sinfo</code> to list partitions and <code>sacctmgr show user</code> to see your accounts.</p>
+        </div>
+
+        <h3>Submitting, monitoring, and reading output</h3>
+
+        <div class="code-block"><span class="c-comment"># submit the job</span>
+          sbatch job.slurm
+
+          <span class="c-comment"># check status — PD = pending, R = running, CG = completing</span>
+          squeue -u username
+
+          <span class="c-comment"># read the output when done</span>
+          cat slurm-12345.out
+
+          <span class="c-comment"># cancel a running or pending job</span>
+          scancel 12345</div>
+
+        <p>When your job finishes, Slurm creates <code>slurm-JOBID.out</code> in your current folder. This file contains everything your Python script printed — if something went wrong, the error message is here.</p>
+
+        <h3>Interactive sessions</h3>
+        <p>Instead of a batch job, you can request an interactive shell on a compute node to test things in real time:</p>
+
+        <div class="code-block">srun --partition=gpu --gpus=<span class="c-num">1</span> --time=<span class="c-num">00:30:00</span> --pty bash
+
+          <span class="c-comment"># type 'exit' when done to release resources</span></div>
+
+        <h2 id="gpu"><span class="step-num">09</span> Running GPU jobs &amp; monitoring with <code>nvidia-smi</code></h2>
+
+        <p>GPU jobs follow the same pattern as CPU jobs, with a few extra flags:</p>
+
+        <div class="code-block"><span class="c-comment">#!/bin/bash</span>
+          <span class="c-key">#SBATCH --job-name=</span><span class="c-str">gpu_training</span>
+          <span class="c-key">#SBATCH --time=</span><span class="c-num">02:00:00</span>
+          <span class="c-key">#SBATCH --partition=</span><span class="c-str">gpu</span>
+          <span class="c-key">#SBATCH --nodes=</span><span class="c-num">1</span>
+          <span class="c-key">#SBATCH --ntasks=</span><span class="c-num">1</span>
+          <span class="c-key">#SBATCH --cpus-per-task=</span><span class="c-num">8</span>
+          <span class="c-key">#SBATCH --mem=</span><span class="c-str">32G</span>
+          <span class="c-key">#SBATCH --gpus=</span><span class="c-num">1</span>
+
+          module load Python
+          module load CUDA
+
+          python train.py</div>
+
+        <p>The key additions: <code>--partition=gpu</code> routes your job to a GPU node (the exact name varies by cluster), <code>--gpus=1</code> requests one GPU, and <code>module load CUDA</code> loads the GPU libraries needed by PyTorch or TensorFlow.</p>
+
+        <div class="callout warn">
+          <div class="callout-label">⏳ GPU availability</div>
+          <p>GPU nodes are in high demand. If your job is stuck as PD (pending) for a long time, try requesting fewer GPUs or a shorter time limit.</p>
+        </div>
+
+        <h3>Monitoring GPU usage with nvidia-smi</h3>
+
+        <p>Once your job is running on a GPU node, <code>nvidia-smi</code> lets you check how the GPU is being used — whether your code is actually using it, and how much memory it consumes.</p>
+
+        <div class="code-block"><span class="c-comment"># one-time snapshot</span>
+          nvidia-smi
+
+          <span class="c-comment"># example output:</span>
+          +-----------------------------------------------------------------------------+
+          | NVIDIA-SMI 525.85   Driver Version: 525.85   CUDA Version: 12.0            |
+          |-------------------------------+----------------------+----------------------+|
+          | GPU  Name        Temp  Pwr:Usage/Cap |  Memory-Usage   | GPU-Util  Compute  |
+          |   0  A100-SXM4   42C   68W / 400W   | 12543MiB/40960MiB |    87%   Default  |
+          +-----------------------------------------------------------------------------+</div>
+
+        <table class="compare-table">
+          <thead><tr><th>Column</th><th>What it tells you</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">GPU-Util</td><td class="desc-col">% of time the GPU is actively computing — should be high (&gt;70%) during training</td></tr>
+            <tr><td class="cmd-col">Memory-Usage</td><td class="desc-col">GPU RAM used vs. total — if it hits 100%, your job crashes with an OOM (Out of Memory) error</td></tr>
+            <tr><td class="cmd-col">Temp</td><td class="desc-col">GPU temperature in °C — normal range is 30–85°C</td></tr>
+            <tr><td class="cmd-col">Pwr:Usage/Cap</td><td class="desc-col">Power draw — useful for estimating job cost</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Useful nvidia-smi variants</h3>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">nvidia-smi</td><td class="desc-col">One-time snapshot of all GPUs</td></tr>
+            <tr><td class="cmd-col">nvidia-smi -l 2</td><td class="desc-col">Live view, refreshes every 2 seconds (Ctrl+C to stop)</td></tr>
+            <tr><td class="cmd-col">nvidia-smi -L</td><td class="desc-col">List all available GPUs and their names</td></tr>
+            <tr><td class="cmd-col">watch -n 2 nvidia-smi</td><td class="desc-col">Alternative live view using the <code>watch</code> command</td></tr>
+            <tr><td class="cmd-col">nvidia-smi --query-gpu=utilization.gpu,<br />memory.used,memory.total --format=csv</td><td class="desc-col">Print only GPU %, memory used, and total as CSV</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-label">📍 Where to run nvidia-smi</div>
+          <p><code>nvidia-smi</code> only works on a GPU compute node — not on the login node. Use it inside an interactive <code>srun</code> session, or add it to your job script to log GPU stats to the output file.</p>
+          <p>If <strong>GPU-Util stays near 0%</strong> during training, your model is likely not on the GPU — check that you are calling <code>.to(device)</code> or <code>.cuda()</code> on your model and tensors.</p>
+        </div>
+
+        <h2 id="git"><span class="step-num">10</span> Using Git on the cluster</h2>
+
+        <p>Git is a version control system — it tracks changes to your code, lets you collaborate with others, and makes it easy to bring your project onto the cluster directly from GitHub or GitLab. Instead of uploading files with <code>scp</code> every time you make a change, you push from your laptop to GitHub and pull on the cluster.</p>
+
+        <h3>First-time setup</h3>
+
+        <div class="code-block">git config --global user.name <span class="c-str">&quot;Your Name&quot;</span>
+          git config --global user.email <span class="c-str">&quot;you@example.com&quot;</span></div>
+
+        <h3>The everyday workflow</h3>
+
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-circle">1</div>
+            <div class="step-body">
+              <div class="step-title">Clone — download the repository</div>
+              <div class="step-desc"><code>git clone https://github.com/yourname/yourproject.git</code></div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">2</div>
+            <div class="step-body">
+              <div class="step-title">Check what changed</div>
+              <div class="step-desc"><code>git status</code></div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">3</div>
+            <div class="step-body">
+              <div class="step-title">Stage your changes</div>
+              <div class="step-desc"><code>git add .</code> (all files) or <code>git add myscript.py</code> (one file)</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">4</div>
+            <div class="step-body">
+              <div class="step-title">Commit — save a snapshot with a message</div>
+              <div class="step-desc"><code>git commit -m &quot;Add training loop for experiment 1&quot;</code></div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">5</div>
+            <div class="step-body">
+              <div class="step-title">Push / pull — sync with GitHub</div>
+              <div class="step-desc"><code>git push</code> to upload your commits; <code>git pull</code> to download the latest changes.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✏️ Good commit messages matter</div>
+          <p>Write a short message that describes <em>what</em> changed and <em>why</em>.<br />
+            Good: <code>&quot;Fix learning rate scheduler bug&quot;</code><br />
+            Bad: <code>&quot;stuff&quot;</code> or <code>&quot;changes&quot;</code></p>
+        </div>
+
+        <h3>Branches, history, and undoing mistakes</h3>
+
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">git log --oneline</td><td class="desc-col">Show a compact list of recent commits</td></tr>
+            <tr><td class="cmd-col">git diff</td><td class="desc-col">Show what you changed but haven&apos;t staged yet</td></tr>
+            <tr><td class="cmd-col">git branch name</td><td class="desc-col">Create a new branch</td></tr>
+            <tr><td class="cmd-col">git checkout name</td><td class="desc-col">Switch to that branch</td></tr>
+            <tr><td class="cmd-col">git checkout -b name</td><td class="desc-col">Create and switch in one step</td></tr>
+            <tr><td class="cmd-col">git merge name</td><td class="desc-col">Merge a branch into the current one</td></tr>
+            <tr><td class="cmd-col">git restore file.py</td><td class="desc-col">Discard unsaved changes to a file</td></tr>
+            <tr><td class="cmd-col">git stash</td><td class="desc-col">Temporarily set aside uncommitted changes</td></tr>
+            <tr><td class="cmd-col">git stash pop</td><td class="desc-col">Bring stashed changes back</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-label">🌿 Branch for every experiment</div>
+          <p>Always create a new branch for each experiment or feature. Keep <code>main</code> clean and working — this way you can always go back to a known good state.</p>
+        </div>
+
+        <h3>Ignoring files — .gitignore</h3>
+        <p>Some files should never be committed — large datasets, model weights, caches. Create a <code>.gitignore</code> file in your project root:</p>
+
+        <div class="code-block"><span class="c-comment"># inside .gitignore</span>
+          data/
+          outputs/
+          *.pt
+          *.pth
+          __pycache__/
+          .ipynb_checkpoints/</div>
+
+        <div class="callout danger">
+          <div class="callout-label">⚠ Avoid git reset --hard</div>
+          <p><code>git reset --hard</code> permanently discards uncommitted changes with no undo. Use <code>git restore</code> or <code>git stash</code> instead.</p>
+        </div>
+
+        <h2 id="quickref"><span class="step-num">11</span> Quick reference — all commands</h2>
+
+        <h3>Connecting &amp; uploading files</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">ssh user@hpc.university.edu</td><td class="desc-col">Connect to the HPC cluster</td></tr>
+            <tr><td class="cmd-col">scp file.py user@hpc.university.edu:~/</td><td class="desc-col">Upload a file</td></tr>
+            <tr><td class="cmd-col">scp -r folder/ user@hpc.university.edu:~/</td><td class="desc-col">Upload a whole folder</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Terminal navigation</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">ls / ls -lh</td><td class="desc-col">List files (plain / with details)</td></tr>
+            <tr><td class="cmd-col">cd name / cd ..</td><td class="desc-col">Enter folder / go up a level</td></tr>
+            <tr><td class="cmd-col">cd ~</td><td class="desc-col">Go to home folder</td></tr>
+            <tr><td class="cmd-col">pwd</td><td class="desc-col">Show current location</td></tr>
+            <tr><td class="cmd-col">mkdir name</td><td class="desc-col">Create a folder</td></tr>
+            <tr><td class="cmd-col">rm file / rm -r folder</td><td class="desc-col">Delete file / delete folder</td></tr>
+            <tr><td class="cmd-col">cat / head / tail</td><td class="desc-col">Show full file / first N lines / last N lines</td></tr>
+            <tr><td class="cmd-col">cp file copy / cp -r a/ b/</td><td class="desc-col">Copy file / copy entire folder</td></tr>
+            <tr><td class="cmd-col">mv old new / mv file folder/</td><td class="desc-col">Rename / move a file</td></tr>
+          </tbody>
+        </table>
+
+        <h3>vim editor</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">vim file.py</td><td class="desc-col">Open a file</td></tr>
+            <tr><td class="cmd-col">i</td><td class="desc-col">Enter Insert mode</td></tr>
+            <tr><td class="cmd-col">Esc</td><td class="desc-col">Return to Normal mode</td></tr>
+            <tr><td class="cmd-col">:wq</td><td class="desc-col">Save and quit</td></tr>
+            <tr><td class="cmd-col">:q!</td><td class="desc-col">Quit without saving</td></tr>
+            <tr><td class="cmd-col">dd / u</td><td class="desc-col">Delete current line / undo</td></tr>
+            <tr><td class="cmd-col">/term</td><td class="desc-col">Search for text</td></tr>
+          </tbody>
+        </table>
+
+        <h3>tmux sessions</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">tmux new -s name</td><td class="desc-col">Start a new session</td></tr>
+            <tr><td class="cmd-col">Ctrl+B, D</td><td class="desc-col">Detach (leave running)</td></tr>
+            <tr><td class="cmd-col">tmux attach -t name</td><td class="desc-col">Reconnect</td></tr>
+            <tr><td class="cmd-col">tmux ls</td><td class="desc-col">List all sessions</td></tr>
+            <tr><td class="cmd-col">tmux kill-session -t name</td><td class="desc-col">Delete a session</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Slurm job management</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">sbatch job.slurm</td><td class="desc-col">Submit a job</td></tr>
+            <tr><td class="cmd-col">squeue -u username</td><td class="desc-col">Check your job status</td></tr>
+            <tr><td class="cmd-col">scancel JOBID</td><td class="desc-col">Cancel a job</td></tr>
+            <tr><td class="cmd-col">cat slurm-JOBID.out</td><td class="desc-col">Read job output</td></tr>
+            <tr><td class="cmd-col">sinfo</td><td class="desc-col">List partitions and availability</td></tr>
+            <tr><td class="cmd-col">srun --pty bash</td><td class="desc-col">Start an interactive compute session</td></tr>
+            <tr><td class="cmd-col">module load Python</td><td class="desc-col">Load Python module</td></tr>
+            <tr><td class="cmd-col">module load CUDA</td><td class="desc-col">Load GPU libraries</td></tr>
+            <tr><td class="cmd-col">module avail</td><td class="desc-col">List all available modules</td></tr>
+          </tbody>
+        </table>
+
+        <h3>GPU monitoring — nvidia-smi</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">nvidia-smi</td><td class="desc-col">Snapshot of all GPUs (usage, memory, temperature)</td></tr>
+            <tr><td class="cmd-col">nvidia-smi -l 2</td><td class="desc-col">Live view, refreshes every 2 seconds</td></tr>
+            <tr><td class="cmd-col">nvidia-smi -L</td><td class="desc-col">List all available GPUs and their names</td></tr>
+            <tr><td class="cmd-col">watch -n 2 nvidia-smi</td><td class="desc-col">Alternative live view using watch</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Python environments — venv &amp; uv</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">python -m venv .venv</td><td class="desc-col">Create a virtual environment</td></tr>
+            <tr><td class="cmd-col">source .venv/bin/activate</td><td class="desc-col">Activate the environment</td></tr>
+            <tr><td class="cmd-col">deactivate</td><td class="desc-col">Leave the environment</td></tr>
+            <tr><td class="cmd-col">pip install package</td><td class="desc-col">Install a package</td></tr>
+            <tr><td class="cmd-col">pip install -r requirements.txt</td><td class="desc-col">Install from requirements file</td></tr>
+            <tr><td class="cmd-col">pip freeze &gt; requirements.txt</td><td class="desc-col">Save installed packages to file</td></tr>
+            <tr><td class="cmd-col">pip list</td><td class="desc-col">Show all installed packages</td></tr>
+            <tr><td class="cmd-col">which python</td><td class="desc-col">Confirm you are using the venv Python</td></tr>
+            <tr><td class="cmd-col">uv venv</td><td class="desc-col">Create environment with uv (faster)</td></tr>
+            <tr><td class="cmd-col">uv venv --python 3.11</td><td class="desc-col">Create environment with specific Python version</td></tr>
+            <tr><td class="cmd-col">uv pip install package</td><td class="desc-col">Install package with uv (10–100× faster than pip)</td></tr>
+            <tr><td class="cmd-col">uv pip install -r requirements.txt</td><td class="desc-col">Install from requirements file with uv</td></tr>
+            <tr><td class="cmd-col">uv run python train.py</td><td class="desc-col">Run script inside environment without activating</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Git</h3>
+        <table class="compare-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="cmd-col">git clone URL</td><td class="desc-col">Download a repository</td></tr>
+            <tr><td class="cmd-col">git status</td><td class="desc-col">See what changed</td></tr>
+            <tr><td class="cmd-col">git add . / git add file</td><td class="desc-col">Stage all / a specific file</td></tr>
+            <tr><td class="cmd-col">git commit -m &quot;msg&quot;</td><td class="desc-col">Save a snapshot</td></tr>
+            <tr><td class="cmd-col">git push / git pull</td><td class="desc-col">Upload / download changes</td></tr>
+            <tr><td class="cmd-col">git log --oneline</td><td class="desc-col">View recent commits</td></tr>
+            <tr><td class="cmd-col">git branch name</td><td class="desc-col">Create a branch</td></tr>
+            <tr><td class="cmd-col">git checkout name</td><td class="desc-col">Switch branch</td></tr>
+            <tr><td class="cmd-col">git merge name</td><td class="desc-col">Merge branch into current</td></tr>
+            <tr><td class="cmd-col">git restore file</td><td class="desc-col">Discard changes to a file</td></tr>
+            <tr><td class="cmd-col">git stash / git stash pop</td><td class="desc-col">Shelve / restore uncommitted work</td></tr>
+          </tbody>
+        </table>
+
+        <div class="try-it">
+          <div class="try-it-label">Download</div>
+          <div class="try-it-links">
+            <a href="/files/HPC_Slurm_Beginner_Guide.pdf" class="try-it-link doc">
+              <i class="fas fa-file-word"></i> PDF
+            </a>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">🚀 You are ready to go!</div>
+          <p>Start small: connect to the cluster, upload a simple Python script, and submit a CPU job first. Once that works, move to GPU jobs. If anything goes wrong, the <code>.out</code> file is your best debugging companion.</p>
+        </div>
+      </div>
+    </article>
+
+    <footer class="footer">
+      © 2026 Amirhossein Mohammadi &mdash;
+      <a href="/">Home</a> &middot;
+      <a href="/blog/">Blog</a>
+    </footer>
+  </div>
+
+  <script is:inline>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn?.querySelector('i');
+
+    btn?.addEventListener('click', () => {
+      menu?.classList.toggle('open');
+      icon?.classList.toggle('fa-bars');
+      icon?.classList.toggle('fa-times');
+    });
+
+    document.querySelectorAll('.mobile-nav a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu?.classList.remove('open');
+        icon?.classList.add('fa-bars');
+        icon?.classList.remove('fa-times');
+      });
+    });
+  </script>
+</BaseLayout>
