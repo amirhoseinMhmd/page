@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SlurmScriptBuilder from '../../components/SlurmScriptBuilder';
+import SshCommandBuilder from '../../components/SshCommandBuilder';
 ---
 
 <BaseLayout
@@ -296,6 +298,161 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     .try-it-link.gh { background: #313244; color: #cdd6f4; }
     .try-it-link.doc { background: #45475a; color: #cdd6f4; }
 
+    .island-card {
+      background: linear-gradient(180deg, #fcfcfd 0%, #f7f8fb 100%);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 1.1rem 1.15rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 12px 30px rgba(17, 17, 17, 0.04);
+    }
+    .island-heading {
+      display: grid;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+    .island-heading h3 {
+      margin: 0;
+      font-family: 'EB Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .island-heading p {
+      margin: 0;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--ink-light);
+    }
+    .island-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .island-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    .island-field {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .island-field-wide {
+      grid-column: 1 / -1;
+    }
+    .island-field span {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .island-field input {
+      width: 100%;
+      border: 1px solid #d9dde6;
+      background: #fff;
+      border-radius: 7px;
+      padding: 0.7rem 0.8rem;
+      font: inherit;
+      color: var(--ink);
+    }
+    .island-field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(42, 92, 170, 0.12);
+    }
+    .island-output-list {
+      display: grid;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    .island-output {
+      margin-top: 1rem;
+    }
+    .island-output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.45rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.84rem;
+      color: var(--ink-mid);
+    }
+    .island-copy,
+    .island-toggle {
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--ink-mid);
+      border-radius: 999px;
+      padding: 0.45rem 0.8rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+    .island-copy:hover,
+    .island-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .island-toggle-row {
+      display: flex;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .island-toggle.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .island-shell {
+      margin: 0;
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      background: #151823;
+      color: #dce3f5;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+    }
+    .island-shell-large {
+      min-height: 14rem;
+    }
+    .island-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 1rem;
+    }
+    .island-pill {
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 0.28rem 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+    }
+    @media (max-width: 640px) {
+      .island-grid {
+        grid-template-columns: 1fr;
+      }
+      .island-output-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
     .footer {
       border-top: 1px solid var(--rule); margin-top: 3rem; padding: 1.5rem 0;
       text-align: center; font-size: 0.77rem; color: var(--ink-faint);
@@ -413,6 +570,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="code-block"><span class="c-fn">ssh</span> username@hpc.university.edu</div>
 
         <p>Replace <code>username</code> and <code>hpc.university.edu</code> with the credentials from your institution or instructor. When prompted for your password, type it and press Enter — the cursor will not move while you type, which is normal.</p>
+
+        <SshCommandBuilder client:visible />
 
         <div class="callout tip">
           <div class="callout-label">💡 First-time connection</div>
@@ -807,6 +966,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
           module load Python
           python myscript.py</div>
+
+        <SlurmScriptBuilder client:visible />
 
         <table class="compare-table">
           <thead><tr><th>Flag</th><th>Meaning</th></tr></thead>
