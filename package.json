@@ -1,0 +1,16 @@
+{
+  "name": "amirhosein-page",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync-assets": "node ./scripts/sync-public-assets.mjs",
+    "predev": "npm run sync-assets",
+    "dev": "astro dev",
+    "prebuild": "npm run sync-assets",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "astro": "^5.0.0"
+  }
+}

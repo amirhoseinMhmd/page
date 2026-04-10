@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllBlogPosts } from '../../data/blog';
+import { loadLegacyArticle } from '../../lib/legacy-page';
+
+export async function getStaticPaths() {
+  const posts = await getAllBlogPosts();
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const article = await loadLegacyArticle(post.sourcePath, post.fallbackSuffix);
+---
+
+<BaseLayout
+  title={`${post.title} — Amirhossein Mohammadi`}
+  description={post.description}
+  htmlClass="scroll-smooth"
+>
+  <style is:global set:html={article.styles}></style>
+
+  <header class="nav">
+    <nav class="nav-inner">
+      <a href="/" class="nav-name">A. Mohammadi</a>
+      <div class="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#research">Research</a>
+        <a href="/#publications">Publications</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </nav>
+    <div class="mobile-nav" id="mobile-menu">
+      <a href="/#about">About</a>
+      <a href="/#research">Research</a>
+      <a href="/#publications">Publications</a>
+      <a href="/blog/">Blog</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </header>
+
+  <div class="page">
+    <article set:html={article.article}></article>
+
+    <footer class="footer">
+      © 2026 Amirhossein Mohammadi &mdash;
+      <a href="/">Home</a> &middot;
+      <a href="/blog/">Blog</a>
+    </footer>
+  </div>
+
+  <script is:inline>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn?.querySelector('i');
+
+    btn?.addEventListener('click', () => {
+      menu?.classList.toggle('open');
+      icon?.classList.toggle('fa-bars');
+      icon?.classList.toggle('fa-times');
+    });
+
+    document.querySelectorAll('.mobile-nav a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu?.classList.remove('open');
+        icon?.classList.add('fa-bars');
+        icon?.classList.remove('fa-times');
+      });
+    });
+  </script>
+</BaseLayout>

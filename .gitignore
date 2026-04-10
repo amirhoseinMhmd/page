@@ -1,0 +1,11 @@
+node_modules/
+.astro/
+dist/
+
+public/CNAME
+public/files/
+public/images/
+public/publication.bib
+
+.DS_Store
+.idea/

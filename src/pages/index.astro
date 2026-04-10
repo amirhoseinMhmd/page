@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadLegacyPage } from '../lib/legacy-page';
+
+const home = await loadLegacyPage('index.html');
+---
+
+<BaseLayout
+  title="Amirhossein Mohammadi — Utrecht University"
+  description="Amirhossein Mohammadi — Ph.D. Candidate in Natural Language Processing at Utrecht University. Research on LLMs, computational linguistics, and cognitive science."
+  htmlClass="scroll-smooth"
+>
+  <style is:global set:html={home.styles}></style>
+  <Fragment set:html={home.body} />
+  {home.scripts.map((script) => <script is:inline set:html={script}></script>)}
+</BaseLayout>
