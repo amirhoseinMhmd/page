@@ -9,3 +9,8 @@ public/publication.bib
 
 .DS_Store
 .idea/
+
+# Local legacy HTML sources
+index.html
+blog.html
+blog/*.html

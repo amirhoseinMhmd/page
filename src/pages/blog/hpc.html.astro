@@ -1,16 +1,5 @@
 ---
-import { getAllBlogPosts } from '../../data/blog';
-
-export async function getStaticPaths() {
-  const posts = await getAllBlogPosts();
-
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-  }));
-}
-
-const { slug } = Astro.params;
-const destination = `/blog/${slug}/`;
+const destination = '/blog/hpc/';
 ---
 
 <!DOCTYPE html>

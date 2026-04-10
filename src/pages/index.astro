@@ -1,8 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { loadLegacyPage } from '../lib/legacy-page';
-
-const home = await loadLegacyPage('index.html');
 ---
 
 <BaseLayout
@@ -10,7 +7,522 @@ const home = await loadLegacyPage('index.html');
   description="Amirhossein Mohammadi — Ph.D. Candidate in Natural Language Processing at Utrecht University. Research on LLMs, computational linguistics, and cognitive science."
   htmlClass="scroll-smooth"
 >
-  <style is:global set:html={home.styles}></style>
-  <Fragment set:html={home.body} />
-  {home.scripts.map((script) => <script is:inline set:html={script}></script>)}
+  <style is:global>
+    :root {
+      --ink: #111;
+      --ink-mid: #444;
+      --ink-light: #777;
+      --ink-faint: #aaa;
+      --bg: #fff;
+      --bg-subtle: #f9f9f9;
+      --rule: #e4e4e4;
+      --accent: #2a5caa;
+      --accent-light: #e8eef8;
+      --tag-bg: #f0f4fa;
+      --tag-color: #2a5caa;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-padding-top: 3.5rem; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      max-width: 760px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 3rem;
+    }
+    .nav-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem; font-weight: 500;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 0.1rem; }
+    .nav-links a {
+      font-size: 0.75rem; font-weight: 600; color: var(--ink-light);
+      text-decoration: none; padding: 0.3rem 0.55rem; border-radius: 3px;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover { color: var(--ink); background: var(--bg-subtle); }
+    .nav-links a.active { color: var(--accent); }
+
+    .mobile-toggle {
+      display: none; background: none; border: none;
+      font-size: 1.1rem; color: var(--ink-light); cursor: pointer; padding: 0.4rem;
+    }
+    .mobile-nav { display: none; border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem 0.75rem; }
+    .mobile-nav.open { display: block; }
+    .mobile-nav a {
+      display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink-light);
+      text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .mobile-nav a:hover { color: var(--ink); }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+    }
+
+    .page { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .hero {
+      padding: 3rem 0 2.25rem;
+      display: flex; gap: 2.25rem; align-items: flex-start;
+    }
+    .hero-photo img {
+      width: 150px; height: 150px; border-radius: 50%;
+      object-fit: cover; filter: grayscale(10%);
+      border: 3px solid var(--rule);
+    }
+    .hero-text { padding-top: 0.1rem; }
+    .hero-text h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 2rem; font-weight: 500; line-height: 1.15; margin-bottom: 0.3rem;
+    }
+    .hero-text .subtitle {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem; color: var(--ink-mid); font-style: italic;
+      margin-bottom: 0.15rem;
+    }
+    .hero-text .affil {
+      font-size: 0.87rem; color: var(--ink-light); margin-bottom: 1.1rem;
+    }
+    .hero-links { display: flex; gap: 0.9rem; flex-wrap: wrap; align-items: center; }
+    .hero-links a {
+      font-size: 0.82rem; color: var(--ink-light); text-decoration: none;
+      transition: color 0.15s; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .hero-links a:hover { color: var(--accent); }
+    .hero-links .sep { color: var(--rule); font-size: 0.8rem; }
+
+    @media (max-width: 540px) {
+      .hero { flex-direction: column; align-items: center; text-align: center; gap: 1.25rem; padding: 2.25rem 0 1.5rem; }
+      .hero-links { justify-content: center; }
+      .hero-text h1 { font-size: 1.7rem; }
+    }
+
+    .section { padding: 1.75rem 0; border-top: 1px solid var(--rule); }
+
+    .section-heading {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.25rem; font-weight: 600; color: var(--ink);
+      margin-bottom: 1.1rem; letter-spacing: 0.01em;
+    }
+
+    .about p {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem; line-height: 1.82; color: var(--ink-mid);
+      margin-bottom: 0.8rem;
+    }
+    .about p:last-child { margin-bottom: 0; }
+
+    .interests-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .interest-tag {
+      font-size: 0.8rem; font-weight: 500;
+      background: var(--tag-bg); color: var(--tag-color);
+      padding: 0.3rem 0.7rem; border-radius: 4px;
+      border: 1px solid #d2ddf5;
+      transition: background 0.15s;
+    }
+    .interest-tag:hover { background: #dde7f7; }
+
+    .pub-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; color: var(--ink-faint);
+      margin-top: 1.35rem; margin-bottom: 0.6rem;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .pub-year:first-child { margin-top: 0; }
+
+    .pub-entry {
+      padding: 0.65rem 0 0.65rem 0;
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .pub-entry:last-child { border-bottom: none; }
+
+    .pub-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.02rem; font-weight: 500; color: var(--ink);
+      line-height: 1.45; margin-bottom: 0.22rem;
+    }
+    .pub-authors {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem; color: var(--ink-mid); line-height: 1.5;
+      margin-bottom: 0.18rem;
+    }
+    .pub-authors .me { font-weight: 600; color: var(--ink); }
+    .pub-venue {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem; color: var(--ink-light);
+      font-style: italic; margin-bottom: 0.4rem;
+    }
+    .pub-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .pub-link {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--ink-light); text-decoration: none;
+      padding: 0.15rem 0.45rem; border: 1px solid var(--rule);
+      border-radius: 3px; transition: all 0.15s;
+    }
+    .pub-link:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+    .pub-bib-btn {
+      cursor: pointer; background: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--ink-light);
+      padding: 0.15rem 0.45rem; border: 1px solid var(--rule);
+      border-radius: 3px; transition: all 0.15s;
+    }
+    .pub-bib-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+    .pub-bib-btn.copied { color: #2e7d32; border-color: #2e7d32; background: #e8f4e8; }
+
+    .pub-abstract-toggle {
+      cursor: pointer; background: none; border: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--ink-light);
+      padding: 0.15rem 0; transition: color 0.15s;
+    }
+    .pub-abstract-toggle:hover { color: var(--accent); }
+    .pub-abstract {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem; color: var(--ink-mid); line-height: 1.7;
+      margin-top: 0.6rem; padding: 0.7rem 0.9rem;
+      background: var(--bg-subtle); border-left: 2px solid var(--rule);
+      border-radius: 0 3px 3px 0;
+      display: none;
+    }
+    .pub-abstract.open { display: block; }
+
+    .pub-loading, .pub-error {
+      text-align: center; padding: 2rem 0; color: var(--ink-light);
+      font-style: italic; font-size: 0.9rem;
+    }
+
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
+    .contact-label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--ink-faint); font-weight: 700; margin-bottom: 0.2rem;
+    }
+    .contact-val {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem; color: var(--ink-mid);
+    }
+    .contact-val a { color: var(--ink-mid); text-decoration: none; transition: color 0.15s; }
+    .contact-val a:hover { color: var(--accent); }
+
+    .footer {
+      border-top: 1px solid var(--rule); margin-top: 2.5rem; padding: 1.5rem 0;
+      text-align: center; font-size: 0.77rem; color: var(--ink-faint);
+    }
+    .footer a { color: var(--ink-faint); text-decoration: none; }
+    .footer a:hover { color: var(--ink-light); }
+
+    @media print {
+      .nav, .mobile-toggle, .mobile-nav { display: none; }
+      .page { max-width: 100%; }
+    }
+  </style>
+
+  <header class="nav">
+    <nav class="nav-inner">
+      <a href="/" class="nav-name">Amirhossein M.</a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="/blog/">Blog</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </nav>
+    <div class="mobile-nav" id="mobile-menu">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="/blog/">Blog</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <div class="page">
+    <section class="hero">
+      <div class="hero-photo">
+        <img src="/images/Profile.jpg" alt="Amirhossein Mohammadi" />
+      </div>
+      <div class="hero-text">
+        <h1>Amirhossein Mohammadi</h1>
+        <p class="subtitle">Ph.D. Candidate in Natural Language Processing</p>
+        <p class="affil">Utrecht University &middot; Netherlands</p>
+        <div class="hero-links">
+          <a href="mailto:a.mohammadi@uu.nl"><i class="fas fa-envelope"></i> Email</a>
+          <span class="sep">/</span>
+          <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank" rel="noreferrer"><i class="fas fa-graduation-cap"></i> Scholar</a>
+          <span class="sep">/</span>
+          <a href="https://github.com/amirhoseinMhmd" target="_blank" rel="noreferrer"><i class="fab fa-github"></i> GitHub</a>
+          <span class="sep">/</span>
+          <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" rel="noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <h2 class="section-heading">About</h2>
+      <div class="about">
+        <p>I am a Ph.D. candidate at Utrecht University, supervised by <a href="https://robertab.nl/" target="_blank" rel="noreferrer" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Robert Bagheri</a>, <a href="https://www.uu.nl/staff/AGatt" target="_blank" rel="noreferrer" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Albert Gatt</a>, and <a href="https://www.uu.nl/medewerkers/LEFrank" target="_blank" rel="noreferrer" style="color: var(--ink); text-decoration: underline; text-underline-offset: 2px;">Laurence Frank</a>, working at the intersection of computational linguistics, cognitive science, and artificial intelligence. My research investigates the capabilities and limitations of large language models in computing and acquiring natural and unnatural languages. I am particularly interested in understanding how LLMs process, recover, and interpret structurally degraded input, and what this reveals about the relationship between neural architectural biases and human cognitive constraints on language.</p>
+        <p>My broader research interests include mechanistic interpretability of language models, information locality in natural language, and the application of NLP methods to mental health.</p>
+      </div>
+    </section>
+
+    <section id="research" class="section">
+      <h2 class="section-heading">Research Interests</h2>
+      <div class="interests-grid">
+        <span class="interest-tag">Large Language Models</span>
+        <span class="interest-tag">Computational Linguistics</span>
+        <span class="interest-tag">Cognitive Science &amp; Language</span>
+        <span class="interest-tag">Mechanistic Interpretability</span>
+        <span class="interest-tag">Impossible &amp; Unnatural Languages</span>
+        <span class="interest-tag">Information Locality</span>
+        <span class="interest-tag">Structurally Degraded Input</span>
+        <span class="interest-tag">NLP for Mental Health</span>
+        <span class="interest-tag">Part-of-Speech Tagging</span>
+      </div>
+    </section>
+
+    <section id="publications" class="section">
+      <h2 class="section-heading">Publications</h2>
+      <div id="publications-list">
+        <div class="pub-loading">Loading publications…</div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 class="section-heading">Contact</h2>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="contact-label">Email</div>
+          <div class="contact-val"><a href="mailto:a.mohammadi@uu.nl">a.mohammadi [at] uu.nl</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Office</div>
+          <div class="contact-val">C1.01, Groenmangebouw<br />Padualaan, Utrecht</div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Academic Profiles</div>
+          <div class="contact-val">
+            <a href="https://scholar.google.com/citations?user=-bRKO-4AAAAJ&hl=en" target="_blank" rel="noreferrer">Google Scholar</a> &middot;
+            <a href="https://github.com/amirhoseinMhmd" target="_blank" rel="noreferrer">GitHub</a> &middot;
+            <a href="https://www.linkedin.com/in/amirhoseinmhmd/" target="_blank" rel="noreferrer">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      &copy; 2026 Amirhossein Mohammadi &mdash;
+      <a href="https://www.uu.nl" target="_blank" rel="noreferrer">Utrecht University</a>
+    </footer>
+  </div>
+
+  <script is:inline>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn?.querySelector('i');
+
+    btn?.addEventListener('click', () => {
+      menu?.classList.toggle('open');
+      icon?.classList.toggle('fa-bars');
+      icon?.classList.toggle('fa-times');
+    });
+
+    document.querySelectorAll('.mobile-nav a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu?.classList.remove('open');
+        icon?.classList.add('fa-bars');
+        icon?.classList.remove('fa-times');
+      });
+    });
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        navLinks.forEach((link) => link.classList.remove('active'));
+        const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        active?.classList.add('active');
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach((section) => observer.observe(section));
+
+    class BibtexParser {
+      parse(source) {
+        const entries = [];
+        const re = /@(\w+)\s*\{\s*([^,]+)\s*,\s*([\s\S]*?)\n\}/gm;
+        let match;
+
+        while ((match = re.exec(source)) !== null) {
+          entries.push({
+            type: match[1].toLowerCase(),
+            key: match[2].trim(),
+            _raw: match[0],
+            ...this.parseFields(match[3]),
+          });
+        }
+
+        return entries;
+      }
+
+      parseFields(source) {
+        const fields = {};
+        const re = /(\w+)\s*=\s*\{((?:[^{}]|\{[^{}]*\})*)\}|(\w+)\s*=\s*"([^"]*)"/g;
+        let match;
+
+        while ((match = re.exec(source)) !== null) {
+          fields[(match[1] || match[3]).toLowerCase()] = (match[2] || match[4]).trim();
+        }
+
+        return fields;
+      }
+    }
+
+    function esc(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function fmtAuthors(authorStr) {
+      if (!authorStr) {
+        return '';
+      }
+
+      return authorStr
+        .split(' and ')
+        .map((author) => author.trim())
+        .map((author) => {
+          const normalized = author.toLowerCase();
+          if (normalized.includes('mohammadi') && normalized.includes('amirhossein')) {
+            return `<strong class="me">${esc(author)}</strong>`;
+          }
+          return esc(author);
+        })
+        .join(', ');
+    }
+
+    function copyBib(raw, button) {
+      navigator.clipboard.writeText(raw).then(() => {
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.textContent = 'Cite';
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    window.copyBib = copyBib;
+
+    fetch('/publication.bib')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Could not load publications');
+        }
+        return response.text();
+      })
+      .then((bib) => {
+        const pubs = new BibtexParser().parse(bib);
+        const list = document.getElementById('publications-list');
+
+        if (!list) {
+          return;
+        }
+
+        if (!pubs.length) {
+          list.innerHTML = '<div class="pub-error">No publications found.</div>';
+          return;
+        }
+
+        pubs.sort((a, b) => (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0));
+
+        const groups = {};
+        pubs.forEach((pub) => {
+          const year = pub.year || 'Undated';
+          groups[year] = groups[year] || [];
+          groups[year].push(pub);
+        });
+
+        let html = '';
+        for (const year of Object.keys(groups).sort((a, b) => b - a)) {
+          html += `<div class="pub-year">${esc(year)}</div>`;
+          groups[year].forEach((pub, index) => {
+            const venue = pub.journal || pub.booktitle || pub.publisher || '';
+            const uid = `pub-${year}-${index}`;
+            const absId = `abs-${uid}`;
+
+            let links = '';
+            if (pub.url) {
+              links += `<a class="pub-link" href="${esc(pub.url)}" target="_blank" rel="noreferrer">Link</a>`;
+            }
+            if (pub.doi) {
+              links += `<a class="pub-link" href="https://doi.org/${esc(pub.doi)}" target="_blank" rel="noreferrer">DOI</a>`;
+            }
+            if (venue.includes('arXiv:')) {
+              const arxiv = venue.match(/arXiv:(\d+\.\d+)/);
+              if (arxiv) {
+                links += `<a class="pub-link" href="https://arxiv.org/pdf/${arxiv[1]}" target="_blank" rel="noreferrer">PDF</a>`;
+              }
+            }
+            if (pub.eprint) {
+              links += `<a class="pub-link" href="https://arxiv.org/abs/${esc(pub.eprint)}" target="_blank" rel="noreferrer">arXiv</a>`;
+            }
+
+            links += `<button class="pub-bib-btn" onclick='copyBib(${JSON.stringify(pub._raw)}, this)'>Cite</button>`;
+
+            let absToggle = '';
+            let absBlock = '';
+            if (pub.abstract) {
+              absToggle = `<button class="pub-abstract-toggle" onclick="document.getElementById('${absId}').classList.toggle('open');this.textContent=document.getElementById('${absId}').classList.contains('open')?'Hide abstract':'Abstract'">Abstract</button>`;
+              absBlock = `<div class="pub-abstract" id="${absId}">${esc(pub.abstract)}</div>`;
+            }
+
+            html += `
+              <div class="pub-entry">
+                <div class="pub-title">${esc(pub.title || 'Untitled')}</div>
+                <div class="pub-authors">${fmtAuthors(pub.author)}</div>
+                ${venue ? `<div class="pub-venue">${esc(venue)}</div>` : ''}
+                <div class="pub-links">${links}${absToggle ? `&ensp;${absToggle}` : ''}</div>
+                ${absBlock}
+              </div>`;
+          });
+        }
+
+        list.innerHTML = html;
+      })
+      .catch(() => {
+        const list = document.getElementById('publications-list');
+        if (list) {
+          list.innerHTML = '<div class="pub-error">Unable to load publications.</div>';
+        }
+      });
+  </script>
 </BaseLayout>

@@ -1,17 +1,147 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getListedBlogPosts } from '../../data/blog';
-import { loadLegacyPage } from '../../lib/legacy-page';
+import { getBlogPosts } from '../../data/blog';
 
-const posts = await getListedBlogPosts();
-const legacyBlog = await loadLegacyPage('blog.html');
+const posts = getBlogPosts();
 ---
 
 <BaseLayout
   title="Blog — Amirhossein Mohammadi"
   description="Notes, tutorials, and essays by Amirhossein Mohammadi."
 >
-  <style is:global set:html={legacyBlog.styles}></style>
+  <style is:global>
+    :root {
+      --ink: #111;
+      --ink-mid: #444;
+      --ink-light: #777;
+      --bg: #fff;
+      --rule: #e0e0e0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      max-width: 720px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 3rem;
+    }
+    .nav-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem; font-weight: 500;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 0.15rem; }
+    .nav-links a {
+      font-size: 0.78rem; font-weight: 500; color: var(--ink-light);
+      text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 3px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { color: var(--ink); }
+
+    .mobile-toggle {
+      display: none; background: none; border: none;
+      font-size: 1.1rem; color: var(--ink-light); cursor: pointer; padding: 0.4rem;
+    }
+    .mobile-nav { display: none; border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem 0.75rem; }
+    .mobile-nav.open { display: block; }
+    .mobile-nav a {
+      display: block; font-size: 0.85rem; font-weight: 500; color: var(--ink-light);
+      text-decoration: none; padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .mobile-nav a:hover { color: var(--ink); }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+    }
+
+    .page {
+      max-width: 720px; margin: 0 auto; padding: 0 1.5rem;
+    }
+
+    .page-header {
+      padding: 2.5rem 0 1.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .page-header h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.8rem; font-weight: 500; color: var(--ink);
+    }
+
+    .page-header p {
+      font-size: 0.9rem; color: var(--ink-light); margin-top: 0.25rem;
+    }
+
+    .blog-post {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .blog-post:last-child { border-bottom: none; }
+
+    .blog-post-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; color: var(--ink-light);
+      letter-spacing: 0.02em;
+    }
+
+    .blog-post-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.2rem; font-weight: 500; color: var(--ink);
+      margin: 0.2rem 0 0.35rem;
+    }
+
+    .blog-post-title a {
+      color: var(--ink);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .blog-post-title a:hover {
+      color: var(--ink-mid);
+    }
+
+    .blog-post-summary {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem; color: var(--ink-mid); line-height: 1.7;
+    }
+
+    .blog-post-tags {
+      display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem;
+    }
+
+    .blog-post-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; color: var(--ink-light);
+      background: #f5f5f5; padding: 0.15rem 0.45rem; border-radius: 2px;
+    }
+
+    .footer {
+      border-top: 1px solid var(--rule); margin-top: 2rem; padding: 1.5rem 0;
+      text-align: center; font-size: 0.78rem; color: var(--ink-light);
+    }
+
+    @media print {
+      .nav, .mobile-toggle, .mobile-nav { display: none; }
+      .page { max-width: 100%; }
+    }
+  </style>
 
   <header class="nav">
     <nav class="nav-inner">
@@ -46,7 +176,7 @@ const legacyBlog = await loadLegacyPage('blog.html');
       <div class="blog-post">
         <div class="blog-post-date">{post.dateLabel}</div>
         <div class="blog-post-title">
-          <a href={`/blog/${post.slug}/`}>{post.title}</a>
+          <a href={post.href}>{post.title}</a>
         </div>
         <p class="blog-post-summary">{post.summary}</p>
         <div class="blog-post-tags">
