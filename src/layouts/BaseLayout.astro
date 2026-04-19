@@ -10,6 +10,8 @@ const {
   description = 'Amirhossein Mohammadi — personal website and blog.',
   htmlClass = '',
 } = Astro.props;
+
+const gaMeasurementId = import.meta.env.PROD ? 'G-BH7LEVWN7X' : null;
 ---
 
 <!DOCTYPE html>
@@ -27,6 +29,20 @@ const {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  {gaMeasurementId && (
+    <>
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+      ></script>
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { window.dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-BH7LEVWN7X');
+      </script>
+    </>
+  )}
   <style is:global>
     * {
       box-sizing: border-box;
