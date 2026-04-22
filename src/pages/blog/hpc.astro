@@ -1,14 +1,52 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { blogPosts } from '../../data/blog';
 import SlurmScriptBuilder from '../../components/SlurmScriptBuilder';
 import SshCommandBuilder from '../../components/SshCommandBuilder';
+
+const article = blogPosts.find((post) => post.slug === 'hpc');
+
+if (!article) {
+  throw new Error('Missing blog metadata for the HPC article.');
+}
+
+const articleUrl = `https://amirhosein.nl${article.href}`;
+const updatedLabel = article.updatedOn
+  ? new Date(`${article.updatedOn}T00:00:00`).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  : null;
+const articleStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: article.title,
+  description: article.description,
+  datePublished: article.publishedOn,
+  dateModified: article.updatedOn ?? article.publishedOn,
+  author: {
+    '@type': 'Person',
+    name: 'Amirhossein Mohammadi',
+    url: 'https://amirhosein.nl/',
+  },
+  mainEntityOfPage: articleUrl,
+  url: articleUrl,
+  keywords: article.tags.join(', '),
+};
 ---
 
 <BaseLayout
-  title="Getting Started with HPC Clusters, Slurm & tmux — Amirhossein Mohammadi"
-  description="A beginner-friendly, step-by-step guide to connecting to HPC clusters, navigating the terminal, editing files, managing code with Git, and submitting GPU jobs with Slurm."
+  title={`${article.title} — Amirhossein Mohammadi`}
+  description={article.description}
   htmlClass="scroll-smooth"
 >
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(articleStructuredData)}
+    ></script>
+  </Fragment>
   <style is:global>
     :root {
       --ink: #111;
@@ -37,6 +75,20 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
       color: var(--ink);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 3rem;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #2a5caa 0%, #5f87d3 100%);
+      transform: scaleX(0);
+      transform-origin: left center;
+      z-index: 101;
+      opacity: 0.95;
+      pointer-events: none;
     }
 
     .nav {
@@ -116,6 +168,91 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
     .article-meta .authors { font-family: 'EB Garamond', serif; font-size: 0.95rem; color: var(--ink-mid); font-style: italic; }
     .article-meta .sep { color: var(--rule); }
 
+    .reader-start {
+      padding: 1.65rem 0 0.4rem;
+    }
+    .reader-start-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .summary-panel {
+      background: linear-gradient(180deg, #fbfcfe 0%, #f6f8fc 100%);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 1.1rem 1.15rem;
+    }
+    .summary-panel.alt {
+      background: linear-gradient(180deg, #fdfcf8 0%, #faf7ef 100%);
+    }
+    .summary-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.55rem;
+    }
+    .summary-panel.alt .summary-eyebrow {
+      color: var(--orange);
+    }
+    .summary-panel h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 0.45rem;
+      color: var(--ink);
+    }
+    .summary-panel p {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+      margin-bottom: 0.8rem;
+    }
+    .summary-list {
+      padding-left: 1.1rem;
+      display: grid;
+      gap: 0.4rem;
+      color: var(--ink-mid);
+    }
+    .summary-list li {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .jump-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 1rem 0 0;
+    }
+    .jump-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: #fff;
+      padding: 0.48rem 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-mid);
+      text-decoration: none;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .jump-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: #fafcff;
+    }
+    @media (max-width: 640px) {
+      .reader-start-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .toc {
       background: var(--bg-subtle); border: 1px solid var(--rule);
       border-radius: 6px; padding: 1.1rem 1.3rem; margin: 2rem 0;
@@ -133,6 +270,7 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
     }
     .toc a { color: var(--ink-mid); text-decoration: none; transition: color 0.15s; }
     .toc a:hover { color: var(--accent); }
+    .toc a.active { color: var(--accent); font-weight: 600; }
 
     .article-body { padding: 2.25rem 0; }
     .article-body p {
@@ -222,9 +360,38 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
       font-size: 1rem; color: var(--ink-mid); line-height: 1.65;
     }
 
+    .code-block-wrap {
+      margin: 1.25rem 0;
+    }
+    .code-block-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.4rem;
+    }
+    .copy-code-button {
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--ink-light);
+      border-radius: 999px;
+      padding: 0.38rem 0.75rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+    .copy-code-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .copy-code-button.copied {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
     .code-block {
       background: #1e1e2e; color: #cdd6f4;
-      border-radius: 6px; padding: 1.1rem 1.2rem; margin: 1.25rem 0;
+      border-radius: 6px; padding: 1.1rem 1.2rem; margin: 0;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82rem; line-height: 1.7;
       overflow-x: auto; white-space: pre;
@@ -297,6 +464,94 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
     .try-it-link:hover { opacity: 0.85; }
     .try-it-link.gh { background: #313244; color: #cdd6f4; }
     .try-it-link.doc { background: #45475a; color: #cdd6f4; }
+
+    .issue-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin: 1.35rem 0;
+    }
+    .issue-card {
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      background: #fff;
+      padding: 1rem 1rem 0.95rem;
+    }
+    .issue-card h3 {
+      margin: 0 0 0.45rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .issue-card p {
+      margin: 0;
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--ink-mid);
+    }
+
+    .next-steps {
+      margin-top: 2rem;
+      padding: 1.35rem 1.45rem;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      background: linear-gradient(180deg, #fcfcfd 0%, #f7f8fb 100%);
+    }
+    .next-steps-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .next-steps h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'EB Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .next-steps > p {
+      margin: 0 0 1rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink-light);
+    }
+    .next-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    .next-step-card {
+      display: grid;
+      gap: 0.3rem;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.95rem 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .next-step-card:hover {
+      transform: translateY(-1px);
+      border-color: #c8d5ef;
+      box-shadow: 0 12px 28px rgba(17, 17, 17, 0.05);
+    }
+    .next-step-card strong {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    .next-step-card span {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: var(--ink-mid);
+    }
 
     .island-card {
       background: linear-gradient(180deg, #fcfcfd 0%, #f7f8fb 100%);
@@ -451,6 +706,10 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
         align-items: flex-start;
         flex-direction: column;
       }
+      .issue-grid,
+      .next-steps-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .footer {
@@ -489,6 +748,8 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
     </div>
   </header>
 
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+
   <div class="page">
     <article>
       <!-- ── HEADER ── -->
@@ -510,13 +771,54 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
         <p class="subtitle">A beginner-friendly guide to running Python on any high-performance computing cluster</p>
 
         <div class="article-meta">
-          <span class="date">April 2026</span>
+          <span class="date">{article.dateLabel}</span>
           <span class="sep">&middot;</span>
           <span class="authors">Amirhossein Mohammadi</span>
           <span class="sep">&middot;</span>
-          <span>25 min read</span>
+          <span>{article.readingTimeLabel}</span>
+          {updatedLabel && (
+            <>
+              <span class="sep">&middot;</span>
+              <span>Updated {updatedLabel}</span>
+            </>
+          )}
         </div>
       </header>
+
+      <section class="reader-start" aria-label="Quick start">
+        <div class="reader-start-grid">
+          <div class="summary-panel">
+            <div class="summary-eyebrow">TL;DR</div>
+            <h2>The shortest path to your first successful cluster run</h2>
+            <p>If you want the minimum viable workflow, get one tiny CPU job working before you touch GPUs, long runtimes, or bigger datasets.</p>
+            <ul class="summary-list">
+              <li>Use SSH to log in, then create a clean project folder.</li>
+              <li>Upload one small Python script with <code>scp</code>.</li>
+              <li>Create a <code>.venv</code>, install only the packages you need, and verify a tiny local run.</li>
+              <li>Write a minimal <code>job.slurm</code>, submit with <code>sbatch</code>, and inspect the <code>slurm-*.out</code> file.</li>
+            </ul>
+          </div>
+          <div class="summary-panel alt">
+            <div class="summary-eyebrow">Best For</div>
+            <h2>Who this guide is designed for</h2>
+            <p>This article works best if you are touching an HPC cluster for the first time and want a practical sequence instead of scattered documentation.</p>
+            <ul class="summary-list">
+              <li>Students or researchers who know some Python but not cluster workflows yet.</li>
+              <li>People moving from laptop experiments to scheduled jobs on shared infrastructure.</li>
+              <li>Anyone who keeps running into login-node limits, missing packages, or confusing Slurm errors.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="jump-strip" aria-label="Popular jump links">
+          <a class="jump-link" href="#connecting">Start with SSH</a>
+          <a class="jump-link" href="#uploading">Upload files</a>
+          <a class="jump-link" href="#python">Set up Python</a>
+          <a class="jump-link" href="#slurm">Submit a job</a>
+          <a class="jump-link" href="#gpu">Use a GPU</a>
+          <a class="jump-link" href="#mistakes">Fix common issues</a>
+        </div>
+      </section>
 
       <nav class="toc" aria-label="Table of contents">
         <div class="toc-title">In this guide</div>
@@ -531,6 +833,7 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
           <li><a href="#slurm">Submitting jobs with Slurm</a></li>
           <li><a href="#gpu">Running GPU jobs &amp; monitoring with <code>nvidia-smi</code></a></li>
           <li><a href="#git">Using Git on the cluster</a></li>
+          <li><a href="#mistakes">Common first-run issues</a></li>
           <li><a href="#quickref">Quick reference — all commands</a></li>
         </ol>
       </nav>
@@ -1175,7 +1478,38 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
           <p><code>git reset --hard</code> permanently discards uncommitted changes with no undo. Use <code>git restore</code> or <code>git stash</code> instead.</p>
         </div>
 
-        <h2 id="quickref"><span class="step-num">11</span> Quick reference — all commands</h2>
+        <h2 id="mistakes"><span class="step-num">11</span> Common first-run issues</h2>
+
+        <p>Most frustrating first attempts fail for a small set of predictable reasons. Check this section before assuming the cluster is broken or your code is cursed.</p>
+
+        <div class="issue-grid">
+          <div class="issue-card">
+            <h3>SSH says permission denied</h3>
+            <p>Double-check your username and hostname first. If they are correct, confirm whether your cluster requires VPN access, key-based login, or a one-time password instead of a normal password.</p>
+          </div>
+          <div class="issue-card">
+            <h3>Slurm rejects your job script</h3>
+            <p>Errors like invalid account or unknown partition usually mean the cluster expects different queue names or billing settings. Run <code>sinfo</code> and compare with your cluster documentation.</p>
+          </div>
+          <div class="issue-card">
+            <h3>Python or pip is missing inside the job</h3>
+            <p>Interactive shells and Slurm jobs do not always share the same environment. Load the Python module inside the job script itself, then activate your <code>.venv</code> in that script too.</p>
+          </div>
+          <div class="issue-card">
+            <h3>ModuleNotFoundError after install</h3>
+            <p>You probably installed packages into one interpreter and ran the job with another. Check <code>which python</code> after activation and confirm the same path is used inside the Slurm job.</p>
+          </div>
+          <div class="issue-card">
+            <h3>Job stays pending forever</h3>
+            <p>GPU jobs and long runtimes wait the longest. Ask for fewer resources, shorten the time limit, or start with a CPU test job to confirm the workflow before scaling up.</p>
+          </div>
+          <div class="issue-card">
+            <h3>The output file looks empty</h3>
+            <p>Make sure your script actually prints progress and that it reaches the relevant code path. If it exits immediately, the real error is usually at the top of <code>slurm-JOBID.out</code>.</p>
+          </div>
+        </div>
+
+        <h2 id="quickref"><span class="step-num">12</span> Quick reference — all commands</h2>
 
         <h3>Connecting &amp; uploading files</h3>
         <table class="compare-table">
@@ -1307,6 +1641,26 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
           <div class="callout-label">🚀 You are ready to go!</div>
           <p>Start small: connect to the cluster, upload a simple Python script, and submit a CPU job first. Once that works, move to GPU jobs. If anything goes wrong, the <code>.out</code> file is your best debugging companion.</p>
         </div>
+
+        <section class="next-steps" aria-label="Next steps">
+          <div class="next-steps-label">Next steps</div>
+          <h2>Keep the momentum going</h2>
+          <p>Once you finish this guide, use one concrete follow-up action right away so the workflow sticks.</p>
+          <div class="next-steps-grid">
+            <a class="next-step-card" href="#slurm">
+              <strong>Submit a tiny CPU job</strong>
+              <span>Use the minimal Slurm example first, even if your real target is GPU training.</span>
+            </a>
+            <a class="next-step-card" href="#gpu">
+              <strong>Upgrade to a GPU run</strong>
+              <span>Only add CUDA, a GPU partition, and larger resources after the CPU path is clean.</span>
+            </a>
+            <a class="next-step-card" href="/files/HPC_Slurm_Beginner_Guide.pdf">
+              <strong>Save the PDF cheat sheet</strong>
+              <span>Keep the command summary nearby when you are working on the cluster for the first few times.</span>
+            </a>
+          </div>
+        </section>
       </div>
     </article>
 
@@ -1321,6 +1675,7 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
     const btn = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
     const icon = btn?.querySelector('i');
+    const progress = document.getElementById('reading-progress');
 
     btn?.addEventListener('click', () => {
       menu?.classList.toggle('open');
@@ -1333,6 +1688,113 @@ import SshCommandBuilder from '../../components/SshCommandBuilder';
         menu?.classList.remove('open');
         icon?.classList.add('fa-bars');
         icon?.classList.remove('fa-times');
+      });
+    });
+
+    const article = document.querySelector('article');
+    const updateProgress = () => {
+      if (!article || !progress) {
+        return;
+      }
+
+      const articleTop = article.offsetTop;
+      const articleHeight = article.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      const denominator = Math.max(articleHeight - viewportHeight * 0.65, 1);
+      const numerator = window.scrollY - articleTop + viewportHeight * 0.2;
+      const ratio = Math.min(Math.max(numerator / denominator, 0), 1);
+      progress.style.transform = `scaleX(${ratio})`;
+    };
+
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+
+    const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]'));
+    const observedSections = tocLinks
+      .map((link) => document.querySelector(link.getAttribute('href')))
+      .filter(Boolean);
+
+    if (tocLinks.length && observedSections.length) {
+      const activateTocLink = (activeId) => {
+        tocLinks.forEach((link) => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${activeId}`);
+        });
+      };
+
+      const tocObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible[0]?.target?.id) {
+          activateTocLink(visible[0].target.id);
+        }
+      }, {
+        rootMargin: '-18% 0px -65% 0px',
+        threshold: [0.15, 0.35, 0.6],
+      });
+
+      observedSections.forEach((section) => tocObserver.observe(section));
+    }
+
+    const normalizeCodeText = (raw) => {
+      const lines = raw.replace(/\u00a0/g, ' ').split('\n');
+
+      while (lines.length && !lines[0].trim()) {
+        lines.shift();
+      }
+
+      while (lines.length && !lines[lines.length - 1].trim()) {
+        lines.pop();
+      }
+
+      const indents = lines
+        .filter((line) => line.trim())
+        .map((line) => (line.match(/^ */) || [''])[0].length);
+      const minIndent = indents.length ? Math.min(...indents) : 0;
+
+      return lines.map((line) => line.slice(minIndent)).join('\n');
+    };
+
+    document.querySelectorAll('.code-block').forEach((block) => {
+      if (block.parentElement?.classList.contains('code-block-wrap')) {
+        return;
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrap';
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'code-block-toolbar';
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'copy-code-button';
+      button.textContent = 'Copy';
+
+      toolbar.appendChild(button);
+      block.parentNode?.insertBefore(wrapper, block);
+      wrapper.appendChild(toolbar);
+      wrapper.appendChild(block);
+
+      button.addEventListener('click', async () => {
+        const text = normalizeCodeText(block.textContent || '');
+
+        try {
+          await navigator.clipboard.writeText(text);
+          button.textContent = 'Copied';
+          button.classList.add('copied');
+          window.setTimeout(() => {
+            button.textContent = 'Copy';
+            button.classList.remove('copied');
+          }, 1800);
+        } catch (_error) {
+          button.textContent = 'Copy failed';
+          window.setTimeout(() => {
+            button.textContent = 'Copy';
+          }, 1800);
+        }
       });
     });
   </script>

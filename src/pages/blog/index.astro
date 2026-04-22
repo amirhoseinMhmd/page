@@ -96,10 +96,15 @@ const posts = getBlogPosts();
     .blog-post:last-child { border-bottom: none; }
 
     .blog-post-date {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.75rem; color: var(--ink-light);
       letter-spacing: 0.02em;
     }
+    .blog-post-meta-sep { color: #c7c7c7; }
 
     .blog-post-title {
       font-family: 'EB Garamond', serif;
@@ -120,6 +125,21 @@ const posts = getBlogPosts();
     .blog-post-summary {
       font-family: 'EB Garamond', serif;
       font-size: 1rem; color: var(--ink-mid); line-height: 1.7;
+    }
+
+    .blog-post-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .blog-post-cta:hover {
+      color: var(--ink-mid);
     }
 
     .blog-post-tags {
@@ -174,7 +194,11 @@ const posts = getBlogPosts();
 
     {posts.map((post) => (
       <div class="blog-post">
-        <div class="blog-post-date">{post.dateLabel}</div>
+        <div class="blog-post-date">
+          <span>{post.dateLabel}</span>
+          <span class="blog-post-meta-sep">&middot;</span>
+          <span>{post.readingTimeLabel}</span>
+        </div>
         <div class="blog-post-title">
           <a href={post.href}>{post.title}</a>
         </div>
@@ -182,6 +206,9 @@ const posts = getBlogPosts();
         <div class="blog-post-tags">
           {post.tags.map((tag) => <span class="blog-post-tag">{tag}</span>)}
         </div>
+        <a class="blog-post-cta" href={post.href}>
+          Read the guide <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     ))}
 
