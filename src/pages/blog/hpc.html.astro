@@ -1,4 +1,6 @@
 ---
+import { absoluteUrl } from '../../data/site';
+
 const destination = '/blog/hpc/';
 ---
 
@@ -8,8 +10,9 @@ const destination = '/blog/hpc/';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Redirecting…</title>
+  <meta name="robots" content="noindex,follow" />
   <meta http-equiv="refresh" content={`0;url=${destination}`} />
-  <link rel="canonical" href={destination} />
+  <link rel="canonical" href={absoluteUrl(destination)} />
 </head>
 <body>
   <p>Redirecting to <a href={destination}>{destination}</a>.</p>

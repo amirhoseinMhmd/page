@@ -1,14 +1,45 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getBlogPosts } from '../../data/blog';
+import { absoluteUrl, personId, websiteId } from '../../data/site';
 
 const posts = getBlogPosts();
+const blogStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': absoluteUrl('/blog/#blog'),
+  url: absoluteUrl('/blog/'),
+  name: 'Blog — Amirhossein Mohammadi',
+  description: 'Notes, tutorials, and essays by Amirhossein Mohammadi.',
+  inLanguage: 'en',
+  author: {
+    '@id': personId(),
+  },
+  isPartOf: {
+    '@id': websiteId(),
+  },
+  blogPost: posts.map((post) => ({
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    url: absoluteUrl(post.href),
+    datePublished: post.publishedOn,
+    dateModified: post.updatedOn ?? post.publishedOn,
+  })),
+};
 ---
 
 <BaseLayout
   title="Blog — Amirhossein Mohammadi"
   description="Notes, tutorials, and essays by Amirhossein Mohammadi."
+  canonicalPath="/blog/"
 >
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(blogStructuredData)}
+    ></script>
+  </Fragment>
   <style is:global>
     :root {
       --ink: #111;

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { blogPosts } from '../../data/blog';
+import { SITE, absoluteUrl, personId, websiteId } from '../../data/site';
 import SlurmScriptBuilder from '../../components/SlurmScriptBuilder';
 import SshCommandBuilder from '../../components/SshCommandBuilder';
 
@@ -10,7 +11,7 @@ if (!article) {
   throw new Error('Missing blog metadata for the HPC article.');
 }
 
-const articleUrl = `https://amirhosein.nl${article.href}`;
+const articleUrl = absoluteUrl(article.href);
 const updatedLabel = article.updatedOn
   ? new Date(`${article.updatedOn}T00:00:00`).toLocaleDateString('en-US', {
       month: 'long',
@@ -25,12 +26,23 @@ const articleStructuredData = {
   description: article.description,
   datePublished: article.publishedOn,
   dateModified: article.updatedOn ?? article.publishedOn,
+  image: absoluteUrl(SITE.defaultImage),
   author: {
     '@type': 'Person',
-    name: 'Amirhossein Mohammadi',
-    url: 'https://amirhosein.nl/',
+    '@id': personId(),
+    name: SITE.author.name,
+    url: absoluteUrl('/'),
   },
-  mainEntityOfPage: articleUrl,
+  publisher: {
+    '@id': personId(),
+  },
+  isPartOf: {
+    '@id': websiteId(),
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': articleUrl,
+  },
   url: articleUrl,
   keywords: article.tags.join(', '),
 };
@@ -39,6 +51,10 @@ const articleStructuredData = {
 <BaseLayout
   title={`${article.title} — Amirhossein Mohammadi`}
   description={article.description}
+  canonicalPath={article.href}
+  pageType="article"
+  publishedTime={article.publishedOn}
+  modifiedTime={article.updatedOn ?? article.publishedOn}
   htmlClass="scroll-smooth"
 >
   <Fragment slot="head">
