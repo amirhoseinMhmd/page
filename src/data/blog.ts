@@ -12,20 +12,20 @@ export interface BlogPostMeta {
 }
 
 export const blogPosts: BlogPostMeta[] = [
-  {
-    slug: 'mission-accomplished',
-    title: 'Mission Accomplished? Can LLMs Recover Natural Language from Impossible Languages?',
-    description:
-      'A research blog post based on our paper and project repository: the hypotheses, experiments, results, and concrete examples behind teaching GPT-2 to reconstruct natural language from three impossible language perturbations.',
-    summary:
-      'A research walkthrough of the hypotheses, experiments, findings, and concrete examples behind teaching GPT-2 to translate impossible language back into ordinary English.',
-    dateLabel: 'April 2026',
-    publishedOn: '2026-04-22',
-    updatedOn: '2026-04-22',
-    readingTimeLabel: '18 min read',
-    tags: ['Research', 'LLMs', 'NLP', 'Impossible Languages'],
-    href: '/blog/mission-accomplished/',
-  },
+  // {
+  //   slug: 'mission-accomplished',
+  //   title: 'Mission Accomplished? Can LLMs Recover Natural Language from Impossible Languages?',
+  //   description:
+  //     'A research blog post based on our paper and project repository: the hypotheses, experiments, results, and concrete examples behind teaching GPT-2 to reconstruct natural language from three impossible language perturbations.',
+  //   summary:
+  //     'A research walkthrough of the hypotheses, experiments, findings, and concrete examples behind teaching GPT-2 to translate impossible language back into ordinary English.',
+  //   dateLabel: 'April 2026',
+  //   publishedOn: '2026-04-22',
+  //   updatedOn: '2026-04-22',
+  //   readingTimeLabel: '18 min read',
+  //   tags: ['Research', 'LLMs', 'NLP', 'Impossible Languages'],
+  //   href: '/blog/mission-accomplished/',
+  // },
   {
     slug: 'hpc',
     title: 'Getting Started with HPC Clusters, Slurm & tmux',
