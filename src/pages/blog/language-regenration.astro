@@ -1,0 +1,2221 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { blogPosts } from '../../data/blog';
+import { SITE, absoluteUrl, personId, websiteId } from '../../data/site';
+
+const article = blogPosts.find((post) => post.slug === 'language-regenration');
+
+if (!article) {
+  throw new Error('Missing blog metadata for the Language Re-generation article.');
+}
+
+const articleUrl = absoluteUrl(article.href);
+const articleStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: article.title,
+  description: article.description,
+  datePublished: article.publishedOn,
+  dateModified: article.updatedOn ?? article.publishedOn,
+  image: absoluteUrl(SITE.defaultImage),
+  author: [
+    { '@type': 'Person', '@id': personId(), name: SITE.author.name },
+  ],
+  publisher: {
+    '@id': personId(),
+  },
+  isPartOf: {
+    '@id': websiteId(),
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': articleUrl,
+  },
+  url: articleUrl,
+  keywords: article.tags.join(', '),
+};
+---
+
+<BaseLayout
+    title={`${article.title} — Amirhossein M.`}
+    description={article.description}
+    canonicalPath={article.href}
+    pageType="article"
+    publishedTime={article.publishedOn}
+    modifiedTime={article.updatedOn ?? article.publishedOn}
+    htmlClass="scroll-smooth"
+>
+  <Fragment slot="head">
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify(articleStructuredData)}
+    ></script>
+  </Fragment>
+
+  <style is:global>
+    :root {
+      --ink: #111;
+      --ink-mid: #444;
+      --ink-light: #777;
+      --ink-faint: #aaa;
+      --bg: #fff;
+      --bg-subtle: #f9f9f9;
+      --rule: #e4e4e4;
+      --accent: #2a5caa;
+      --accent-light: #e8eef8;
+      --green: #2e7d32;
+      --green-light: #e8f4e8;
+      --red: #c0392b;
+      --red-light: #fff5f5;
+      --orange: #e65100;
+      --orange-light: #fff3e0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-padding-top: 3.5rem; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 3rem;
+    }
+    .nav-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.1rem;
+    }
+    .nav-links a {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-light);
+      text-decoration: none;
+      padding: 0.3rem 0.55rem;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover {
+      color: var(--ink);
+      background: var(--bg-subtle);
+    }
+    .nav-links a.active {
+      color: var(--accent);
+    }
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      color: var(--ink-light);
+      cursor: pointer;
+      padding: 0.4rem;
+    }
+    .mobile-nav {
+      display: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 0.5rem 1.5rem 0.75rem;
+    }
+    .mobile-nav.open {
+      display: block;
+    }
+    .mobile-nav a {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-light);
+      text-decoration: none;
+      padding: 0.4rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .mobile-nav a:hover {
+      color: var(--ink);
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .article-header {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.77rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+      text-decoration: none;
+      margin-bottom: 1.75rem;
+      transition: color 0.15s;
+    }
+    .article-back:hover {
+      color: var(--accent);
+    }
+    .article-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.1rem;
+    }
+    .article-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--ink-light);
+      background: #f0f0f0;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+    }
+    .article-tag.hl {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    .article-tag.tut {
+      background: var(--orange-light);
+      color: var(--orange);
+    }
+    .article-header h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 2.05rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 0.55rem;
+    }
+    .article-header .subtitle {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin-bottom: 0.9rem;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--ink-faint);
+      margin-bottom: 1.25rem;
+    }
+    .article-meta .date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+    .article-meta .authors {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+      font-style: italic;
+    }
+    .article-meta .sep { color: var(--rule); }
+
+    .article-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .article-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-light);
+      text-decoration: none;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+    .article-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .toc {
+      background: var(--bg-subtle);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem;
+      margin: 2rem 0;
+    }
+    .toc-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-faint);
+      margin-bottom: 0.7rem;
+    }
+    .toc ol {
+      padding-left: 1.3rem;
+      margin: 0;
+    }
+    .toc li {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--ink-mid);
+      margin-bottom: 0.25rem;
+      line-height: 1.5;
+    }
+    .toc a {
+      color: var(--ink-mid);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .toc a:hover {
+      color: var(--accent);
+    }
+
+    .article-body {
+      padding: 2.25rem 0;
+    }
+    .article-body p {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.07rem;
+      line-height: 1.87;
+      color: var(--ink-mid);
+      margin-bottom: 1.1rem;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.75rem 0 0.9rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--rule);
+    }
+    .article-body h2:first-child {
+      margin-top: 0;
+      border-top: none;
+    }
+    .article-body h2 .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 3px;
+      padding: 0.15rem 0.45rem;
+      margin-right: 0.6rem;
+      vertical-align: middle;
+      position: relative;
+      top: -2px;
+    }
+    .article-body h3 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 1.75rem 0 0.55rem;
+    }
+    .article-body a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-color: var(--rule);
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .article-body a:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+    .article-body strong { color: var(--ink); }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: #f0f0f0;
+      color: var(--ink-mid);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+    }
+
+    .callout {
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .callout.info { background: var(--accent-light); border-left: 3px solid var(--accent); }
+    .callout.tip { background: var(--green-light); border-left: 3px solid var(--green); }
+    .callout.warn { background: var(--orange-light); border-left: 3px solid var(--orange); }
+    .callout-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .callout.info .callout-label { color: var(--accent); }
+    .callout.tip .callout-label { color: var(--green); }
+    .callout.warn .callout-label { color: var(--orange); }
+    .callout p {
+      font-size: 1rem !important;
+      margin-bottom: 0 !important;
+      color: var(--ink-mid);
+    }
+
+    .demo-sentence {
+      background: var(--bg-subtle);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 1.1rem 1.2rem;
+      margin: 1.1rem 0;
+      font-family: 'EB Garamond', serif;
+    }
+    .demo-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.5rem;
+    }
+    .demo-label.natural { color: var(--green); }
+    .demo-label.perturbed { color: var(--red); }
+    .demo-label.recovered { color: var(--accent); }
+    .demo-text {
+      font-size: 1.12rem;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .demo-text .tok-r {
+      display: inline-block;
+      background: #ffe0e0;
+      color: var(--red);
+      border-radius: 3px;
+      padding: 0 0.3rem;
+      font-size: 0.9em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .demo-text .tok-s {
+      display: inline-block;
+      background: #ddeeff;
+      color: #1a5276;
+      border-radius: 3px;
+      padding: 0 0.3rem;
+      font-size: 0.9em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .demo-text .perturbed-word {
+      background: #fff3cd;
+      border-radius: 2px;
+      padding: 0 0.1rem;
+      color: #7d5a00;
+    }
+    .demo-arrow {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--ink-faint);
+      margin: 0.2rem 0;
+      user-select: none;
+    }
+
+    .figure-shell {
+      background: linear-gradient(180deg, #fcfcfd 0%, #f7f8fb 100%);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 1.15rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .figure-caption {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-faint);
+      margin-bottom: 0.85rem;
+    }
+
+    .dependency-grid,
+    .locality-ladder,
+    .diagnostic-grid,
+    .dep-explainer {
+      display: grid;
+      gap: 0.85rem;
+    }
+    .dependency-grid {
+      grid-template-columns: 1fr;
+    }
+    .diagnostic-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .locality-ladder,
+    .dep-explainer {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .dependency-card,
+    .dep-explainer-card,
+    .ladder-card,
+    .diagnostic-panel {
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.95rem 1rem;
+    }
+    .dependency-card.good {
+      background: linear-gradient(180deg, #fbfefb 0%, #f3faf4 100%);
+      border-color: #d3e5d5;
+    }
+    .dependency-card.bad {
+      background: linear-gradient(180deg, #fffdfd 0%, #fff6f6 100%);
+      border-color: #edd2d2;
+    }
+    .dependency-card h3,
+    .ladder-card strong {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.94rem;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+    .dependency-card p,
+    .dep-explainer-card p,
+    .ladder-card p {
+      margin: 0;
+      font-family: 'EB Garamond', serif;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: var(--ink-mid);
+    }
+    .dep-explainer-card span,
+    .ladder-card span,
+    .diagnostic-panel span {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 0.35rem;
+    }
+    .dependency-sentence {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.8rem 0;
+    }
+    .dep-word {
+      border-radius: 999px;
+      padding: 0.32rem 0.58rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--ink-mid);
+    }
+    .dep-word.head {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: #c9d7ef;
+      font-weight: 700;
+    }
+    .dep-link-list {
+      display: grid;
+      gap: 0.5rem;
+    }
+    .dep-link {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.75rem;
+      align-items: center;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.88rem;
+      color: var(--ink-mid);
+    }
+    .dep-distance {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.69rem;
+      padding: 0.22rem 0.45rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .dep-distance.short {
+      background: #e8f4e8;
+      color: var(--green);
+    }
+    .dep-distance.long {
+      background: #fff0f0;
+      color: var(--red);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.35rem 0;
+    }
+    .compare-table,
+    .heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .compare-table th,
+    .compare-table td,
+    .heatmap-table th,
+    .heatmap-table td {
+      padding: 0.55rem 0.55rem;
+      border-bottom: 1px solid #efefef;
+      vertical-align: top;
+      overflow-wrap: break-word;
+    }
+    .compare-table th,
+    .heatmap-table th {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-light);
+      background: var(--bg-subtle);
+      text-align: left;
+    }
+    .compare-table td,
+    .heatmap-table td {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.94rem;
+      color: var(--ink-mid);
+      line-height: 1.45;
+      background: #fff;
+    }
+    .compare-table tr:last-child td,
+    .heatmap-table tr:last-child td {
+      border-bottom: none;
+    }
+    .compare-table .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      white-space: normal;
+      overflow-wrap: break-word;
+      font-weight: 500;
+    }
+    .compare-table .good {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .result-card {
+      background: #fff;
+      padding: 1.1rem 0.95rem;
+      text-align: center;
+    }
+    .result-card .rc-pert {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+    .result-card .rc-val {
+      font-family: 'EB Garamond', serif;
+      font-size: 2.05rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .result-card .rc-metric {
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      margin-top: 0.2rem;
+    }
+    .result-card .rc-desc {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      line-height: 1.4;
+      margin-top: 0.45rem;
+    }
+    .result-card.best {
+      background: var(--accent-light);
+    }
+    .result-card.best .rc-val { color: var(--accent); }
+    .result-card.hard {
+      background: var(--red-light);
+    }
+    .result-card.hard .rc-val { color: var(--red); }
+    .result-card.mid .rc-val { color: var(--orange); }
+
+    .metric-cell {
+      font-family: 'Source Sans 3', sans-serif !important;
+      font-size: 0.86rem !important;
+      font-weight: 700;
+    }
+    .metric-cell.high {
+      background: #ecf8ee !important;
+      color: var(--green) !important;
+    }
+    .metric-cell.medium {
+      background: #fff6e8 !important;
+      color: var(--orange) !important;
+    }
+    .metric-cell.low {
+      background: #fff1f1 !important;
+      color: var(--red) !important;
+    }
+    .metric-cell.mixed {
+      background: #edf3fd !important;
+      color: var(--accent) !important;
+    }
+    .metric-note {
+      display: block;
+      margin-top: 0.15rem;
+      font-size: 0.77rem;
+      font-weight: 400;
+      color: var(--ink-light);
+    }
+
+    .perp-section {
+      margin: 1.4rem 0;
+    }
+    .perp-group {
+      margin-bottom: 1.25rem;
+    }
+    .perp-group-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ink-mid);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.45rem;
+    }
+    .perp-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+    .perp-row-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--ink-faint);
+      width: 5.5rem;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .perp-bar-outer {
+      flex: 1;
+      background: #efefef;
+      border-radius: 3px;
+      overflow: hidden;
+      height: 15px;
+    }
+    .perp-bar-inner {
+      height: 100%;
+      border-radius: 3px;
+    }
+    .perp-bar-inner.inp { background: #d6e4f7; }
+    .perp-bar-inner.pred { background: var(--accent); }
+    .perp-bar-inner.base { background: #bbb; }
+    .perp-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--ink-light);
+      white-space: nowrap;
+    }
+    .perp-delta {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding-left: 6.8rem;
+      margin-top: 0.15rem;
+    }
+    .perp-delta.down { color: var(--green); }
+    .perp-delta.up { color: var(--orange); }
+
+    .checkpoint-flow {
+      display: grid;
+      gap: 0.85rem;
+      margin: 1.25rem 0 1.6rem;
+    }
+    .checkpoint-source,
+    .checkpoint-card,
+    .diagnostic-card {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      background: #fff;
+      padding: 0.95rem 1rem;
+    }
+    .checkpoint-source.good {
+      background: linear-gradient(180deg, #fbfefb 0%, #f4fbf4 100%);
+      border-color: #d7e8d9;
+    }
+    .checkpoint-source.bad {
+      background: linear-gradient(180deg, #fffdfd 0%, #fff7f7 100%);
+      border-color: #ead6d6;
+    }
+    .checkpoint-source-label,
+    .checkpoint-stage {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 0.45rem;
+    }
+    .checkpoint-text {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.04rem;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+    .checkpoint-token-good,
+    .checkpoint-token-bad,
+    .checkpoint-token-focus {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 0 0.22rem;
+    }
+    .checkpoint-token-good {
+      background: #def4e1;
+      color: #1f6c28;
+    }
+    .checkpoint-token-bad {
+      background: #ffe1e1;
+      color: #b42323;
+    }
+    .checkpoint-token-focus {
+      background: #e6eefc;
+      color: var(--accent);
+    }
+    .checkpoint-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+    .checkpoint-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .checkpoint-status {
+      border-radius: 999px;
+      padding: 0.25rem 0.55rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .checkpoint-status.red {
+      background: #fff0f0;
+      color: var(--red);
+    }
+    .checkpoint-status.orange {
+      background: #fff3e5;
+      color: var(--orange);
+    }
+    .checkpoint-status.green {
+      background: #eaf7ec;
+      color: var(--green);
+    }
+    .checkpoint-analysis,
+    .diagnostic-note {
+      margin-top: 0.7rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid #f0f0f0;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+    }
+
+    .finding-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    .finding-list li {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem;
+      color: var(--ink-mid);
+      line-height: 1.75;
+      padding: 0.6rem 0 0.6rem 2.2rem;
+      position: relative;
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .finding-list li:last-child {
+      border-bottom: none;
+    }
+    .finding-list li::before {
+      content: attr(data-icon);
+      position: absolute;
+      left: 0;
+      font-size: 1.1rem;
+      top: 0.6rem;
+    }
+
+    .steps {
+      margin: 1.25rem 0;
+    }
+    .step-item {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0 0.9rem;
+      margin-bottom: 1.1rem;
+      align-items: start;
+    }
+    .step-circle {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .step-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .step-desc {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--ink-mid);
+      line-height: 1.65;
+    }
+
+    .code-block {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 6px;
+      padding: 1.1rem 1.2rem;
+      margin: 1.25rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .code-block .c-comment { color: #6c7086; }
+    .code-block .c-key { color: #cba6f7; }
+    .code-block .c-str { color: #a6e3a1; }
+    .code-block .c-fn { color: #89b4fa; }
+    .code-block-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-faint);
+      margin-bottom: 0.35rem;
+    }
+
+    .try-it {
+      background: #1e1e2e;
+      border-radius: 8px;
+      padding: 1.3rem 1.5rem;
+      margin: 1.3rem 0;
+    }
+    .try-it-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #6c7086;
+      margin-bottom: 0.8rem;
+    }
+    .try-it-links {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .try-it-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.4rem 0.85rem;
+      border-radius: 5px;
+      transition: opacity 0.15s;
+    }
+    .try-it-link:hover { opacity: 0.85; }
+    .try-it-link.gh { background: #313244; color: #cdd6f4; }
+    .try-it-link.pdf { background: #45475a; color: #cdd6f4; }
+
+    .footer {
+      border-top: 1px solid var(--rule);
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 0.77rem;
+      color: var(--ink-faint);
+    }
+    .footer a {
+      color: var(--ink-faint);
+      text-decoration: none;
+    }
+    .footer a:hover {
+      color: var(--ink-light);
+    }
+
+    @media (max-width: 720px) {
+      .dependency-grid,
+      .locality-ladder,
+      .diagnostic-grid,
+      .dep-explainer,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      .nav, .mobile-toggle, .mobile-nav { display: none; }
+      .page { max-width: 100%; }
+    }
+  </style>
+
+  <header class="nav">
+    <nav class="nav-inner">
+      <a href="/" class="nav-name">Amirhossein M.</a>
+      <div class="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#research">Research</a>
+        <a href="/#publications">Publications</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="mobile-toggle" id="mobile-menu-button" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </nav>
+    <div class="mobile-nav" id="mobile-menu">
+      <a href="/#about">About</a>
+      <a href="/#research">Research</a>
+      <a href="/#publications">Publications</a>
+      <a href="/blog/">Blog</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </header>
+
+  <div class="page">
+    <article>
+      <header class="article-header">
+        <a href="/blog/" class="article-back">
+          <i class="fas fa-arrow-left"></i> Blog
+        </a>
+
+        <div class="article-tags">
+          <span class="article-tag hl">Research</span>
+          <span class="article-tag tut">Experiments</span>
+          <span class="article-tag">LLMs</span>
+          <span class="article-tag">NLP</span>
+          <span class="article-tag">Cognitive Science</span>
+          <span class="article-tag">Impossible Languages</span>
+        </div>
+
+        <h1>Language Re-generation: An investigation into information locality effects on reconstruction</h1>
+        <p class="subtitle">A full project walkthrough of the hypotheses, experiments, findings, and examples behind teaching GPT-2 to translate impossible language back into ordinary English.</p>
+
+        <div class="article-meta">
+          <span class="date">July 2026</span>
+          <span class="sep">&middot;</span>
+          <span class="authors">Amirhossein M.</span>
+          <span class="sep">&middot;</span>
+          <span>Research blog &middot; 28 min read</span>
+        </div>
+
+        <div class="article-links">
+          <a href="https://github.com/amirhoseinMhmd/impossible_translation" target="_blank" rel="noreferrer" class="article-link">
+            <i class="fab fa-github"></i> GitHub Repo
+          </a>
+          <a href="https://huggingface.co/collections/the-amirhosein/impossible-translation-models" target="_blank" rel="noreferrer" class="article-link">
+            <i class="fas fa-cubes"></i> Model Collection
+          </a>
+        </div>
+      </header>
+
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-title">In this article</div>
+        <ol>
+          <li><a href="#why-this-project">Why this project exists</a></li>
+          <li><a href="#information-locality">The core idea: information locality</a></li>
+          <li><a href="#perturbations">Three impossible languages, with examples</a></li>
+          <li><a href="#setup">Data, models, and training setup</a></li>
+          <li><a href="#hypotheses">Experiments and hypotheses</a></li>
+          <li><a href="#results">What the results actually show</a></li>
+          <li><a href="#examples">Checkpoint-by-checkpoint examples</a></li>
+          <li><a href="#beyond">Beyond the paper: the experiments that didn't make it in</a></li>
+          <li><a href="#meaning">What the findings mean</a></li>
+          <li><a href="#resources">Resources and how to reproduce it</a></li>
+        </ol>
+      </nav>
+
+      <div class="article-body">
+        <h2 id="why-this-project"><span class="step-num">01</span> Why this project exists</h2>
+
+        <p>Kallini et al. (2024) asked whether language models find "impossible languages" — English deterministically perturbed to violate the regularities of natural language — harder to <em>learn</em>. They do. This project asks the inverse question: given a GPT-2 that was pre-trained from scratch on an impossible language and has never seen a word of natural English, can it learn to <strong>translate back</strong> into the possible language?</p>
+
+        <div class="demo-sentence">
+          <div class="demo-label perturbed">perturbed input</div>
+          <div class="demo-text">mat the on sat cat The</div>
+        </div>
+        <div class="demo-arrow">↓</div>
+        <div class="demo-sentence">
+          <div class="demo-label recovered">Target output</div>
+          <div class="demo-text">The cat sat on the mat.</div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-label">Key question</div>
+          <p>Recovery, not acquisition. If information locality governs what models can do with linguistic structure, then the difficulty of <em>undoing</em> a locality violation should scale with the severity of the violation — a graded prediction we can test metric by metric.</p>
+        </div>
+
+        <h2 id="information-locality"><span class="step-num">02</span> The core idea: information locality</h2>
+
+        <p>Natural languages keep words that depend on each other close together in linear order. This tendency — <strong>information locality</strong> — is one of the most robustly documented regularities across the world's languages, and it is the ruler by which this entire project measures its perturbations. So it is worth slowing down and building the idea up properly: what a dependency is, how its length is measured, why distance costs anything, and why the same logic might apply to a transformer that has no working memory at all.</p>
+
+        <h3>What counts as a dependency, and how long is it?</h3>
+
+        <p>In dependency grammar, every word in a sentence (except the root) is linked to exactly one <em>head</em> — the word it modifies or completes. An article depends on its noun, a subject on its verb, a preposition's object on the preposition. Each of these links is a <em>dependency arc</em>, and its <strong>length</strong> is the number of word positions separating dependent from head. The best way to build intuition is to read some trees. In each figure below, arcs point from dependent to head, the label gives the grammatical relation and the arc's length, and color encodes distance: <span style="color:var(--green);font-weight:600">short (1–2)</span>, <span style="color:var(--orange);font-weight:600">medium (3–4)</span>, <span style="color:var(--red);font-weight:600">long (5+)</span>. The bold word is the root.</p>
+
+        <div class="figure-shell">
+          <div class="figure-caption">Figure 1. A simple sentence. Every dependent finds its head within three positions. ADL = (1+1+2+1+3)/5 = <strong>1.60</strong>.</div>
+          <svg viewBox="0 0 680 208" width="100%" role="img" aria-label="Dependency tree of: The cat sat on the mat">
+            <defs><marker id="arwA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-light)"/></marker></defs>
+            <path d="M60,158 C60,116 170,116 170,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwA)"/>
+            <text x="115" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 1</text>
+            <path d="M170,158 C170,116 280,116 280,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwA)"/>
+            <text x="225" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">nsubj · 1</text>
+            <path d="M390,158 C390,96 610,96 610,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwA)"/>
+            <text x="500" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">case · 2</text>
+            <path d="M500,158 C500,116 610,116 610,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwA)"/>
+            <text x="555" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 1</text>
+            <path d="M610,158 C610,76 280,76 280,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwA)"/>
+            <text x="445" y="90" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">obl · 3</text>
+            <text x="60" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">The</text>
+            <text x="170" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">cat</text>
+            <text x="280" y="182" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">sat</text>
+            <text x="390" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">on</text>
+            <text x="500" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">the</text>
+            <text x="610" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">mat</text>
+            <text x="60" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">1</text>
+            <text x="170" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">2</text>
+            <text x="280" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">3</text>
+            <text x="390" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">4</text>
+            <text x="500" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">5</text>
+            <text x="610" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">6</text>
+          </svg>
+        </div>
+
+        <p><strong>The locality story:</strong> this is what natural word order buys you. Four of the five arcs connect immediate or near neighbors; the longest ("mat" back to the root "sat") spans just three positions. A comprehender — human or model — never has to hold a dependent in memory for long before its head arrives. Averaging the arc lengths gives the metric used throughout this project:</p>
+
+        <div class="code-block-label">Average Dependency Length</div>
+        <div class="code-block">ADL = (1/n) · Σ | pos(wᵢ) − pos(head(wᵢ)) |</div>
+
+        <div class="figure-shell">
+          <div class="figure-caption">Figure 2. A relative clause forces one long arc. ADL = (1+1+1+1+2+2+5)/7 = <strong>1.86</strong>.</div>
+          <svg viewBox="0 0 680 208" width="100%" role="img" aria-label="Dependency tree of: The dog that chased the cat barked loudly">
+            <defs><marker id="arwB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-light)"/></marker></defs>
+            <path d="M42,158 C42,116 127,116 127,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="84" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 1</text>
+            <path d="M212,158 C212,116 297,116 297,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="254" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">nsubj · 1</text>
+            <path d="M382,158 C382,116 467,116 467,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="424" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 1</text>
+            <path d="M637,158 C637,116 552,116 552,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="594" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">advmod · 1</text>
+            <path d="M297,158 C297,96 127,96 127,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="212" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">relcl · 2</text>
+            <path d="M467,158 C467,96 297,96 297,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="382" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">obj · 2</text>
+            <path d="M127,158 C127,36 552,36 552,158" fill="none" stroke="var(--red)" stroke-width="1.8" marker-end="url(#arwB)"/>
+            <text x="340" y="60" text-anchor="middle" font-size="11" font-style="italic" fill="var(--red)">nsubj · 5</text>
+            <text x="42" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">The</text>
+            <text x="127" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">dog</text>
+            <text x="212" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">that</text>
+            <text x="297" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">chased</text>
+            <text x="382" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">the</text>
+            <text x="467" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">cat</text>
+            <text x="552" y="182" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">barked</text>
+            <text x="637" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">loudly</text>
+            <text x="42" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">1</text>
+            <text x="127" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">2</text>
+            <text x="212" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">3</text>
+            <text x="297" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">4</text>
+            <text x="382" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">5</text>
+            <text x="467" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">6</text>
+            <text x="552" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">7</text>
+            <text x="637" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">8</text>
+          </svg>
+        </div>
+
+        <p><strong>The locality story:</strong> even natural English tolerates the occasional long arc. The subject "dog" must wait five positions for its verb "barked" while the relative clause intervenes — that is the red arc, and it is exactly where psycholinguistics finds elevated reading times. But look at the rest of the tree: the grammar spends distance <em>only where it must</em>, keeping every other arc at length 1–2 and holding the average to 1.86. Locality is a pressure on the average, not a ban on long dependencies. That is why ADL — an average — is the right measuring stick, and why a perturbation that lengthens arcs <em>everywhere</em> is so unlike anything natural.</p>
+
+        <div class="figure-shell">
+          <div class="figure-caption">Figure 3. The same sentence after a global scramble — same words, same seven arcs, same relations. ADL = (2+2+3+3+3+4+6)/7 = <strong>3.29</strong>, nearly double.</div>
+          <svg viewBox="0 0 680 215" width="100%" role="img" aria-label="Dependency tree of the perturbed sentence: cat barked the that dog loudly chased The">
+            <defs><marker id="arwC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-light)"/></marker></defs>
+            <path d="M212,158 C212,96 42,96 42,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="127" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 2</text>
+            <path d="M552,158 C552,96 382,96 382,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="467" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">relcl · 2</text>
+            <path d="M297,158 C297,76 552,76 552,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="425" y="90" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">nsubj · 3</text>
+            <path d="M637,158 C637,76 382,76 382,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="510" y="102" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">det · 3</text>
+            <path d="M382,158 C382,76 127,76 127,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="255" y="90" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">nsubj · 3</text>
+            <path d="M467,158 C467,56 127,56 127,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="297" y="75" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">advmod · 4</text>
+            <path d="M42,158 C42,16 552,16 552,158" fill="none" stroke="var(--red)" stroke-width="1.8" marker-end="url(#arwC)"/>
+            <text x="297" y="45" text-anchor="middle" font-size="11" font-style="italic" fill="var(--red)">obj · 6</text>
+            <text x="42" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">cat</text>
+            <text x="127" y="182" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">barked</text>
+            <text x="212" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">the</text>
+            <text x="297" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">that</text>
+            <text x="382" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">dog</text>
+            <text x="467" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">loudly</text>
+            <text x="552" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">chased</text>
+            <text x="637" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">The</text>
+            <text x="42" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">1</text>
+            <text x="127" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">2</text>
+            <text x="212" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">3</text>
+            <text x="297" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">4</text>
+            <text x="382" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">5</text>
+            <text x="467" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">6</text>
+            <text x="552" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">7</text>
+            <text x="637" y="200" text-anchor="middle" font-size="10" fill="var(--ink-faint)">8</text>
+          </svg>
+        </div>
+
+        <p><strong>The locality story:</strong> compare this tree to Figure 2 arc by arc. Not a single word was added or removed, and the grammatical relations are identical — but every green arc save two has turned orange or red, the tree is now a thicket of crossing dependencies, and the flip that matters most is "cat → chased": an object that used to sit two positions from its verb must now be linked across six positions of unrelated material, with no grammatical cue for where to look. The scramble is lexically invisible but metrically loud: ADL nearly doubles, from 1.86 to 3.29. This is what our perturbations do to every sentence, in controlled doses.</p>
+
+        <div class="figure-shell">
+          <div class="figure-caption">Figure 4. PhraseShuffle in miniature: move whole phrases (shaded), and the tree barely notices. Natural ADL = 10/6 = <strong>1.67</strong> (top); phrase-shuffled ADL = 11/6 = <strong>1.83</strong> (bottom) — only one arc changed.</div>
+          <svg viewBox="0 0 680 208" width="100%" role="img" aria-label="Dependency tree of: The old man walked to the station">
+            <defs><marker id="arwD1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-light)"/></marker></defs>
+            <rect x="16" y="164" width="262" height="26" rx="6" fill="var(--accent-light)"/>
+            <rect x="404" y="164" width="262" height="26" rx="6" fill="var(--accent-light)"/>
+            <path d="M48,158 C48,96 242,96 242,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD1)"/>
+            <text x="145" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 2</text>
+            <path d="M145,158 C145,116 242,116 242,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD1)"/>
+            <text x="194" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">amod · 1</text>
+            <path d="M242,158 C242,116 339,116 339,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD1)"/>
+            <text x="290" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">nsubj · 1</text>
+            <path d="M436,158 C436,96 630,96 630,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD1)"/>
+            <text x="533" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">case · 2</text>
+            <path d="M533,158 C533,116 630,116 630,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD1)"/>
+            <text x="581" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 1</text>
+            <path d="M630,158 C630,76 339,76 339,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwD1)"/>
+            <text x="484" y="90" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">obl · 3</text>
+            <text x="48" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">The</text>
+            <text x="145" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">old</text>
+            <text x="242" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">man</text>
+            <text x="339" y="182" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">walked</text>
+            <text x="436" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">to</text>
+            <text x="533" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">the</text>
+            <text x="630" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">station</text>
+            <text x="48" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">1</text>
+            <text x="145" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">2</text>
+            <text x="242" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">3</text>
+            <text x="339" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">4</text>
+            <text x="436" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">5</text>
+            <text x="533" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">6</text>
+            <text x="630" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">7</text>
+          </svg>
+          <svg viewBox="0 0 680 208" width="100%" role="img" aria-label="Dependency tree of the phrase-shuffled sentence: to the station The old man walked">
+            <defs><marker id="arwD2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-light)"/></marker></defs>
+            <rect x="16" y="164" width="262" height="26" rx="6" fill="var(--accent-light)"/>
+            <rect x="309" y="164" width="262" height="26" rx="6" fill="var(--accent-light)"/>
+            <path d="M48,158 C48,96 242,96 242,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD2)"/>
+            <text x="145" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">case · 2</text>
+            <path d="M145,158 C145,116 242,116 242,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD2)"/>
+            <text x="194" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 1</text>
+            <path d="M339,158 C339,96 533,96 533,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD2)"/>
+            <text x="436" y="105" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">det · 2</text>
+            <path d="M436,158 C436,116 533,116 533,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD2)"/>
+            <text x="484" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">amod · 1</text>
+            <path d="M533,158 C533,116 630,116 630,158" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#arwD2)"/>
+            <text x="581" y="120" text-anchor="middle" font-size="11" font-style="italic" fill="var(--green)">nsubj · 1</text>
+            <path d="M242,158 C242,56 630,56 630,158" fill="none" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#arwD2)"/>
+            <text x="436" y="75" text-anchor="middle" font-size="11" font-style="italic" fill="var(--orange)">obl · 4</text>
+            <text x="48" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">to</text>
+            <text x="145" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">the</text>
+            <text x="242" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">station</text>
+            <text x="339" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">The</text>
+            <text x="436" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">old</text>
+            <text x="533" y="182" text-anchor="middle" font-size="15" fill="var(--ink)">man</text>
+            <text x="630" y="182" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">walked</text>
+            <text x="48" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">1</text>
+            <text x="145" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">2</text>
+            <text x="242" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">3</text>
+            <text x="339" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">4</text>
+            <text x="436" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">5</text>
+            <text x="533" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">6</text>
+            <text x="630" y="202" text-anchor="middle" font-size="10" fill="var(--ink-faint)">7</text>
+          </svg>
+        </div>
+
+        <p><strong>The locality story:</strong> this pair is the key to the beyond-paper results in §08. The two shaded phrases swapped places — a <em>global</em> reordering at the token level — yet five of the six arcs are completely untouched, because they live <em>inside</em> phrases and phrases moved as blocks. Only the single arc that crosses a phrase boundary ("station → walked") stretched, and only by one position. ADL creeps from 1.67 to 1.83 while a token-level view would call this sentence heavily perturbed. Locality can be preserved at one granularity (within phrases) while being violated at another (between them) — hold that thought for the PhraseShuffle experiments below.</p>
+
+        <h3>Why distance costs: Dependency Locality Theory</h3>
+
+        <p>Why should distance matter at all? Gibson's Dependency Locality Theory (1998, 2000) gives the classic processing answer. Comprehension is incremental: as each word arrives, the parser must either <em>store</em> an expectation (a subject is waiting for its verb) or <em>integrate</em> the new word with an earlier one. Both operations get more expensive with distance — the longer a dependent waits for its head, the more intervening material must be held in, and retrieved from, working memory. DLT predicts measurable processing difficulty exactly where long arcs pile up, and decades of reading-time and neuroimaging evidence agree: object relative clauses (which stack two long dependencies) are reliably harder than subject relatives, and difficulty tracks the amount of intervening material.</p>
+
+        <p>Figure 3 above is DLT's nightmare scenario: "cat" must be linked to "chased" across six positions of unrelated words, with no grammatical cue for where to look. The lexical content is fully intact, but the sentence has become cognitively inaccessible — which is precisely what makes such strings good candidates for "impossible" languages.</p>
+
+        <h3>Dependency length minimization: the typological evidence</h3>
+
+        <p>If long dependencies are expensive, languages should evolve word orders that avoid them — and they do. Liu (2008) measured dependency lengths across 20 languages; Futrell, Mahowald &amp; Gibson (2015) extended this to 37, comparing each real corpus against random reorderings of the <em>same</em> dependency trees. In every language, observed dependency lengths sit far below the random baseline. The effect shows up in the grammar itself: heavy constituents get shifted to the edge ("I gave <em>the book</em> to Mary" vs "I gave to Mary <em>the book that my grandmother left me</em>"), head-initial and head-final languages mirror each other's ordering preferences, and Hawkins' processing typology and Temperley &amp; Gildea's corpus work trace dozens of word-order universals back to this single pressure. Dependency length minimization (DLM) is about as close as linguistics gets to a law-like generalization.</p>
+
+        <h3>From memory to information theory — and to transformers</h3>
+
+        <p>There is a deeper way to state the principle that never mentions human memory. Futrell's information-theoretic reformulation says: in natural language, <em>statistical</em> dependencies are local too — the mutual information between two words decays with the distance between them. Any predictor operating with bounded or lossy memory of the past does measurably better when the information it needs is nearby; this is the <strong>memory–surprisal tradeoff</strong>. Stated that way, the principle applies to <em>any</em> sequential processor: a human parser with limited working memory, or a transformer whose attention is soft, trained, and empirically sharpest over recent tokens (Khandelwal et al., 2018: "sharp nearby, fuzzy far away").</p>
+
+        <div class="callout tip">
+          <div class="callout-label">Why this matters for the whole project</div>
+          <p>This substrate-independent formulation is what licenses the central question of the paper. If locality were only a fact about human working memory, there would be no reason to expect GPT-2 to care about it. But if locality is an efficiency condition on any bounded sequential predictor, then a transformer should show the same graded sensitivity — harder recovery as dependencies stretch — for its own architectural reasons. That is exactly the hypothesis the experiments test.</p>
+        </div>
+
+        <h3>Locality as the ruler for our impossible languages</h3>
+
+        <p>Because ADL is computable per sentence, we can put an exact number on how much locality damage each perturbation inflicts — before any model is trained. Measured on the actual test data:</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Text condition</th>
+              <th>Input ADL, bnc_spoken<br/>(≈12-token sentences)</th>
+              <th>Input ADL, Gutenberg<br/>(≈40-token sentences)</th>
+              <th>Behavior as sentences grow</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">Natural English</td>
+              <td>2.49</td>
+              <td>3.16</td>
+              <td class="good">Nearly flat — DLM at work</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle (w=3)</td>
+              <td>—</td>
+              <td>3.59</td>
+              <td class="good">Bounded: no token moves more than 2 positions</td>
+            </tr>
+            <tr>
+              <td class="label">PartialReverse</td>
+              <td>3.32</td>
+              <td>6.90</td>
+              <td>Grows with the reversed suffix</td>
+            </tr>
+            <tr>
+              <td class="label">FullShuffle</td>
+              <td>3.34</td>
+              <td>15.26</td>
+              <td>Unbounded: grows in proportion to sentence length</td>
+            </tr>
+            <tr>
+              <td class="label">WordHop <em>(§08)</em></td>
+              <td colspan="2">≈ natural — only the verb–marker arc stretches, always by 4</td>
+              <td class="good">Constant: one fixed-length arc per verb</td>
+            </tr>
+            <tr>
+              <td class="label">PhraseShuffle <em>(§08)</em></td>
+              <td>—</td>
+              <td>3.50</td>
+              <td class="good">Bounded at phrase level: within-phrase arcs never stretch</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Three things to notice. First, natural English barely moves between 12-token and 40-token sentences (2.49 → 3.16) — that near-flatness across a 3× length increase <em>is</em> dependency length minimization, visible in our own data. Second, the perturbations differ not just in how much they stretch dependencies but in <em>how that stretch scales</em>: LocalShuffle's damage is constant by construction, PartialReverse's grows moderately, and FullShuffle's explodes from 3.34 to 15.26 as sentences get longer. Third — and this only becomes visible with the two extra perturbations we ran beyond the paper — raw ADL is not the only ruler. PhraseShuffle reorders a sentence <em>globally</em> yet its ADL barely rises above natural (3.50 vs 3.16), because the arcs that matter most live <em>inside</em> phrases and phrases move as intact blocks. There is a second, complementary measure of damage: the fraction of dependency arcs that survive perturbation untouched (the perturbed-input Triple F1 baseline). Section 08 shows that this second ruler, not ADL, is what best predicts recovery.</p>
+
+        <div class="callout tip">
+          <div class="callout-label">The important distinction</div>
+          <p>All perturbations in this project preserve lexical content entirely. Only <em>linear order</em> — and hence dependency length — is manipulated. Whatever the model recovers, it recovers from structure, not from missing-word guessing.</p>
+        </div>
+
+        <h2 id="perturbations"><span class="step-num">03</span> Three impossible languages, with examples</h2>
+
+        <p>The paper studies three perturbations from Kallini et al., chosen because they span a spectrum of locality violation while all preserving vocabulary. All operate on GPT-2 <em>token IDs</em>, not whitespace words — matching pre-training exactly.</p>
+
+        <h3>LocalShuffle (window = 3)</h3>
+        <p>Tokens are shuffled randomly within non-overlapping windows of three. Every token stays within two positions of home, so the damage is severe locally but strictly <em>bounded</em>: dependency distances cannot grow with sentence length.</p>
+
+        <div class="demo-sentence">
+          <div class="demo-label natural">Original</div>
+          <div class="demo-text">It is nice in there.</div>
+        </div>
+        <div class="demo-arrow">↓</div>
+        <div class="demo-sentence">
+          <div class="demo-label perturbed">LocalShuffle</div>
+          <div class="demo-text"><span class="perturbed-word">nice</span> <span class="perturbed-word">is</span> It <span class="perturbed-word">there</span> in.</div>
+        </div>
+
+        <h3>PartialReverse</h3>
+        <p>A random point is chosen, a marker token <span class="tok-r">R</span> is inserted, and everything after it is reversed. The prefix survives intact and the marker is an explicit structural clue — but the model still has to reconstruct a long reversed suffix.</p>
+
+        <div class="demo-sentence">
+          <div class="demo-label natural">Original</div>
+          <div class="demo-text">we'd need to look at it again, would n't we</div>
+        </div>
+        <div class="demo-arrow">↓</div>
+        <div class="demo-sentence">
+          <div class="demo-label perturbed">PartialReverse</div>
+          <div class="demo-text">we'd need <span class="tok-r">R</span> we n't would, again it at look to</div>
+        </div>
+
+        <h3>FullShuffle</h3>
+        <p>All tokens are shuffled globally. No local structure survives, and — crucially — the expected dependency distance grows <em>with sentence length</em>. This is the only perturbation whose locality damage is unbounded, and that single property ends up explaining the most dramatic result in the paper.</p>
+
+        <div class="demo-sentence">
+          <div class="demo-label natural">Original</div>
+          <div class="demo-text">we'd need to look at it again, would n't we</div>
+        </div>
+        <div class="demo-arrow">↓</div>
+        <div class="demo-sentence">
+          <div class="demo-label perturbed">FullShuffle</div>
+          <div class="demo-text">again, at n't we it would we need look 'd to</div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Perturbation</th>
+              <th>Operation</th>
+              <th>Locality damage</th>
+              <th>Surviving arcs (bnc_spoken)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">PartialReverse</td>
+              <td>Reverse suffix after marker <span class="tok-r">R</span></td>
+              <td>Moderate — prefix intact, one strong cue</td>
+              <td class="good">0.48</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle</td>
+              <td>Shuffle within windows of 3</td>
+              <td>Bounded — every token stays within 2 positions</td>
+              <td>0.36</td>
+            </tr>
+            <tr>
+              <td class="label">FullShuffle</td>
+              <td>Shuffle all tokens globally</td>
+              <td>Unbounded — grows with sentence length</td>
+              <td>0.18</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="figure-shell">
+          <div class="figure-caption">Figure 5. The locality-violation spectrum. The perturbed-input baseline quantifies how much dependency structure survives each perturbation for free.</div>
+          <div class="locality-ladder">
+            <div class="ladder-card">
+              <span>Lowest locality damage</span>
+              <strong>PartialReverse</strong>
+              <p>The initial segment survives intact and the reverse marker leaves one strong structural clue the model can exploit.</p>
+            </div>
+            <div class="ladder-card">
+              <span>Bounded damage</span>
+              <strong>LocalShuffle</strong>
+              <p>Short-range syntax is perturbed, but every token stays within its window — the damage never grows with sentence length.</p>
+            </div>
+            <div class="ladder-card">
+              <span>Unbounded damage</span>
+              <strong>FullShuffle</strong>
+              <p>Global scrambling scatters dependents arbitrarily far from their heads. Longer sentence, longer dependencies, harder recovery.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="setup"><span class="step-num">04</span> Data, models, and training setup</h2>
+
+        <p>The project uses two BabyLM-derived sources because sentence length is part of the story: <em>bnc_spoken</em>, which is shorter and noisier, and <em>Gutenberg</em>, which is longer and more syntactically complete.</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Dataset split</th>
+              <th>Size</th>
+              <th>Average sentence length</th>
+              <th>Why it is useful</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">bnc_spoken train</td>
+              <td>100K</td>
+              <td>12.77</td>
+              <td>Short, spoken-style sentences with fewer structural cues.</td>
+            </tr>
+            <tr>
+              <td class="label">bnc_spoken test</td>
+              <td>1K</td>
+              <td>11.72</td>
+              <td>Measures recovery under short-context conditions.</td>
+            </tr>
+            <tr>
+              <td class="label">Gutenberg train</td>
+              <td>100K</td>
+              <td>40.61</td>
+              <td>Longer, better-formed written sentences with richer dependencies.</td>
+            </tr>
+            <tr>
+              <td class="label">Gutenberg test</td>
+              <td>1K</td>
+              <td>46.78</td>
+              <td>Measures whether longer contexts help or hurt recovery.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>The most important design choice is the starting point. We do <strong>not</strong> start from an English-pretrained GPT-2. That would let the model fall back on natural-English priors and confound recovery with retrieval of a known target distribution. Instead, we fine-tune the GPT-2 checkpoints that Kallini et al. pre-trained from scratch on each impossible language — one model per perturbation, each inverting the language it grew up in. Acquisition difficulty is already paid for; what remains is pure reconstruction.</p>
+
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-circle">1</div>
+            <div class="step-body">
+              <div class="step-title">Create paired data</div>
+              <div class="step-desc">Each example is a pair: a perturbed input and its original English target.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">2</div>
+            <div class="step-body">
+              <div class="step-title">Prompt the model as a correction task</div>
+              <div class="step-desc">Each pair is formatted as an instruction-response example so GPT-2 learns to continue the prompt with the corrected text.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">3</div>
+            <div class="step-body">
+              <div class="step-title">Mask the instruction tokens</div>
+              <div class="step-desc">Everything up to and including "Corrected:" gets label −100, so the loss is computed only over the target tokens. The model conditions on the prompt but is never rewarded for copying it.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle">4</div>
+            <div class="step-body">
+              <div class="step-title">Extend the tokenizer for perturbation markers</div>
+              <div class="step-desc">The reverse marker is added as a special token before fine-tuning — otherwise it fragments into byte-pieces and the model loses its one reliable anchor.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block-label">Training prompt format</div>
+        <div class="code-block"><span class="c-key">Fix this text:</span> <span class="c-str">we'd need R we n't would, again it at look to</span>
+          <span class="c-key">Corrected:</span> <span class="c-str">we'd need to look at it again, would n't we</span> <span class="c-fn">&lt;|endoftext|&gt;</span></div>
+
+        <p>Training details, for the record: effective batch size 512, AdamW at 2e-5 with cosine schedule and 500 warmup steps, label smoothing 0.1, bfloat16 on H100s, 5,000 steps on the 100K datasets. Every fine-tuning run was repeated with <strong>five random seeds</strong> (1337, 2025, 314159, 42, 8675309); all reported curves are seed averages with standard-deviation error bars.</p>
+
+        <h2 id="hypotheses"><span class="step-num">05</span> Experiments and hypotheses</h2>
+
+        <p>The paper is organized around three experiments, each tied to a concrete hypothesis about information locality.</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Experiment</th>
+              <th>Question</th>
+              <th>Hypothesis</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">Training sample size</td>
+              <td>How does recovery improve over training checkpoints?</td>
+              <td>All models improve, but the rate tracks locality damage: PartialReverse fastest, FullShuffle slowest, LocalShuffle in between.</td>
+            </tr>
+            <tr>
+              <td class="label">Sentence length</td>
+              <td>Do longer sentences help or hurt recovery?</td>
+              <td>Longer sentences give richer context, but also stretch dependencies. Where damage is bounded, context should win; where damage grows with length, recovery should break.</td>
+            </tr>
+            <tr>
+              <td class="label">Perplexity / naturalness</td>
+              <td>Does the generated text move back toward ordinary English?</td>
+              <td>If recovery is genuine, predictions should converge toward the natural-English baseline under a standard GPT-2.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Four evaluation lenses: <strong>Exact Match</strong> for strict reconstruction, <strong>BLEU</strong> for partial overlap, <strong>Average Dependency Length (ADL)</strong> for the locality profile of the output itself, and <strong>Dependency Triple F1</strong> for recovered syntactic relations (spaCy <em>en_core_web_trf</em> parses; a triple counts only if dependent, relation, and head all match). The division of labor matters: ADL is <em>reference-free</em> — a property of the output string — while Triple F1 is <em>reference-bound</em> — faithfulness to the source. Their dissociation under FullShuffle turns out to be one of the most interesting results.</p>
+
+        <h2 id="results"><span class="step-num">06</span> What the results actually show</h2>
+
+        <h3>Result 1: recovery difficulty tracks locality disruption</h3>
+
+        <p>On <em>bnc_spoken</em>, PartialReverse learns fastest and tops out highest. LocalShuffle and FullShuffle trail — but the metrics disagree in an informative way. FullShuffle edges out LocalShuffle on exact match (0.23 vs 0.17), yet LocalShuffle wins on Dependency Triple F1 (0.53 vs 0.51). Exact match penalizes any positional error regardless of structural correctness; LocalShuffle's errors are locally bounded and structurally recoverable, so surface metrics <em>underestimate</em> its recovery.</p>
+
+        <div class="results-grid">
+          <div class="result-card best">
+            <div class="rc-pert">PartialReverse</div>
+            <div class="rc-val">EM 0.52</div>
+            <div class="rc-metric">BLEU 79% on Gutenberg</div>
+            <div class="rc-desc">The preserved prefix plus one explicit marker make the hardest-looking transformation the most recoverable.</div>
+          </div>
+          <div class="result-card mid">
+            <div class="rc-pert">LocalShuffle</div>
+            <div class="rc-val">EM 0.25</div>
+            <div class="rc-metric">BLEU 68% on Gutenberg</div>
+            <div class="rc-desc">Bounded damage means longer sentences are pure signal — performance scales up with length.</div>
+          </div>
+          <div class="result-card hard">
+            <div class="rc-pert">FullShuffle</div>
+            <div class="rc-val">EM 0.01</div>
+            <div class="rc-metric">BLEU 4% on Gutenberg</div>
+            <div class="rc-desc">Complete collapse on long sentences — the one perturbation whose dependency distances grow with length.</div>
+          </div>
+        </div>
+
+        <h3>Result 2: sentence length is the stress test</h3>
+
+        <p>Moving from short spoken sentences to long Gutenberg prose, the bounded perturbations <em>improve</em> — PartialReverse EM goes 0.29 → 0.52, LocalShuffle 0.17 → 0.25 — while FullShuffle collapses: EM 0.23 → 0.01, Triple F1 down to 0.14. The mechanism is visible in the input ADL: globally shuffling a 40-token sentence stretches average dependency length to 15.26, versus 3.34 for short sentences, while LocalShuffle's window keeps input ADL nearly constant (3.59). When dependency distance grows with sentence length, richer context cannot compensate; when it is bounded, longer sentences just mean more evidence.</p>
+
+        <div class="figure-shell">
+          <div class="figure-caption">Figure 6. Summary of the main evidence across both datasets.</div>
+          <table class="heatmap-table">
+            <thead>
+            <tr>
+              <th>Perturbation</th>
+              <th>Surface recovery</th>
+              <th>Structural recovery</th>
+              <th>Effect of longer sentences</th>
+              <th>Interpretation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><strong>PartialReverse</strong></td>
+              <td class="metric-cell high">Best overall<span class="metric-note">EM 0.29 → 0.52 from short to long sentences; BLEU up to 79%.</span></td>
+              <td class="metric-cell high">Strong<span class="metric-note">Triple F1 0.67 on bnc_spoken, 0.84 on Gutenberg.</span></td>
+              <td class="metric-cell high">Helps<span class="metric-note">Longer preserved prefix, more anchors.</span></td>
+              <td>One good structural cue makes a hard transformation learnable.</td>
+            </tr>
+            <tr>
+              <td><strong>LocalShuffle</strong></td>
+              <td class="metric-cell medium">Modest<span class="metric-note">EM stays low because order must be rebuilt from weak local cues.</span></td>
+              <td class="metric-cell high">Stronger than it looks<span class="metric-note">Triple F1 0.53 → 0.77 with longer sentences, well above the 0.36 baseline.</span></td>
+              <td class="metric-cell high">Helps<span class="metric-note">Damage is bounded, so context is pure signal.</span></td>
+              <td>The model rebuilds the syntactic skeleton before the exact surface form.</td>
+            </tr>
+            <tr>
+              <td><strong>FullShuffle</strong></td>
+              <td class="metric-cell mixed">Split<span class="metric-note">Comparable to others on short sentences (EM 0.23), near zero on long ones.</span></td>
+              <td class="metric-cell low">Collapses<span class="metric-note">Triple F1 falls to 0.14 on Gutenberg.</span></td>
+              <td class="metric-cell low">Breaks it<span class="metric-note">Input ADL 3.34 → 15.26; damage grows with length.</span></td>
+              <td>Not merely harder — a categorical break where locality damage becomes unbounded.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Result 3: the model learns structure before it learns perfect strings</h3>
+
+        <p>Exact match makes the task look harsher than it is. Evaluated on dependency structure directly, the model reconstructs correct grammatical relationships well before — and well beyond — exact string reconstruction.</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Exact Match</th>
+              <th>Dependency Triple F1</th>
+              <th>perturbed-input baseline</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">PartialReverse, bnc_spoken</td>
+              <td>0.29</td>
+              <td class="good">0.67</td>
+              <td>0.48</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle, bnc_spoken</td>
+              <td>0.17</td>
+              <td class="good">0.53</td>
+              <td>0.36</td>
+            </tr>
+            <tr>
+              <td class="label">FullShuffle, bnc_spoken</td>
+              <td>0.23</td>
+              <td class="good">0.51</td>
+              <td>0.18</td>
+            </tr>
+            <tr>
+              <td class="label">PartialReverse, Gutenberg</td>
+              <td>0.52</td>
+              <td class="good">0.84</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle, Gutenberg</td>
+              <td>0.25</td>
+              <td class="good">0.77</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td class="label">FullShuffle, Gutenberg</td>
+              <td>0.01</td>
+              <td>0.14</td>
+              <td>—</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-label">A subtle bonus finding</div>
+          <p>Under LocalShuffle, the model's outputs converge to an average dependency length <em>below</em> the natural value (predicted ADL ≈ 2.28 vs actual 2.49 on bnc_spoken). These models never saw natural English in pre-training — so a bias toward shorter-than-natural dependency arcs cannot be memorized English statistics. It looks like a genuine inductive bias of the attention architecture, functionally parallel to dependency length minimization in human production.</p>
+        </div>
+
+        <h3>Result 4: naturalness moves back toward English — but fluent is not faithful</h3>
+
+        <p>Measured against base GPT-2 (natural-text baseline: perplexity 129), all three models pull their outputs far down from the perturbed-input perplexity.</p>
+
+        <div class="perp-section">
+          <div class="perp-group">
+            <div class="perp-group-title">PartialReverse</div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Input</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner inp" style="width:24.4%"></div></div>
+              <span class="perp-num">1500</span>
+            </div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Prediction</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner pred" style="width:2.5%"></div></div>
+              <span class="perp-num">152</span>
+            </div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Natural</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner base" style="width:2.1%"></div></div>
+              <span class="perp-num">129</span>
+            </div>
+            <div class="perp-delta down">89.8% reduction, converging closest to the natural baseline.</div>
+          </div>
+
+          <div class="perp-group">
+            <div class="perp-group-title">LocalShuffle</div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Input</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner inp" style="width:63.5%"></div></div>
+              <span class="perp-num">3903</span>
+            </div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Prediction</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner pred" style="width:3.3%"></div></div>
+              <span class="perp-num">204</span>
+            </div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Natural</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner base" style="width:2.1%"></div></div>
+              <span class="perp-num">129</span>
+            </div>
+            <div class="perp-delta down">94.8% reduction: the largest relative recovery of naturalness.</div>
+          </div>
+
+          <div class="perp-group">
+            <div class="perp-group-title">FullShuffle</div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Input</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner inp" style="width:100%"></div></div>
+              <span class="perp-num">6143</span>
+            </div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Prediction</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner pred" style="width:22.8%"></div></div>
+              <span class="perp-num">1398</span>
+            </div>
+            <div class="perp-row">
+              <span class="perp-row-tag">Natural</span>
+              <div class="perp-bar-outer"><div class="perp-bar-inner base" style="width:2.1%"></div></div>
+              <span class="perp-num">129</span>
+            </div>
+            <div class="perp-delta up">77.2% reduction — yet still far above baseline, and EM is near zero.</div>
+          </div>
+        </div>
+
+        <p>The FullShuffle case is the philosophically interesting one. On long sentences, its output ADL sits near the natural value and perplexity drops substantially — <em>while exact match is near zero and Triple F1 has collapsed</em>. The model generates fluent, locality-respecting English that is simply not the source sentence. Naturalness and faithfulness dissociate, which is exactly why reference-free metrics (perplexity, output ADL) can never certify recovery on their own.</p>
+
+        <h2 id="examples"><span class="step-num">07</span> Checkpoint-by-checkpoint examples</h2>
+
+        <p>These are real rows from the saved evaluation outputs in the repository — the same sentence tracked across training checkpoints. Green marks what the model has recovered; red marks what is still wrong.</p>
+
+        <h3>Example A: LocalShuffle rebuilds the skeleton first, then stalls on one local swap</h3>
+        <div class="checkpoint-flow">
+          <div class="checkpoint-source good">
+            <span class="checkpoint-source-label">Target sentence</span>
+            <p class="checkpoint-text">The only other creature in this White House who has the same sweet deal is the President's dog!</p>
+          </div>
+          <div class="checkpoint-source bad">
+            <span class="checkpoint-source-label">Corrupted LocalShuffle input</span>
+            <p class="checkpoint-text">The only other in this creature White House who same has the sweet is deal the President's dog!</p>
+          </div>
+
+          <div class="checkpoint-grid">
+            <div class="checkpoint-card">
+              <div class="checkpoint-head">
+                <span class="checkpoint-stage">Checkpoint 200</span>
+                <span class="checkpoint-status red">Fluent, but mostly wrong</span>
+              </div>
+              <p class="checkpoint-text">The only <span class="checkpoint-token-bad">only the human one who's name is the same as the same man.</span></p>
+              <p class="checkpoint-analysis"><strong>What happened:</strong> the model has learned the shape of the task — produce a fluent English sentence — but it is solving by generic language modeling, not reconstruction. Content drifts entirely.</p>
+            </div>
+
+            <div class="checkpoint-card">
+              <div class="checkpoint-head">
+                <span class="checkpoint-stage">Checkpoint 2600</span>
+                <span class="checkpoint-status orange">Structure recovered, one local error left</span>
+              </div>
+              <p class="checkpoint-text"><span class="checkpoint-token-good">The only other creature in this White House who has the same</span> <span class="checkpoint-token-bad">deal is sweet</span> <span class="checkpoint-token-good">the President's dog!</span></p>
+              <p class="checkpoint-analysis"><strong>What happened:</strong> the clause backbone, the relative clause, and the final possessive are all restored. The one remaining error — "deal is sweet" for "sweet deal is" — is a <em>within-window</em> swap: exactly the error signature LocalShuffle predicts. Exact match scores this 0; dependency F1 gives most of the credit.</p>
+            </div>
+
+            <div class="checkpoint-card">
+              <div class="checkpoint-head">
+                <span class="checkpoint-stage">Checkpoint 5000</span>
+                <span class="checkpoint-status orange">Same near-miss, stable</span>
+              </div>
+              <p class="checkpoint-text"><span class="checkpoint-token-good">The only other creature in this White House who has the same</span> <span class="checkpoint-token-bad">deal is sweet</span> <span class="checkpoint-token-good">the President's dog!</span></p>
+              <p class="checkpoint-analysis"><strong>What happened:</strong> 2,400 further steps change nothing. The residual ambiguity is genuinely local — both orders are plausible within the window — and this is what LocalShuffle's EM ceiling is made of.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Example B: FullShuffle's two failure modes, live</h3>
+        <div class="checkpoint-flow">
+          <div class="checkpoint-source good">
+            <span class="checkpoint-source-label">Target sentence</span>
+            <p class="checkpoint-text">"Well, I'll turn over a new leaf," he promised, "just to please you."</p>
+          </div>
+          <div class="checkpoint-source bad">
+            <span class="checkpoint-source-label">Corrupted FullShuffle input (Gutenberg)</span>
+            <p class="checkpoint-text">I, over turn new, leaf" " a'llWell," promised you to please he."just</p>
+          </div>
+
+          <div class="checkpoint-grid">
+            <div class="checkpoint-card">
+              <div class="checkpoint-head">
+                <span class="checkpoint-stage">Checkpoint 200</span>
+                <span class="checkpoint-status orange">Fluent but unfaithful</span>
+              </div>
+              <p class="checkpoint-text">"<span class="checkpoint-token-bad">I'll get the new, and a leaf, "I'll just give it," said he said, "I'll go,"</span></p>
+              <p class="checkpoint-analysis"><strong>What happened:</strong> early in training the model produces natural-sounding English built from the input's vocabulary — low perplexity, near-natural ADL — but the sentence is invented. This is the "fluent ≠ faithful" dissociation in a single row.</p>
+            </div>
+
+            <div class="checkpoint-card">
+              <div class="checkpoint-head">
+                <span class="checkpoint-stage">Checkpoint 5000</span>
+                <span class="checkpoint-status red">Degenerates toward copying</span>
+              </div>
+              <p class="checkpoint-text"><span class="checkpoint-token-bad">I, I turn over new leaf, "Well'll a promised," promised he to please."</span></p>
+              <p class="checkpoint-analysis"><strong>What happened:</strong> more training does not converge on the source — it shifts the model toward conservative near-copying of the perturbed input. Neither failure mode is recovery: fluency without faithfulness early, faithfulness to the <em>wrong string</em> late. On long sentences, FullShuffle has no path to the target at all.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="beyond"><span class="step-num">08</span> Beyond the paper: the experiments that didn't make it in</h2>
+
+        <p>The repository contains a set of completed experiments that the paper's page limit couldn't fit. They are worth showing because each one independently stress-tests the same claim — recovery tracks locality — from an angle the paper doesn't cover.</p>
+
+        <h3>WordHop: the low-violation control</h3>
+
+        <p>WordHop is the fourth Kallini et al. perturbation we ran: each inflected verb is replaced by its lemma, and a singular/plural marker (<span class="tok-s">S</span> / <span class="tok-s">P</span>) is displaced exactly four tokens downstream. Linear order otherwise survives — only <em>one</em> dependency per verb is stretched, by a fixed distance.</p>
+
+        <div class="demo-sentence">
+          <div class="demo-label natural">Original</div>
+          <div class="demo-text">It is nice in there.</div>
+        </div>
+        <div class="demo-arrow">↓</div>
+        <div class="demo-sentence">
+          <div class="demo-label perturbed">WordHop</div>
+          <div class="demo-text">It be nice in there <span class="tok-s">S</span></div>
+        </div>
+
+        <p>If the locality account is right, WordHop should be the easiest condition of all — and it is, on every measure we have:</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Condition (100K)</th>
+              <th>Exact Match</th>
+              <th>BLEU</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">WordHop, bnc_spoken</td>
+              <td class="good">0.33</td>
+              <td class="good">0.60</td>
+            </tr>
+            <tr>
+              <td class="label">WordHop, Gutenberg</td>
+              <td class="good">0.38</td>
+              <td class="good">0.77</td>
+            </tr>
+            <tr>
+              <td class="label">PartialReverse, Gutenberg (best paper condition)</td>
+              <td>0.52</td>
+              <td>0.79</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Its perplexity profile is the most telling part: WordHop input measures just <strong>168</strong> under base GPT-2, barely above the natural baseline of 129 — compared to 1500–6143 for the word-order perturbations. Distributionally, WordHop text is <em>almost not impossible at all</em>. That anchors the low end of the violation spectrum with a perturbation whose damage is measurably tiny, and its high recoverability is exactly where the locality gradient says it should be.</p>
+
+        <div class="callout warn">
+          <div class="callout-label">An overtraining surprise</div>
+          <p>WordHop's prediction perplexity reached its best value (154) at checkpoint 600 — then <em>drifted upward</em> to 244 by checkpoint 5000, even as BLEU held steady. Extended fine-tuning on a nearly-natural language slowly degrades output naturalness without hurting surface accuracy. Checkpoint selection isn't a detail; the "best" model depends on which metric you ask.</p>
+        </div>
+
+        <h3>PhraseShuffle: a new perturbation the paper never tested</h3>
+
+        <p>Every perturbation above operates on tokens. PhraseShuffle operates on <em>constituents</em>: we parse each sentence with a neural constituency parser (benepar), find leaf-level phrases (NP, VP, PP, ADJP, ADVP, and similar), and shuffle those phrases as intact units. Word order is globally disrupted — but locality <em>within each phrase</em> is perfectly preserved.</p>
+
+        <div class="demo-sentence">
+          <div class="demo-label natural">Original</div>
+          <div class="demo-text">"Well, it's all there in the house now, but you'd have to be a good deal smarter than any one I know to see it."</div>
+        </div>
+        <div class="demo-arrow">↓</div>
+        <div class="demo-sentence">
+          <div class="demo-label perturbed">PhraseShuffle</div>
+          <div class="demo-text">"Well, it's all there in house the now, but you'd to a any deal be I see smarter to one good have than it know."</div>
+        </div>
+
+        <p>This makes PhraseShuffle a critical test case: at the <em>token</em> level it looks globally perturbed, like FullShuffle. At the <em>phrase</em> level it is locality-preserving. If the model's recovery capacity depends on token-level adjacency, PhraseShuffle should collapse on long Gutenberg sentences like FullShuffle did. If it depends on preserved local dependency structure — at whatever granularity — it should recover well.</p>
+
+        <p>It recovers well. On Gutenberg (seed 42), where FullShuffle managed EM 0.01 and Triple F1 0.14:</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Checkpoint</th>
+              <th>Exact Match</th>
+              <th>BLEU</th>
+              <th>Dependency Triple F1</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">200</td>
+              <td>0.04</td>
+              <td>0.26</td>
+              <td>0.40 (baseline: 0.55)</td>
+            </tr>
+            <tr>
+              <td class="label">1000</td>
+              <td>0.22</td>
+              <td>0.67</td>
+              <td>0.74</td>
+            </tr>
+            <tr>
+              <td class="label">3000</td>
+              <td>0.28</td>
+              <td>0.74</td>
+              <td>0.80</td>
+            </tr>
+            <tr>
+              <td class="label">Final (5000)</td>
+              <td class="good">0.30</td>
+              <td class="good">0.75</td>
+              <td class="good">0.80</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Final output ADL lands at 3.158 against a natural value of 3.154 — a near-exact restoration of the locality profile, from input ADL 3.50. Note the early-training dip: at checkpoint 200 the model's Triple F1 (0.40) is <em>below</em> the do-nothing baseline (0.55) — attempting reconstruction before the mapping is learned is worse than leaving the input alone. It crosses the baseline between checkpoints 200 and 400 and never looks back.</p>
+
+        <div class="callout tip">
+          <div class="callout-label">Why this matters theoretically</div>
+          <p>PhraseShuffle dissociates two readings of "information locality" that the paper's perturbations conflate: token adjacency versus preserved local dependency structure. The model recovers phrase-shuffled text at LocalShuffle-or-better levels despite global token displacement — evidence that what the architecture exploits is <em>intact local structure at some granularity</em>, not raw token distance. This directly echoes Mollica et al.'s finding that human comprehenders extract composed meaning from order-violating strings as long as dependents stay local.</p>
+        </div>
+
+        <h3>Data scale interacts with locality too</h3>
+
+        <p>The paper reports 100K-sample training. We also ran everything at 10K, and the comparison is stark:</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Condition</th>
+              <th>EM at 10K</th>
+              <th>EM at 100K</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">WordHop, bnc_spoken</td>
+              <td>0.30</td>
+              <td>0.33</td>
+            </tr>
+            <tr>
+              <td class="label">WordHop, Gutenberg</td>
+              <td>0.25</td>
+              <td>0.38</td>
+            </tr>
+            <tr>
+              <td class="label">PartialReverse, bnc_spoken</td>
+              <td class="metric-cell low">0.05</td>
+              <td>0.29</td>
+            </tr>
+            <tr>
+              <td class="label">PartialReverse, Gutenberg</td>
+              <td class="metric-cell low">0.01</td>
+              <td>0.52</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle, bnc_spoken</td>
+              <td class="metric-cell low">0.04</td>
+              <td>0.17</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle, Gutenberg</td>
+              <td class="metric-cell low">0.00</td>
+              <td>0.25</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>WordHop is essentially learnable from 10K examples; the order-restoring perturbations are <em>not learnable at all</em> at that scale (EM ≤ 0.05) and only become tractable at 100K. Locality violation doesn't just lower the ceiling — it raises the price of entry. The amount of data needed to learn the inverse mapping scales with the severity of the violation, mirroring, in the recovery direction, the sample-efficiency gaps Kallini et al. observed during acquisition.</p>
+
+        <h3>The five-perturbation dose–response: which ruler actually predicts recovery?</h3>
+
+        <p>With WordHop and PhraseShuffle added, we have five perturbations measured on the same Gutenberg test set — enough to ask which measure of locality damage actually predicts recovery. The paper's framing leans on ADL. But put the two rulers side by side and ADL loses:</p>
+
+        <div class="table-wrap">
+          <table class="compare-table">
+            <thead>
+            <tr>
+              <th>Perturbation (Gutenberg)</th>
+              <th>Input ADL</th>
+              <th>Surviving arcs (baseline F1)</th>
+              <th>EM</th>
+              <th>Triple F1</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="label">PartialReverse</td>
+              <td>6.90</td>
+              <td class="good">0.62</td>
+              <td class="good">0.52</td>
+              <td class="good">0.84</td>
+            </tr>
+            <tr>
+              <td class="label">PhraseShuffle</td>
+              <td>3.50</td>
+              <td class="good">0.55</td>
+              <td>0.30</td>
+              <td class="good">0.80</td>
+            </tr>
+            <tr>
+              <td class="label">LocalShuffle (w=3)</td>
+              <td>3.59</td>
+              <td>0.49</td>
+              <td>0.25</td>
+              <td>0.77</td>
+            </tr>
+            <tr>
+              <td class="label">FullShuffle</td>
+              <td>15.26</td>
+              <td class="metric-cell low">0.29</td>
+              <td class="metric-cell low">0.01</td>
+              <td class="metric-cell low">0.14</td>
+            </tr>
+            <tr>
+              <td class="label">WordHop <em>(order preserved)</em></td>
+              <td>≈ natural</td>
+              <td>—</td>
+              <td>0.38</td>
+              <td>—</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Sort by surviving arcs and recovery is <strong>perfectly monotone</strong> — on both exact match (0.52 &gt; 0.30 &gt; 0.25 &gt; 0.01) and Triple F1 (0.84 &gt; 0.80 &gt; 0.77 &gt; 0.14). Sort by ADL and the ordering breaks immediately: PartialReverse has nearly twice PhraseShuffle's dependency stretch yet recovers best, and LocalShuffle stretches dependencies <em>less</em> than PhraseShuffle yet recovers worse.</p>
+
+        <p>The explanation is that the two rulers measure different things. ADL measures how far dependents moved from their heads. Baseline F1 measures how many head–dependent <em>adjacency relations survived</em> — and reversal preserves adjacency (neighbors stay neighbors, just mirrored), phrase movement preserves within-phrase adjacency, while window shuffling scrambles exactly the short arcs where most of a sentence's structure lives, and global shuffling destroys everything. The model's recovery tracks surviving local structure, not displacement distance.</p>
+
+        <div class="callout info">
+          <div class="callout-label">The refined claim</div>
+          <p>Information locality governs recovery — but "locality" means <em>preserved local dependency structure at some granularity</em>, not raw token distance. That refinement is invisible with the paper's three perturbations alone; it takes PhraseShuffle (globally displaced, locally intact) and PartialReverse (far-displaced, adjacency-preserving) sitting in the same table to separate the two readings. It also aligns with Futrell's information-theoretic version of locality: what a bounded predictor needs is not that dependents are <em>near</em>, but that the statistical structure linking them is <em>recoverable from a bounded window</em>.</p>
+        </div>
+
+        <p>One caveat: these are seed-42 runs on one test set of 1K sentences; the WordHop row lacks dependency-based measurements because its evaluation predates that part of the pipeline. Rerunning the dependency metrics across all five seeds is the obvious robustness check before making this table load-bearing.</p>
+
+        <h3>In progress: window size as a locality dial</h3>
+
+        <p>The repo also contains training data and a pre-trained model for <strong>LocalShuffle with window 5</strong> (alongside window 3). Window size is the cleanest possible locality dial — same operation, strictly larger maximum displacement — and comparing w=3 vs w=5 recovery curves will test whether the gradient is smooth even <em>within</em> a perturbation family. Results to follow in a future post.</p>
+
+        <h2 id="meaning"><span class="step-num">09</span> What the findings mean</h2>
+
+        <p>The central conclusion is not that LLMs can do everything humans cannot. It is more precise: the models are <strong>sensitive</strong> to locality violations, and their performance degrades in predictable ways as violations intensify — until one specific condition breaks the pattern categorically.</p>
+
+        <ul class="finding-list">
+          <li data-icon="1">Recovery difficulty scales with locality-violation severity across five perturbations spanning the spectrum — WordHop, PartialReverse, PhraseShuffle, LocalShuffle, FullShuffle — supporting information locality as a graded organizing principle of sequential processing.</li>
+          <li data-icon="2">The exception proves the rule: FullShuffle on long sentences is not "harder," it is broken — the one condition where dependency distance is unbounded in sentence length. The picture is a graded cost function with a capacity cliff.</li>
+          <li data-icon="3">Dependency metrics reveal syntactic recovery even where exact reconstruction fails — and across all five perturbations, recovery is perfectly monotone in the fraction of dependency arcs that survive perturbation, while raw ADL mis-orders the conditions. The operative variable is preserved local structure at some granularity, not token displacement.</li>
+          <li data-icon="4">The DLM undershoot (output ADL below natural) in models that never saw natural English suggests dependency length minimization may be a property of any efficient sequential processor, not of human memory specifically.</li>
+          <li data-icon="5">Fluency and faithfulness dissociate: FullShuffle outputs look like English while recovering nothing. Reference-free metrics cannot certify recovery — a methodological point that extends well beyond this project.</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-label">Main takeaway</div>
+          <p>Information locality looks less like a hard learnability boundary and more like a graded processing principle with a capacity cliff. The harsher the locality violation, the harder recovery becomes — in final performance, in learning speed, and in how much data the mapping costs — until the violation becomes unbounded, at which point recovery does not degrade but collapses.</p>
+        </div>
+
+        <h2 id="resources"><span class="step-num">10</span> Resources and how to reproduce it</h2>
+
+        <p>The repository contains the full training and evaluation stack, the saved per-checkpoint outputs behind every example above, and the Hugging Face model identifiers used in the project.</p>
+
+        <div class="code-block-label">Project structure</div>
+        <div class="code-block"><span class="c-comment"># Clone the repository</span>
+          git clone https://github.com/amirhoseinMhmd/impossible_translation.git
+          cd impossible_translation
+
+          <span class="c-comment"># Main folders</span>
+          <span class="c-fn">utils/</span>         <span class="c-comment"># shuffle.py, reverse.py, hop.py, phrase_shuffle.py</span>
+          <span class="c-fn">fine_tuning/</span>   <span class="c-comment"># GPT-2 fine-tuning with masked labels</span>
+          <span class="c-fn">evaluation/</span>    <span class="c-comment"># EM, BLEU, ADL, dependency metrics, perplexity</span>
+          <span class="c-fn">datasets/</span>      <span class="c-comment"># BabyLM-derived train/test files</span>
+          <span class="c-fn">configs/</span>       <span class="c-comment"># training configs</span>
+
+          <span class="c-comment"># Example: train on PartialReverse</span>
+          python fine_tuning/finetune.py \
+          -p datasets/100k_gutenberg.train \
+          -c configs/finetune.yaml \
+          -t partialReverse
+
+          <span class="c-comment"># Pre-trained starting points (Kallini et al.)</span>
+          mission-impossible-lms/word-hop-gpt2
+          mission-impossible-lms/partial-reverse-gpt2
+          mission-impossible-lms/local-shuffle-w3-gpt2
+          mission-impossible-lms/local-shuffle-w5-gpt2
+          mission-impossible-lms/deterministic-shuffle-s57-gpt2</div>
+
+        <div class="try-it">
+          <div class="try-it-label">Resources</div>
+          <div class="try-it-links">
+            <a href="https://github.com/amirhoseinMhmd/impossible_translation" target="_blank" rel="noreferrer" class="try-it-link gh">
+              <i class="fab fa-github"></i> GitHub Repository
+            </a>
+            <a href="https://huggingface.co/collections/the-amirhosein/impossible-translation-models" target="_blank" rel="noreferrer" class="try-it-link pdf">
+              <i class="fas fa-cubes"></i> Hugging Face Models
+            </a>
+          </div>
+        </div>
+
+        <p>Read the paper, then browse the saved checkpoint outputs in the repo — the same conclusion keeps arriving from different directions: <strong>models recover a surprising amount of structure from impossible inputs, and the point where recovery breaks down is exactly the point where locality damage stops being bounded.</strong></p>
+      </div>
+    </article>
+
+    <footer class="footer">
+      &copy; 2026 Amirhossein M. &mdash;
+      <a href="/">Home</a> &middot;
+      <a href="/blog/">Blog</a>
+    </footer>
+  </div>
+
+  <script is:inline>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn?.querySelector('i');
+
+    btn?.addEventListener('click', () => {
+      menu?.classList.toggle('open');
+      icon?.classList.toggle('fa-bars');
+      icon?.classList.toggle('fa-times');
+    });
+
+    document.querySelectorAll('.mobile-nav a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu?.classList.remove('open');
+        icon?.classList.add('fa-bars');
+        icon?.classList.remove('fa-times');
+      });
+    });
+  </script>
+</BaseLayout>
