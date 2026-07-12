@@ -20,9 +20,6 @@ const articleStructuredData = {
   image: absoluteUrl(SITE.defaultImage),
   author: [
     { '@type': 'Person', '@id': personId(), name: SITE.author.name },
-    { '@type': 'Person', name: 'Laurence E. Frank' },
-    { '@type': 'Person', name: 'Albert Gatt' },
-    { '@type': 'Person', name: 'Ayoub Bagheri' },
   ],
   publisher: {
     '@id': personId(),
@@ -40,7 +37,7 @@ const articleStructuredData = {
 ---
 
 <BaseLayout
-    title={`${article.title} — Amirhossein Mohammadi`}
+    title={`${article.title} — Amirhossein M.`}
     description={article.description}
     canonicalPath={article.href}
     pageType="article"
@@ -2196,7 +2193,7 @@ const articleStructuredData = {
     </article>
 
     <footer class="footer">
-      &copy; 2026 Amirhossein Mohammadi &mdash;
+      &copy; 2026 Amirhossein M. &mdash;
       <a href="/">Home</a> &middot;
       <a href="/blog/">Blog</a>
     </footer>
