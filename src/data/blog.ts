@@ -23,7 +23,7 @@ export const blogPosts: BlogPostMeta[] = [
     publishedOn: '2026-07-12',
     updatedOn: '2026-07-12',
     readingTimeLabel: '28 min read',
-    tags: ['Research', 'LLMs', 'NLP', 'Impossible Languages'],
+    tags: ['Research', 'LLMs', 'NLP', 'Information Locality','Impossible Languages'],
     href: '/blog/language-regenration/',
   },
   {
