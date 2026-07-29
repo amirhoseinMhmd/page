@@ -443,6 +443,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     window.copyBib = copyBib;
 
+    const pubBlogMap = {
+      'mohammadi2026languageregenerationinvestigationinformation': '/blog/language-regenration/',
+    };
+
     fetch('/publication.bib')
       .then((response) => {
         if (!response.ok) {
@@ -481,6 +485,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             const absId = `abs-${uid}`;
 
             let links = '';
+            const blogHref = pubBlogMap[pub.key];
+            if (blogHref) {
+              links += `<a class="pub-link" href="${esc(blogHref)}">Blog</a>`;
+            }
             if (pub.url) {
               links += `<a class="pub-link" href="${esc(pub.url)}" target="_blank" rel="noreferrer">Link</a>`;
             }

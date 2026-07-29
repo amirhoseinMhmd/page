@@ -34,6 +34,16 @@ const articleStructuredData = {
   url: articleUrl,
   keywords: article.tags.join(', '),
 };
+
+const citationBibtex = `@misc{mohammadi2026languageregenerationinvestigationinformation,
+  title={Language Re-generation: An investigation into information locality effects on reconstruction},
+  author={Amirhossein Mohammadi and Laurence E. Frank and Albert Gatt and Robert A. Bagheri},
+  year={2026},
+  eprint={2607.10268},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2607.10268},
+}`;
 ---
 
 <BaseLayout
@@ -968,7 +978,27 @@ const articleStructuredData = {
       letter-spacing: 0.07em;
       color: var(--ink-faint);
       margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
+    .cite-copy-btn {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-mid);
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .cite-copy-btn:hover { color: var(--ink); border-color: var(--ink-mid); }
+    .cite-copy-btn.copied { color: #40a02b; border-color: #40a02b; }
 
     .try-it {
       background: #1e1e2e;
@@ -1094,6 +1124,9 @@ const articleStructuredData = {
           </a>
           <a href="https://huggingface.co/collections/the-amirhosein/impossible-translation-models" target="_blank" rel="noreferrer" class="article-link">
             <i class="fas fa-cubes"></i> Model Collection
+          </a>
+          <a href="#citation" class="article-link">
+            <i class="fas fa-quote-right"></i> Citation
           </a>
         </div>
       </header>
@@ -2189,6 +2222,16 @@ const articleStructuredData = {
         </div>
 
         <p>Read the paper, then browse the saved checkpoint outputs in the repo — the same conclusion keeps arriving from different directions: <strong>models recover a surprising amount of structure from impossible inputs, and the point where recovery breaks down is exactly the point where locality damage stops being bounded.</strong></p>
+
+        <h2 id="citation"><span class="step-num">11</span> Citation</h2>
+
+        <p>If you use this work, please cite:</p>
+
+        <div class="code-block-label">
+          BibTeX
+          <button class="cite-copy-btn" id="cite-copy-btn" type="button">Copy</button>
+        </div>
+        <div class="code-block" id="cite-bibtex" set:html={citationBibtex}></div>
       </div>
     </article>
 
@@ -2216,6 +2259,29 @@ const articleStructuredData = {
         icon?.classList.add('fa-bars');
         icon?.classList.remove('fa-times');
       });
+    });
+
+    const citeBtn = document.getElementById('cite-copy-btn');
+    const citeBlock = document.getElementById('cite-bibtex');
+    citeBtn?.addEventListener('click', async () => {
+      const text = citeBlock?.textContent ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      const original = citeBtn.textContent;
+      citeBtn.textContent = 'Copied';
+      citeBtn.classList.add('copied');
+      setTimeout(() => {
+        citeBtn.textContent = original;
+        citeBtn.classList.remove('copied');
+      }, 2000);
     });
   </script>
 </BaseLayout>
